@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Attempt, TimerMode } from "@/types";
+import {
+  listCustomDrills,
+  registerCustomDrill as persistCustomDrill,
+  removeCustomDrill as deleteCustomDrill,
+} from "@/features/drills/drillLoader";
+import type { Attempt, Drill, TimerMode } from "@/types";
 import { DEMO_SEED, newSeed } from "@/utils/seedRandom";
 
 export interface PendingSeed {
@@ -14,11 +19,16 @@ interface DrillState {
   timerMode: TimerMode;
   /** Seed assigned at the briefing so the briefing and the sandbox show the same scenario. */
   pending: Record<string, PendingSeed>;
+  /** Reactive mirror of custom drills persisted in localStorage (`mfd_custom_drills`). */
+  customDrills: Drill[];
   setTimerMode: (mode: TimerMode) => void;
   ensureSeed: (drillId: string, demoAllowed: boolean) => PendingSeed;
   clearPending: (drillId: string) => void;
   addAttempt: (attempt: Attempt) => void;
   attachQuiz: (attemptId: string, quiz: NonNullable<Attempt["quiz"]>) => void;
+  registerCustomDrill: (drill: Drill) => Drill;
+  removeCustomDrill: (drillId: string) => void;
+  syncCustomDrills: () => void;
   resetAll: () => void;
 }
 
@@ -30,6 +40,7 @@ export const useDrillStore = create<DrillState>()(
       attempts: [],
       timerMode: "relaxed",
       pending: {},
+      customDrills: listCustomDrills(),
       setTimerMode: (timerMode) => set({ timerMode }),
       ensureSeed: (drillId, demoAllowed) => {
         const existing = get().pending[drillId];
@@ -49,8 +60,29 @@ export const useDrillStore = create<DrillState>()(
       addAttempt: (attempt) => set((s) => ({ attempts: [...s.attempts, attempt] })),
       attachQuiz: (attemptId, quiz) =>
         set((s) => ({ attempts: s.attempts.map((a) => (a.id === attemptId ? { ...a, quiz } : a)) })),
+      registerCustomDrill: (drill) => {
+        const saved = persistCustomDrill(drill);
+        set({ customDrills: listCustomDrills() });
+        return saved;
+      },
+      removeCustomDrill: (drillId) => {
+        deleteCustomDrill(drillId);
+        set((s) => {
+          const restPending = { ...s.pending };
+          delete restPending[drillId];
+          return { customDrills: listCustomDrills(), pending: restPending };
+        });
+      },
+      syncCustomDrills: () => set({ customDrills: listCustomDrills() }),
       resetAll: () => set({ attempts: [], pending: {}, timerMode: "relaxed" }),
     }),
-    { name: "mfd-drills" },
+    {
+      name: "mfd-drills",
+      partialize: (state) => ({
+        attempts: state.attempts,
+        timerMode: state.timerMode,
+        pending: state.pending,
+      }),
+    },
   ),
 );

@@ -13,11 +13,20 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
+function str(val: unknown, fallback: string): string {
+  return typeof val === "string" && val.length > 0 ? val : fallback;
+}
+
 /** Drill: fake authority / digital arrest video call intimidation. */
-export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function DigitalArrestScene({ drill, vars, stepProps, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
   const [tab, setTab] = useState<Tab>("call");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const sender = str(stepProps?.callerName ?? stepProps?.sender, payload.sender || vars.scammerName || "Unknown Caller");
+  const channel = str(stepProps?.channel, payload.channel || "Video Call");
+  const body = str(stepProps?.body ?? stepProps?.transcript, payload.body || "");
+  const amount = str(stepProps?.amount, vars.amount || "25,000");
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -33,13 +42,13 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
       {tab === "call" && (
         <>
           <div className="absolute inset-x-0 top-0 z-10">
-            <PhoneHeader title={callEnded ? "Call ended" : "Incoming video call"} subtitle={payload.channel} />
+            <PhoneHeader title={callEnded ? "Call ended" : "Incoming video call"} subtitle={channel} />
           </div>
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <div className="rounded-[20px] bg-[#0b1b3a] p-4 text-white">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-[14px] font-bold">{payload.sender}</p>
+                  <p className="truncate text-[14px] font-bold">{sender}</p>
                   <p className="text-[11.5px] text-white/75">{callEnded ? "Disconnected" : "Live call · Fake uniform backdrop"}</p>
                 </div>
                 <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-semibold", callEnded ? "bg-white/15" : "bg-[#ff3b30]")}>
@@ -53,7 +62,7 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                 Caller statement · tap suspicious words
               </p>
               <RedFlagText
-                text={payload.body}
+                text={body}
                 flags={drill.redFlags}
                 found={flagsFound}
                 onFlag={tapFlag}
@@ -93,7 +102,7 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                 No &ldquo;digital arrest&rdquo; exists in India
               </p>
               <p className="mt-1.5">
-                Real police and agencies never ask you to stay isolated on a video call or transfer ₹{vars.amount} for verification.
+                Real police and agencies never ask you to stay isolated on a video call or transfer ₹{amount} for verification.
               </p>
             </div>
             {verified ? (

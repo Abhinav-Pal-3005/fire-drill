@@ -1,0 +1,280 @@
+{
+  "id": "qr-marketplace-refund",
+  "title": "QR & marketplace refund trap",
+  "tagline": "A fake marketplace buyer insists you scan a QR or enter your UPI PIN to receive a refund.",
+  "concept": "upi-safety",
+  "relatedConcepts": ["phishing-indicators", "fraud-response"],
+  "difficulty": "easy",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["upi-01", "upi-02", "upi-03"],
+  "intro": "You listed furniture on {{merchantName}}. {{scammerName}} messages from {{maskedPhone}} claiming they sent ₹{{amount}} via a QR refund collect request to {{scammerVpa}} and asks you to enter your UPI PIN to receive it. Stay calm and protect your {{bankName}} account.",
+  "variables": {
+    "amount": { "min": 2500, "max": 28000, "step": 500 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "channel": "Marketplace SMS",
+      "sender": "{{scammerName}} ({{maskedPhone}})",
+      "senderId": "{{scammerVpa}}",
+      "time": "{{time}}",
+      "body": "Hi, I am buying your listing on {{merchantName}} right now. I have sent a QR collect request of ₹{{amount}} from {{scammerVpa}}. Just approve and enter your UPI PIN to receive the amount instantly!"
+    }
+  },
+  "steps": [
+    {
+      "id": "step-sms",
+      "label": "Inspect buyer SMS & open your UPI app safely",
+      "actionKey": "OPEN_UPI_APP",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Spot the 'enter your UPI PIN to receive' red flag in the SMS and open your UPI app directly instead of tapping links.",
+      "explanation": "Scammers pretend a QR or collect request credits money. Always inspect the message for manipulation cues and open your official UPI app directly.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "step-collect",
+      "label": "Decline the ₹{{amount}} collect request",
+      "actionKey": "DECLINE_REQUEST",
+      "order": 2,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Look at the transaction direction on the collect sheet — approving sends money OUT of {{bankName}}.",
+      "explanation": "A UPI collect request always debits your account when approved. Declining it immediately stops the scammer without risking your PIN.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "step-balance",
+      "label": "Verify your {{bankName}} balance is untouched",
+      "actionKey": "CHECK_BALANCE",
+      "order": 3,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Confirm your balance and recent ledger show no unauthorised debit.",
+      "explanation": "Checking your balance confirms ₹{{amount}} stayed safely in your account and gives you peace of mind.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "step-report",
+      "label": "Block {{scammerVpa}} & report to 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "File a quick report so {{scammerVpa}} is flagged and blocked from sending repeat requests.",
+      "explanation": "Reporting fraudulent UPI handles to 1930 / cybercrime.gov.in helps freeze mule accounts before others get targeted.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "step-sms",
+      "screenType": "SMS_INBOX",
+      "notification": {
+        "app": "Messages · {{merchantName}}",
+        "title": "{{scammerName}} sent a QR payment claim",
+        "body": "Approve ₹{{amount}} request & enter UPI PIN to receive instantly.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Messages · {{merchantName}}",
+        "sender": "{{scammerName}} · {{maskedPhone}}",
+        "channel": "Marketplace SMS",
+        "time": "{{time}}",
+        "body": "Hi, I am buying your listing on {{merchantName}} right now without bargaining. I have sent a QR collect request of ₹{{amount}} from {{scammerVpa}}. Just approve and enter your UPI PIN to receive the amount instantly! Do it in 2 minutes or I cancel.",
+        "actions": [
+          {
+            "intent": "OPEN_UPI_APP",
+            "label": "Open {{app}} directly to inspect request",
+            "subtitle": "Verify safely inside your official UPI app",
+            "variant": "primary"
+          },
+          {
+            "intent": "CLICK_EXTERNAL_LINK",
+            "label": "Tap buyer's QR refund link in SMS",
+            "subtitle": "https://quick-qr-receive.in/claim?amt={{amount}}",
+            "variant": "secondary"
+          },
+          {
+            "intent": "SHARE_OTP",
+            "label": "Reply with your bank OTP to speed up refund",
+            "subtitle": "Send verification code in chat",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "redFlagPhrases": [
+        "QR collect request",
+        "enter your UPI PIN to receive",
+        "Do it in 2 minutes or I cancel"
+      ],
+      "validIntents": ["OPEN_UPI_APP"],
+      "trapIntents": {
+        "CLICK_EXTERNAL_LINK": "Never open QR or payment links sent by a stranger on a marketplace. They route straight to fake collect sheets.",
+        "SHARE_OTP": "No buyer ever needs your OTP to pay you. Sharing an OTP hands over full control of your debit or login."
+      },
+      "nextStepMap": {
+        "OPEN_UPI_APP": "step-collect"
+      }
+    },
+    {
+      "stepId": "step-collect",
+      "screenType": "COLLECT_SHEET",
+      "notification": {
+        "app": "{{app}} UPI",
+        "title": "Collect request: ₹{{amount}}",
+        "body": "{{scammerName}} ({{scammerVpa}}) requested ₹{{amount}} from your {{bankName}} account.",
+        "urgent": true
+      },
+      "props": {
+        "appName": "{{app}}",
+        "scammerName": "{{scammerName}}",
+        "scammerVpa": "{{scammerVpa}}",
+        "amount": "{{amount}}",
+        "bankName": "{{bankName}}",
+        "note": "Marketplace refund — enter your UPI PIN to receive ₹{{amount}}",
+        "warningBanner": "DEBIT ALERT: Approving sends ₹{{amount}} OUT of {{bankName}} to {{scammerVpa}}."
+      },
+      "redFlagPhrases": [
+        "enter your UPI PIN to receive",
+        "DEBIT ALERT"
+      ],
+      "validIntents": ["DECLINE_REQUEST"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "Careful! Approving a collect request pulls ₹{{amount}} OUT of your account — it never credits money. Back out of the PIN screen immediately!"
+      },
+      "nextStepMap": {
+        "DECLINE_REQUEST": "step-balance",
+        "ACCEPT_COLLECT": "step-pin-trap"
+      }
+    },
+    {
+      "stepId": "step-pin-trap",
+      "screenType": "PIN_PAD",
+      "notification": {
+        "app": "{{app}} Security",
+        "title": "WAIT — UPI PIN authorises DEBIT",
+        "body": "You never enter a UPI PIN to receive ₹{{amount}}. Tap Cancel now!",
+        "urgent": true
+      },
+      "props": {
+        "mode": "pin"
+      },
+      "validIntents": ["DECLINE_REQUEST"],
+      "trapIntents": {
+        "ENTER_UPI_PIN": "You entered your UPI PIN on a collect request! In real life, ₹{{amount}} would be instantly debited to {{scammerVpa}}."
+      },
+      "nextStepMap": {
+        "DECLINE_REQUEST": "step-collect"
+      }
+    },
+    {
+      "stepId": "step-balance",
+      "screenType": "BALANCE_VIEW",
+      "props": {
+        "bankName": "{{bankName}}",
+        "balance": "{{balance}}",
+        "note": "Collect request declined. ₹{{amount}} stayed safely in your {{bankName}} account.",
+        "transactions": [
+          {
+            "id": "qr-tx-1",
+            "title": "Declined collect ({{scammerName}})",
+            "subtitle": "Blocked · UTR {{utrNumber}}",
+            "amount": "{{amount}}",
+            "direction": "credit"
+          },
+          {
+            "id": "qr-tx-2",
+            "title": "Metro Card Top-up",
+            "subtitle": "Yesterday",
+            "amount": "300",
+            "direction": "debit"
+          }
+        ],
+        "actions": [
+          {
+            "intent": "CHECK_BALANCE",
+            "label": "Balance verified — proceed to report {{scammerVpa}}",
+            "variant": "primary"
+          },
+          {
+            "intent": "ACCEPT_COLLECT",
+            "label": "Send ₹1 test transfer to {{scammerVpa}}",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "validIntents": ["CHECK_BALANCE"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "Never send a 'test transfer' to a scammer — it confirms your account is active and loses money."
+      },
+      "nextStepMap": {
+        "CHECK_BALANCE": "step-report"
+      }
+    },
+    {
+      "stepId": "step-report",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report UPI Handle · 1930",
+        "intro": "Block {{scammerVpa}} and log this fake QR marketplace collect scam on 1930 / cybercrime.gov.in.",
+        "details": [
+          { "label": "Scammer Handle", "value": "{{scammerVpa}}" },
+          { "label": "Caller Number", "value": "{{maskedPhone}}" },
+          { "label": "Attempted Debit", "value": "₹{{amount}} ({{merchantName}})" },
+          { "label": "Reference", "value": "UTR {{utrNumber}}" }
+        ],
+        "reasons": [
+          "Fake QR / Collect Request ('PIN to receive')",
+          "Marketplace Buyer Impersonation",
+          "Suspicious Payment Link"
+        ],
+        "submitLabel": "Block handle & file 1930 report",
+        "successText": "Reported {{scammerVpa}} to 1930 sandbox & blocked future requests."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ENTER_UPI_PIN"],
+  "critical": {
+    "title": "You entered your UPI PIN on a QR collect trap",
+    "explanation": "A UPI PIN ONLY authorises sending money out of your account. No buyer, QR code, or marketplace refund ever needs your UPI PIN to credit money. If this happens in real life, call 1930 and your bank helpline immediately.",
+    "reason": "You entered a UPI PIN on a marketplace collect request, so practise rejecting PIN-to-receive traps next.",
+    "concept": "upi-safety"
+  },
+  "redFlags": [
+    {
+      "id": "qr-flag-collect",
+      "textFragment": "QR collect request",
+      "label": "Collect pulls money out",
+      "explanation": "A collect request asks YOU to pay, never to receive."
+    },
+    {
+      "id": "qr-flag-pin",
+      "textFragment": "enter your UPI PIN to receive",
+      "label": "PIN to receive lie",
+      "explanation": "Receiving money on UPI is automatic and never requires a PIN."
+    },
+    {
+      "id": "qr-flag-urgent",
+      "textFragment": "Do it in 2 minutes or I cancel",
+      "label": "Artificial countdown",
+      "explanation": "Scammers create urgency so you approve before noticing the debit label."
+    }
+  ],
+  "hints": {
+    "step-sms": "Tap the suspicious phrases in the SMS ('enter your UPI PIN to receive') and choose to open {{app}} directly — never tap the SMS refund link.",
+    "step-collect": "Notice the DEBIT ALERT banner. Tap Decline on the collect request sheet instead of Approve.",
+    "step-pin-trap": "You never enter a UPI PIN to receive money! Tap Cancel immediately to back out safely.",
+    "step-balance": "Your {{bankName}} balance is intact. Confirm the balance check to move to blocking and reporting.",
+    "step-report": "Pick the QR / Collect Request reason and submit the 1930 report to block {{scammerVpa}}."
+  },
+  "quizId": "upi-safety"
+}

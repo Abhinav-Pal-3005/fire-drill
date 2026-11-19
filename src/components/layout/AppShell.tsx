@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, Settings, ShieldCheck, User } from "lucide-react";
+import { PersistentSosButton } from "@/components/emergency/PersistentSosButton";
 import { NavTitleContext } from "@/components/glass/GlassNavBar";
 import { ToastHost } from "@/components/glass/GlassToast";
+import { useEmergencyStore } from "@/store/useEmergencyStore";
 import { useUserStore } from "@/store/useUserStore";
 import { routeTransition } from "@/theme/tokens";
 import { cn } from "@/utils/cn";
+import EmergencySos from "@/views/EmergencySos";
 import { DisclaimerPill, ResourcesSheet } from "./DisclaimerPill";
 import { RoleChip } from "./RoleChip";
 import { sidebarItems, tabItems } from "./navItems";
@@ -34,11 +37,14 @@ function routeHeaderTitle(pathname: string): string {
   return "Money Fire Drill";
 }
 
-/** Global shell: Stitch warm-paper & forest-emerald UI everywhere except active sandbox simulation (/play). */
+/** Global shell: Stitch warm-paper & forest-emerald UI everywhere except active sandbox (/play) or active Emergency Mode. */
 export function AppShell() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const role = useUserStore((s) => s.role);
   const displayName = useUserStore((s) => s.displayName);
+  const emergencyState = useEmergencyStore((s) => s.emergencyState);
+  const triggerEmergency = useEmergencyStore((s) => s.triggerEmergency);
   const [title, setTitle] = useState("");
   const [resourcesOpen, setResourcesOpen] = useState(false);
 
@@ -59,6 +65,24 @@ export function AppShell() {
   const focusMode = pathname.endsWith("/play");
   const tabs = useMemo(() => tabItems(role), [role]);
   const side = useMemo(() => sidebarItems(), []);
+
+  // Law 3: Full Chrome Stripping whenever emergencyState !== 'IDLE'.
+  // Removes all nav bars, sidebars, bottom tabs, settings, and distractions for panic-proof focus.
+  if (emergencyState !== "IDLE") {
+    return (
+      <NavTitleContext.Provider value={setTitle}>
+        <div className="min-h-dvh overflow-x-clip">
+          <EmergencySos />
+        </div>
+        <ToastHost />
+      </NavTitleContext.Provider>
+    );
+  }
+
+  const handleInstantSos = () => {
+    triggerEmergency(pathname);
+    navigate("/sos");
+  };
 
   // PracticeOS obsidian studio shell during active /play drills only (Stitch shell elsewhere untouched).
   if (focusMode) {
@@ -87,6 +111,7 @@ export function AppShell() {
                   <DisclaimerPill sandbox onClick={() => setResourcesOpen(true)} />
                 </div>
                 <RoleChip sandbox />
+                <PersistentSosButton compact />
               </div>
             </div>
           </header>
@@ -109,12 +134,13 @@ export function AppShell() {
   }
 
   const headerTitle = routeHeaderTitle(pathname);
-  const initials = displayName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join("") || "AR";
+  const initials =
+    displayName
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase())
+      .join("") || "AR";
 
   return (
     <NavTitleContext.Provider value={setTitle}>
@@ -140,6 +166,19 @@ export function AppShell() {
               const active = item.match(pathname);
               const Icon = item.icon;
               const isSos = item.tone === "sos";
+              if (isSos) {
+                return (
+                  <button
+                    key={item.to}
+                    type="button"
+                    onClick={handleInstantSos}
+                    className="relative flex min-h-[48px] w-full items-center gap-3 rounded-full bg-[#DC2626] px-4 text-left text-[15px] font-semibold text-white shadow-[0_6px_16px_-4px_rgba(220,38,38,0.45)] transition-transform hover:bg-[#B91C1C] active:scale-[0.98]"
+                  >
+                    <Icon size={19} strokeWidth={2.2} aria-hidden />
+                    <span className="whitespace-nowrap">SOS / Scammed?</span>
+                  </button>
+                );
+              }
               return (
                 <Link
                   key={item.to}
@@ -147,13 +186,9 @@ export function AppShell() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "relative flex min-h-[46px] items-center gap-3 rounded-full px-4 text-[15px] font-semibold transition-all",
-                    isSos
-                      ? active
-                        ? "bg-st-error text-st-on-error shadow-sm"
-                        : "bg-st-error-container/60 text-st-error hover:bg-st-error-container"
-                      : active
-                        ? "bg-st-primary-container text-st-on-primary shadow-sm"
-                        : "text-st-on-surface-variant hover:bg-st-surface-container hover:text-st-primary",
+                    active
+                      ? "bg-st-primary-container text-st-on-primary shadow-sm"
+                      : "text-st-on-surface-variant hover:bg-st-surface-container hover:text-st-primary",
                   )}
                 >
                   <Icon size={19} strokeWidth={2} aria-hidden />
@@ -193,7 +228,10 @@ export function AppShell() {
               </Link>
 
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-                <RoleChip />
+                <PersistentSosButton />
+                <div className="hidden sm:block">
+                  <RoleChip />
+                </div>
                 <Link
                   to="/about"
                   aria-label="Settings"
@@ -245,6 +283,24 @@ export function AppShell() {
               const active = item.match(pathname);
               const Icon = item.icon;
               const isSos = item.tone === "sos";
+              if (isSos) {
+                return (
+                  <button
+                    key={item.to}
+                    type="button"
+                    onClick={handleInstantSos}
+                    aria-label="SOS — Scammed? Immediately freeze outbound payments"
+                    className="flex min-h-[48px] min-w-[56px] flex-col items-center justify-center py-1 text-[#DC2626] transition-transform active:scale-95"
+                  >
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-[#DC2626] text-white shadow-[0_3px_10px_rgba(220,38,38,0.35)]">
+                      <Icon size={18} strokeWidth={2.2} aria-hidden />
+                    </span>
+                    <span className="mt-1 text-center text-[11px] font-bold leading-none text-[#DC2626]">
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              }
               return (
                 <Link
                   key={item.to}
@@ -252,26 +308,13 @@ export function AppShell() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "flex min-h-[48px] min-w-[56px] flex-col items-center justify-center py-1 transition-all",
-                    isSos
-                      ? "text-st-error"
-                      : active
-                        ? "scale-[1.03] font-semibold text-st-primary-container"
-                        : "text-st-on-surface-variant hover:text-st-primary",
+                    active
+                      ? "scale-[1.03] font-semibold text-st-primary-container"
+                      : "text-st-on-surface-variant hover:text-st-primary",
                   )}
                 >
-                  {isSos ? (
-                    <span
-                      className={cn(
-                        "grid h-8 w-8 place-items-center rounded-full shadow-[0_2px_8px_rgba(185,28,28,0.2)] transition-transform",
-                        active ? "bg-st-error text-st-on-error scale-105" : "bg-st-error-container text-st-error",
-                      )}
-                    >
-                      <Icon size={18} strokeWidth={2} aria-hidden />
-                    </span>
-                  ) : (
-                    <Icon size={22} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
-                  )}
-                  <span className={cn("mt-1 text-center text-[11px] leading-none", isSos && "font-semibold text-st-error")}>
+                  <Icon size={22} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
+                  <span className="mt-1 text-center text-[11px] leading-none">
                     {item.label}
                   </span>
                 </Link>
@@ -286,3 +329,4 @@ export function AppShell() {
     </NavTitleContext.Provider>
   );
 }
+

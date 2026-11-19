@@ -15,14 +15,25 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
-const ACCOUNTS = ["Email account", "Cloud backup and photos", "Social media accounts"];
+const DEFAULT_ACCOUNTS = ["Email account", "Cloud backup and photos", "Social media accounts"];
+
+function str(val: unknown, fallback: string): string {
+  return typeof val === "string" && val.length > 0 ? val : fallback;
+}
 
 /** Drill 2: you are on a friend's phone after losing yours. */
-export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function LostPhoneScene({ drill, vars, stepProps, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
   const [tab, setTab] = useState<Tab>("messages");
   const [selected, setSelected] = useState<string[]>([]);
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const bank = str(stepProps?.bankName ?? stepProps?.bank, vars.bank || vars.bankName || "Your Bank");
+  const telco = str(stepProps?.telco, vars.telco || "Mobile Operator");
+  const sender = str(stepProps?.sender, payload.sender || vars.maskedPhone || "Unknown number");
+  const time = str(stepProps?.time, payload.time || vars.time || "now");
+  const body = str(stepProps?.body, payload.body || "");
+  const accounts = Array.isArray(stepProps?.accounts) ? (stepProps.accounts as string[]) : DEFAULT_ACCOUNTS;
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -35,7 +46,7 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
   const contacts: DialerContact[] = [
     {
       id: "telco",
-      name: `${vars.telco} customer care`,
+      name: `${telco} customer care`,
       subtitle: "Mobile operator",
       onCall: () => emit("block_sim"),
     },
@@ -43,13 +54,13 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
       .filter((d) => d.screen === "calls")
       .map((d) => ({
         id: d.id,
-        name: "Number from the “found your phone” message",
-        subtitle: "Unknown number",
+        name: d.label,
+        subtitle: sender,
         onCall: () => emit(d.actionKey, d.label),
       })),
     {
       id: "bank",
-      name: `${vars.bank} 24×7 helpline`,
+      name: `${bank} 24×7 helpline`,
       subtitle: "Bank helpline",
       onCall: () => emit("call_bank_helpline"),
     },
@@ -63,7 +74,7 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
       {tab === "messages" && (
         <MockInbox
           title="Messages"
-          messages={[{ id: "m1", sender: payload.sender, time: payload.time, body: payload.body }]}
+          messages={[{ id: "m1", sender, time, body }]}
           redFlags={drill.redFlags}
           found={flagsFound}
           onFlag={tapFlag}
@@ -83,7 +94,7 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <fieldset className="space-y-2">
               <legend className="px-1 pb-1 text-[12px] font-bold uppercase tracking-wide text-[#4f5f7a]">Accounts to secure</legend>
-              {ACCOUNTS.map((name) => (
+              {accounts.map((name) => (
                 <label
                   key={name}
                   className={cn(

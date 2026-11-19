@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   title: "Money Fire Drill",
   description:
     "A safe, timed practice app that teaches UPI safety, fraud response and phishing indicators. Education, not personal advice. No real payments.",
+  openGraph: {
+    title: "Money Fire Drill",
+    description:
+      "A safe, timed practice app that teaches UPI safety, fraud response and phishing indicators. Education, not personal advice. No real payments.",
+  },
 };
 
 export const viewport: Viewport = {

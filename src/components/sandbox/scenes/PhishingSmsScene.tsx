@@ -3,7 +3,7 @@ import { Building2, CheckCircle2, Flag, MessageSquare, ShieldCheck, type LucideI
 import { cn } from "@/utils/cn";
 import { MockComplaintForm } from "../MockComplaintForm";
 import { MockInbox } from "../MockInbox";
-import { DistractorRows, PhoneBody, PhoneButton, PhoneHeader, PhoneRow, useSnack } from "../phoneUi";
+import { DistractorRows, PhoneBody, PhoneButton, PhoneHeader, useSnack } from "../phoneUi";
 import type { SceneProps } from "./sceneTypes";
 
 type Tab = "messages" | "bank" | "report";
@@ -14,11 +14,27 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
+function str(val: unknown, fallback: string): string {
+  return typeof val === "string" && val.length > 0 ? val : fallback;
+}
+
+function extractSuspiciousLink(body: string): string {
+  const match = body.match(/(?:https?:\/\/|bit\.ly\/|tinyurl\.com\/|[a-z0-9-]+\.(?:to|ly|in|com|apk)\/[^\s.,!]+)/i);
+  return match ? match[0] : "Suspicious link in SMS";
+}
+
 /** Drill: fake bank KYC SMS phishing link vs opening official bank app directly. */
-export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function PhishingSmsScene({ drill, vars, stepProps, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
   const [tab, setTab] = useState<Tab>("messages");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const bank = str(stepProps?.bankName ?? stepProps?.bank, vars.bank || vars.bankName || "Your Bank");
+  const sender = str(stepProps?.sender, payload.sender || vars.maskedPhone || "Unknown Sender");
+  const time = str(stepProps?.time, payload.time || vars.time || "now");
+  const channel = str(stepProps?.channel, payload.channel || "SMS Inbox");
+  const body = str(stepProps?.body, payload.body || "");
+  const suspiciousLink = str(stepProps?.link, payload.link || extractSuspiciousLink(body));
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -38,15 +54,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
       {tab === "messages" && (
         <MockInbox
           title="Messages"
-          messages={[
-            {
-              id: "m1",
-              sender: payload.sender,
-              time: payload.time,
-              channel: payload.channel,
-              body: payload.body,
-            },
-          ]}
+          messages={[{ id: "m1", sender, time, channel, body }]}
           redFlags={drill.redFlags}
           found={flagsFound}
           onFlag={tapFlag}
@@ -59,7 +67,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
       {tab === "bank" && (
         <>
           <div className="absolute inset-x-0 top-0 z-10">
-            <PhoneHeader title={`${vars.bank} Official`} subtitle="Opened directly" />
+            <PhoneHeader title={`${bank} Official`} subtitle="Opened directly" />
           </div>
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#e3eaf6]">
@@ -69,7 +77,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
                 </span>
                 <div>
                   <p className="text-[14px] font-bold text-[#0b1b3a]">Account &amp; KYC Centre</p>
-                  <p className="text-[12px] text-[#4f5f7a]">Official {vars.bank} status</p>
+                  <p className="text-[12px] text-[#4f5f7a]">Official {bank} status</p>
                 </div>
               </div>
               <p className="mt-3 text-[13.5px] leading-snug text-[#33415c]">
@@ -83,7 +91,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
                   <CheckCircle2 size={18} strokeWidth={2} aria-hidden /> KYC verified &amp; active
                 </p>
                 <p className="text-[12.5px] leading-snug">
-                  Your {vars.bank} account is active with no pending KYC blocks. That SMS link was a phishing trap.
+                  Your {bank} account is active with no pending KYC blocks. That SMS link was a phishing trap.
                 </p>
               </div>
             ) : (
@@ -98,8 +106,8 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
           title="Block & report phishing SMS"
           intro="Blocking stops repeat phishing texts. Reporting the URL helps take fake bank sites down."
           details={[
-            { label: "SMS Sender", value: payload.sender },
-            { label: "Suspicious link", value: "bit.ly/kyc-9x2" },
+            { label: "SMS Sender", value: sender },
+            { label: "Suspicious link", value: suspiciousLink },
           ]}
           reasons={["Fake KYC / Phishing link", "Impersonating my bank", "Spam"]}
           submitLabel={reported ? "Reported" : "Block sender & report phishing"}
@@ -125,7 +133,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
               )}
             >
               <Icon size={20} strokeWidth={1.75} aria-hidden />
-              {t.id === "bank" ? vars.bank : t.label}
+              {t.id === "bank" ? bank : t.label}
             </button>
           );
         })}

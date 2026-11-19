@@ -32,7 +32,7 @@ import {
 import type { DrillRunner } from "@/features/drills/useDrillRunner";
 import { nextIncompleteStep, redFlagGoal, sortedSteps } from "@/features/drills/stepValidator";
 import { spring } from "@/theme/tokens";
-import type { Drill, TimerMode } from "@/types";
+import type { Drill, ScreenWidgetType, TimerMode } from "@/types";
 import { cn } from "@/utils/cn";
 import { MockComplaintForm } from "./MockComplaintForm";
 import { MockInterestCalculator } from "./MockInterestCalculator";
@@ -41,6 +41,7 @@ import { MockPinPad } from "./MockPinPad";
 import { MockTransactionHistory, type MockTransaction } from "./MockTransactionHistory";
 import { PhoneFrame, type PhoneNotificationItem } from "./PhoneFrame";
 import { RedFlagText } from "./RedFlagText";
+import { SandboxScene } from "./SandboxScene";
 
 type OSAppId =
   | "payeasy"
@@ -55,9 +56,31 @@ type OSAppId =
   | "report";
 
 interface NavEntry {
-  view: "lock" | "home" | "recents" | "app";
+  view: "lock" | "home" | "recents" | "app" | "composable";
   appId?: OSAppId;
   screenId?: string;
+}
+
+function getAppForWidget(screenType?: ScreenWidgetType): OSAppId {
+  switch (screenType) {
+    case "SMS_INBOX":
+      return "messages";
+    case "INCOMING_CALL":
+      return "phone";
+    case "LOAN_OFFER":
+    case "LENDER_CHECK":
+    case "INTEREST_CALC":
+      return "loan";
+    case "COMPLAINT_FORM":
+      return "report";
+    case "UPI_HOME":
+    case "COLLECT_SHEET":
+    case "PIN_PAD":
+    case "BALANCE_VIEW":
+    case "TX_HISTORY":
+    default:
+      return "payeasy";
+  }
 }
 
 interface AppMeta {
@@ -156,7 +179,11 @@ export function PracticeOSPhone({
   const payload = drill.trigger.payloadTemplate;
   const steps = useMemo(() => sortedSteps(drill), [drill]);
   const nextStep = useMemo(() => nextIncompleteStep(drill, runner.run.actions), [drill, runner.run.actions]);
-  const currentStepIdx = nextStep ? steps.findIndex((s) => s.id === nextStep.id) : steps.length - 1;
+  const currentStepIdx = runner.isComposable
+    ? Math.max(0, Math.min(runner.activeComposableStepIndex, Math.max(0, steps.length - 1)))
+    : nextStep
+      ? steps.findIndex((s) => s.id === nextStep.id)
+      : steps.length - 1;
   const hasFlags = drill.redFlags.length > 0;
   const flagGoal = redFlagGoal(drill);
 
@@ -313,6 +340,11 @@ export function PracticeOSPhone({
           homeApps: ["videocall", "phone", "report", "bank", "browser", "settings"],
           dockApps: ["videocall", "phone", "report", "browser"],
         };
+      case "composable":
+        return {
+          homeApps: ["messages", "payeasy", "phone", "bank", "loan", "report", "browser", "settings"],
+          dockApps: ["phone", "messages", "payeasy", "report"],
+        };
       default:
         return {
           homeApps: ["messages", "payeasy", "bank", "phone", "browser", "settings"],
@@ -344,13 +376,18 @@ export function PracticeOSPhone({
 
   const openApp = useCallback(
     (appId: OSAppId, screenId?: string) => {
+      if (runner.isComposable && appId !== "browser" && appId !== "settings") {
+        setRecentApps((prev) => [appId, ...prev.filter((x) => x !== appId)]);
+        navigateTo({ view: "composable", appId });
+        return;
+      }
       navigateTo({
         view: "app",
         appId,
         screenId: screenId ?? appCatalog[appId].homeScreenId,
       });
     },
-    [navigateTo, appCatalog],
+    [navigateTo, appCatalog, runner.isComposable],
   );
 
   const currentNav = navStack[navStack.length - 1] ?? { view: "lock" };
@@ -383,7 +420,7 @@ export function PracticeOSPhone({
         runner.cancelPin();
         return;
       }
-      if (currentNav.view === "app" || currentNav.view === "recents") {
+      if (currentNav.view === "app" || currentNav.view === "recents" || currentNav.view === "composable") {
         e.preventDefault();
         handleBackNav();
       }
@@ -456,11 +493,23 @@ export function PracticeOSPhone({
         body: "Incoming urgent video call — tap to inspect.",
         onOpen: () => openApp("videocall", "call"),
       });
+    } else if (runner.isComposable) {
+      const stepNotif = runner.activeComposableStep?.notification;
+      items.push({
+        id: `n-comp-${runner.activeComposableStep?.stepId ?? "start"}`,
+        appName: stepNotif?.app || payload.channel || drill.title,
+        title: stepNotif?.title || payload.sender || drill.title,
+        body: stepNotif?.body || payload.body || drill.tagline,
+        onOpen: () => navigateTo({ view: "composable", appId: getAppForWidget(runner.activeComposableStep?.screenType) }),
+      });
     }
     return items.filter((i) => !dismissedNotifs.includes(i.id));
-  }, [drillType, vars, payload, openApp, dismissedNotifs]);
+  }, [drillType, vars, payload, openApp, dismissedNotifs, runner.isComposable, runner.activeComposableStep, drill.title, drill.tagline, navigateTo]);
 
   const getAppBadge = (appId: OSAppId): number => {
+    if (runner.isComposable) {
+      return appId === getAppForWidget(runner.activeComposableStep?.screenType) ? 1 : 0;
+    }
     if (drillType === "collect_request") {
       if (appId === "messages" && !runner.doneKeys.has("spot_red_flags")) return 1;
       if (appId === "payeasy" && !runner.doneKeys.has("decline_request")) return 1;
@@ -486,7 +535,9 @@ export function PracticeOSPhone({
     return 0;
   };
 
-  const focusApps = getFocusAppsForStep(drillType, nextStep?.actionKey);
+  const focusApps = runner.isComposable
+    ? [getAppForWidget(runner.activeComposableStep?.screenType)]
+    : getFocusAppsForStep(drillType, nextStep?.actionKey);
 
   const handleLockTouchStart = (e: TouchEvent) => {
     touchStartYRef.current = e.touches[0]?.clientY ?? null;
@@ -496,7 +547,9 @@ export function PracticeOSPhone({
     const deltaY = (e.changedTouches[0]?.clientY ?? 0) - touchStartYRef.current;
     touchStartYRef.current = null;
     if (deltaY < -36) {
-      if (drillType === "digital_arrest") {
+      if (runner.isComposable) {
+        navigateTo({ view: "composable", appId: getAppForWidget(runner.activeComposableStep?.screenType) });
+      } else if (drillType === "digital_arrest") {
         openApp("videocall", "call");
       } else {
         navigateTo({ view: "home" });
@@ -1881,7 +1934,9 @@ export function PracticeOSPhone({
             <button
               type="button"
               onClick={() => {
-                if (drillType === "digital_arrest") {
+                if (runner.isComposable) {
+                  navigateTo({ view: "composable", appId: getAppForWidget(runner.activeComposableStep?.screenType) });
+                } else if (drillType === "digital_arrest") {
                   openApp("videocall", "call");
                 } else {
                   navigateTo({ view: "home" });
@@ -2116,6 +2171,13 @@ export function PracticeOSPhone({
 
       {/* ACTIVE APP */}
       {currentNav.view === "app" && currentNav.appId && renderActiveApp(currentNav.appId, currentNav.screenId ?? "")}
+
+      {/* COMPOSABLE WIDGET REGISTRY VIEW */}
+      {currentNav.view === "composable" && runner.isComposable && (
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+          <SandboxScene drill={drill} vars={vars} runner={runner} onBack={handleHomeNav} />
+        </div>
+      )}
 
       {/* FAKE PIN / OTP KEYPAD OVERLAY */}
       <AnimatePresence>

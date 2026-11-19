@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle2,
@@ -13,13 +13,16 @@ import { LiveAlertsStrip } from "@/components/library/LiveAlertsStrip";
 import { computeStreak, getReadiness, getRecommendedDrill } from "@/features/adaptive/adaptiveEngine";
 import { getConcept, listDrills } from "@/features/drills/drillLoader";
 import { useDrillStore } from "@/store/useDrillStore";
+import { useEmergencyStore } from "@/store/useEmergencyStore";
 import { useUserStore } from "@/store/useUserStore";
 import { conceptIcons } from "@/theme/icons";
 import { greeting } from "@/utils/formatters";
 
 export default function Home() {
+  const navigate = useNavigate();
   const attempts = useDrillStore((s) => s.attempts);
   const displayName = useUserStore((s) => s.displayName);
+  const triggerEmergency = useEmergencyStore((s) => s.triggerEmergency);
   const drills = listDrills();
   const recommendation = useMemo(() => getRecommendedDrill(attempts), [attempts]);
   const readiness = useMemo(() => getReadiness(attempts), [attempts]);
@@ -183,19 +186,23 @@ export default function Home() {
             <ShieldAlert size={20} strokeWidth={2} aria-hidden />
           </span>
           <div>
-            <p className="text-[14px] font-bold text-st-on-surface">Suspect real fraud right now?</p>
+            <p className="text-[14px] font-bold text-st-on-surface">Scammed right now?</p>
             <p className="text-[12px] text-st-on-surface-variant">
-              Open Golden Hour triage steps or dial 1930 Cyber Helpline immediately.
+              One tap freezes outbound UPI &amp; cards immediately, auto-captures UTRs, and prepares 1930.
             </p>
           </div>
         </div>
-        <Link
-          to="/sos"
-          className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full bg-st-error px-4 text-[13px] font-semibold text-st-on-error shadow-sm transition-transform active:scale-[0.98]"
+        <button
+          type="button"
+          onClick={() => {
+            triggerEmergency("/");
+            navigate("/sos");
+          }}
+          className="inline-flex min-h-[48px] items-center gap-1.5 whitespace-nowrap rounded-full bg-[#DC2626] px-5 text-[14px] font-semibold text-white shadow-sm transition-transform hover:bg-[#B91C1C] active:scale-[0.98]"
         >
-          <span>Emergency SOS</span>
-          <ArrowRight size={14} strokeWidth={2} aria-hidden />
-        </Link>
+          <span>SOS / Scammed?</span>
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden />
+        </button>
       </div>
 
       {/* Live Alerts Strip */}

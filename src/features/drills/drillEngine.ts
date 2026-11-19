@@ -1,4 +1,14 @@
-import type { ConceptId, Drill, DrillGrade, LoggedAction, Mistake, RunState, StepResult, TimerMode } from "@/types";
+import type {
+  ConceptId,
+  Drill,
+  DrillGrade,
+  LoggedAction,
+  Mistake,
+  RunState,
+  SemanticIntent,
+  StepResult,
+  TimerMode,
+} from "@/types";
 import { clamp } from "@/utils/formatters";
 import {
   classifyAction,
@@ -11,7 +21,7 @@ import {
 /* ----------------------------- Runner state ----------------------------- */
 
 export function createRunState(): RunState {
-  return { actions: [], flagsFound: [], wrongTaps: 0, hintsUsed: [], critical: false };
+  return { actions: [], flagsFound: [], wrongTaps: 0, hintsUsed: [], critical: false, trapMistakes: [] };
 }
 
 export interface ActionOutcome {
@@ -26,11 +36,19 @@ export function applyAction(
   actionKey: string,
   label: string | undefined,
   tMs: number,
+  explanation?: string,
 ): { state: RunState; outcome: ActionOutcome } {
   const outcome = classifyAction(drill, state.actions, actionKey);
   const resolvedLabel =
     label ?? findStep(drill, actionKey)?.label ?? findDistractor(drill, actionKey)?.label ?? actionKey;
-  const logged: LoggedAction = { actionKey, label: resolvedLabel, tMs, kind: outcome.kind, stepId: outcome.stepId };
+  const logged: LoggedAction = {
+    actionKey,
+    label: resolvedLabel,
+    tMs,
+    kind: outcome.kind,
+    stepId: outcome.stepId,
+    explanation,
+  };
   return {
     state: {
       ...state,
@@ -38,6 +56,34 @@ export function applyAction(
       critical: state.critical || outcome.kind === "critical",
     },
     outcome,
+  };
+}
+
+/** Records a schema-driven trap mistake from a ComposableDrillStep (with exact explanation). */
+export function applyTrapMistake(
+  drill: Drill,
+  state: RunState,
+  stepId: string,
+  intent: SemanticIntent,
+  label: string,
+  explanation: string,
+  isCritical: boolean,
+  tMs: number,
+): RunState {
+  const logged: LoggedAction = {
+    actionKey: `${stepId}:${intent}`,
+    label,
+    tMs,
+    kind: isCritical ? "critical" : "distractor",
+    stepId,
+    explanation,
+  };
+  const nextTraps = [...(state.trapMistakes ?? []), { stepId, intent, explanation, tMs }];
+  return {
+    ...state,
+    actions: [...state.actions, logged],
+    critical: state.critical || isCritical || drill.criticalActions.includes(intent),
+    trapMistakes: nextTraps,
   };
 }
 
@@ -138,25 +184,38 @@ export function gradeRun(
     });
   }
 
-  // Extra (wrong) actions: distinct distractors, plus the critical mistake if any.
+  // Extra (wrong) actions: distinct legacy distractors AND schema-driven composable traps.
   const seen = new Set<string>();
   for (const action of run.actions) {
     if (action.kind === "distractor" && !seen.has(action.actionKey)) {
       seen.add(action.actionKey);
       const d = findDistractor(drill, action.actionKey);
-      if (!d) continue;
-      results.push({
-        id: `extra-${d.id}`,
-        label: d.label,
-        status: "wrong",
-        timeMs: timeFor(action),
-        explanation: d.explanation,
-        kind: "extra",
-        mistakeConcept: d.mistakeConcept,
-      });
-      mistakes.push({ concept: d.mistakeConcept, kind: "wrong", label: d.label });
+      if (d) {
+        results.push({
+          id: `extra-${d.id}`,
+          label: d.label,
+          status: "wrong",
+          timeMs: timeFor(action),
+          explanation: d.explanation,
+          kind: "extra",
+          mistakeConcept: d.mistakeConcept,
+        });
+        mistakes.push({ concept: d.mistakeConcept, kind: "wrong", label: d.label });
+      } else if (action.explanation) {
+        results.push({
+          id: `extra-trap-${action.actionKey}`,
+          label: action.label,
+          status: "wrong",
+          timeMs: timeFor(action),
+          explanation: action.explanation,
+          kind: "extra",
+          mistakeConcept: drill.concept,
+        });
+        mistakes.push({ concept: drill.concept, kind: "wrong", label: action.label });
+      }
     }
   }
+
   if (run.critical) {
     const crit = run.actions.find((a) => a.kind === "critical");
     results.push({
@@ -164,7 +223,7 @@ export function gradeRun(
       label: drill.critical.title,
       status: "critical",
       timeMs: crit ? timeFor(crit) : null,
-      explanation: drill.critical.explanation,
+      explanation: crit?.explanation ?? drill.critical.explanation,
       kind: "extra",
       mistakeConcept: drill.critical.concept,
     });

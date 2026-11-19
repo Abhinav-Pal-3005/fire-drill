@@ -1,0 +1,227 @@
+{
+  "id": "electricity-bill-apk",
+  "title": "Electricity disconnection APK scam",
+  "tagline": "An urgent power-cut SMS pushes a malicious .apk download and fake officer callback.",
+  "concept": "phishing-indicators",
+  "relatedConcepts": ["fraud-response", "upi-safety"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["phish-01", "phish-02"],
+  "intro": "Late in the evening, an SMS from {{maskedPhone}} threatens that your electricity connection will be disconnected at 9:30 PM tonight unless you pay ₹{{amount}} via {{fakeApkName}} and call {{scammerName}}. Protect your phone from spyware and OTP theft.",
+  "variables": {
+    "amount": { "min": 1200, "max": 8500, "step": 250 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "channel": "Urgent SMS",
+      "sender": "{{maskedPhone}}",
+      "senderId": "{{maskedPhone}}",
+      "time": "{{time}}",
+      "body": "DEAR CONSUMER, your electricity power will be DISCONNECTED tonight at 9:30 PM because last month bill ₹{{amount}} was not updated. Download {{fakeApkName}} immediately or call Electricity Officer {{scammerName}} at {{maskedPhone}}."
+    }
+  },
+  "steps": [
+    {
+      "id": "step-sms",
+      "label": "Spot the fake .apk SMS & block the sender",
+      "actionKey": "BLOCK_SENDER",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Power utilities never send disconnection threats from personal mobile numbers or ask you to install .apk files.",
+      "explanation": "Sideloading an .apk file grants scammers silent SMS-reading and screen-sharing access to steal every bank OTP.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "step-call",
+      "label": "Hang up on the fake electricity officer",
+      "actionKey": "HANG_UP_CALL",
+      "order": 2,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "The scammer calls back claiming to be {{scammerName}} from {{callerAgency}}. End the call immediately.",
+      "explanation": "No genuine electricity board officer calls at night asking you to install remote-support apps or read out bank OTPs.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "step-report",
+      "label": "Report the scam number & .apk on 1930 / Chakshu",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Log {{maskedPhone}} and {{fakeApkName}} so telecom carriers can block the phishing campaign.",
+      "explanation": "Reporting phishing numbers and malicious APKs via 1930 and Sanchar Saathi Chakshu stops mass SMS blasts quickly.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "step-sms",
+      "screenType": "SMS_INBOX",
+      "notification": {
+        "app": "Messages · Alert",
+        "title": "Electricity DISCONNECTION Tonight 9:30 PM",
+        "body": "Install {{fakeApkName}} to update ₹{{amount}} bill immediately.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Messages · {{maskedPhone}}",
+        "sender": "{{maskedPhone}} (Personal Mobile)",
+        "channel": "SMS",
+        "time": "{{time}}",
+        "body": "DEAR CONSUMER, your electricity power will be DISCONNECTED tonight at 9:30 PM because last month bill ₹{{amount}} was not updated. Download {{fakeApkName}} immediately or call Electricity Officer {{scammerName}} at {{maskedPhone}} right now.",
+        "actions": [
+          {
+            "intent": "BLOCK_SENDER",
+            "label": "Ignore link & block personal mobile sender",
+            "subtitle": "Check real bill only on your official utility portal",
+            "variant": "primary"
+          },
+          {
+            "intent": "INSTALL_APK",
+            "label": "Download & install {{fakeApkName}}",
+            "subtitle": "Quick utility bill updater (4.2 MB .apk)",
+            "variant": "secondary"
+          },
+          {
+            "intent": "CLICK_EXTERNAL_LINK",
+            "label": "Open quick-pay link from SMS",
+            "subtitle": "http://power-bill-update-now.xyz/pay",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "redFlagPhrases": [
+        "DISCONNECTED tonight at 9:30 PM",
+        "{{fakeApkName}}",
+        "call Electricity Officer {{scammerName}}"
+      ],
+      "validIntents": ["BLOCK_SENDER", "IGNORE_MESSAGE"],
+      "trapIntents": {
+        "INSTALL_APK": "Installing {{fakeApkName}} gives attackers silent SMS-forwarding and screen control to drain your {{bankName}} account!",
+        "CLICK_EXTERNAL_LINK": "Unverified HTTP links in power-cut SMS messages lead to fake payment pages and malware downloads."
+      },
+      "nextStepMap": {
+        "BLOCK_SENDER": "step-call",
+        "IGNORE_MESSAGE": "step-call"
+      }
+    },
+    {
+      "stepId": "step-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Phone · Incoming Call",
+        "title": "{{scammerName}} · Utility Helpline",
+        "body": "Calling from {{maskedPhone}} about urgent power cut.",
+        "urgent": true
+      },
+      "props": {
+        "callerName": "{{scammerName}}",
+        "callerNumber": "{{maskedPhone}}",
+        "agency": "Claimed: Electricity Billing Desk",
+        "channel": "Incoming Voice Call",
+        "badge": "Unknown Personal Mobile",
+        "transcript": "Sir/Madam, your meter is queued for disconnection in 15 minutes! Pay a ₹10 verification fee using {{fakeApkName}} and read me the 6-digit {{bankName}} OTP on your screen to keep power ON.",
+        "actions": [
+          {
+            "intent": "HANG_UP_CALL",
+            "label": "Hang up immediately",
+            "variant": "primary"
+          },
+          {
+            "intent": "ANSWER_CALL",
+            "label": "Stay on call & argue",
+            "variant": "secondary"
+          },
+          {
+            "intent": "SHARE_OTP",
+            "label": "Read out 6-digit {{bankName}} OTP for ₹10 fee",
+            "variant": "secondary"
+          },
+          {
+            "intent": "INSTALL_APK",
+            "label": "Install {{fakeApkName}} while on call",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "redFlagPhrases": [
+        "disconnection in 15 minutes",
+        "{{fakeApkName}}",
+        "read me the 6-digit {{bankName}} OTP"
+      ],
+      "validIntents": ["HANG_UP_CALL"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on the call lets the scammer escalate panic and talk you into screen sharing. Hang up and check your official electricity app instead.",
+        "SHARE_OTP": "Reading out a bank OTP lets the attacker empty your account — a ₹10 'verification fee' is a classic pretext.",
+        "INSTALL_APK": "Installing {{fakeApkName}} during a call hands over remote device control."
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "step-report"
+      }
+    },
+    {
+      "stepId": "step-report",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Phishing & APK · 1930",
+        "intro": "Report {{maskedPhone}} and the malicious {{fakeApkName}} link to 1930 / cybercrime.gov.in and Sanchar Saathi Chakshu.",
+        "details": [
+          { "label": "Scammer Number", "value": "{{maskedPhone}}" },
+          { "label": "Malicious File", "value": "{{fakeApkName}}" },
+          { "label": "Claimed Officer", "value": "{{scammerName}}" },
+          { "label": "Helpline", "value": "1930 · Sanchar Saathi Chakshu" }
+        ],
+        "reasons": [
+          "Electricity Bill Disconnection Scam",
+          "Malicious .APK / Remote-Access App Push",
+          "OTP / Banking Phishing Call"
+        ],
+        "submitLabel": "Submit 1930 & Chakshu report",
+        "successText": "Logged {{maskedPhone}} and {{fakeApkName}} in 1930 sandbox."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["INSTALL_APK", "SHARE_OTP"],
+  "critical": {
+    "title": "You installed a malicious .APK or shared an OTP",
+    "explanation": "Electricity disconnection scams rely on sideloaded .apk spyware or bank OTPs to hijack your phone and silently approve bank transfers. Never install apps sent via SMS or WhatsApp, and never share an OTP on a call.",
+    "reason": "You fell for an .apk download or OTP request, so rehearse shutting down phishing links next.",
+    "concept": "phishing-indicators"
+  },
+  "redFlags": [
+    {
+      "id": "elec-flag-cut",
+      "textFragment": "DISCONNECTED tonight at 9:30 PM",
+      "label": "Night-time fear tactic",
+      "explanation": "Utilities issue formal notice periods on official bills, never sudden late-night SMS threats."
+    },
+    {
+      "id": "elec-flag-apk",
+      "textFragment": "{{fakeApkName}}",
+      "label": "Malicious .APK sideload",
+      "explanation": "Official utilities never distribute .apk installer files over SMS or WhatsApp."
+    },
+    {
+      "id": "elec-flag-otp",
+      "textFragment": "read me the 6-digit {{bankName}} OTP",
+      "label": "OTP theft pretext",
+      "explanation": "No utility officer ever asks for your bank OTP for a verification fee."
+    }
+  ],
+  "hints": {
+    "step-sms": "Tap the red flags ('DISCONNECTED tonight at 9:30 PM' and '{{fakeApkName}}'), then choose to block the personal mobile sender instead of installing the .apk.",
+    "step-call": "An officer threatening disconnection in 15 minutes and asking for a bank OTP is a scammer. Tap Hang up right away.",
+    "step-report": "Select the Electricity Bill Disconnection Scam reason and submit the 1930 report."
+  },
+  "quizId": "phishing-indicators"
+}

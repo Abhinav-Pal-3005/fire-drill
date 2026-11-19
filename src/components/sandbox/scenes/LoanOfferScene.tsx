@@ -9,14 +9,24 @@ import type { SceneProps } from "./sceneTypes";
 
 type Screen = "sms" | "offer" | "lender";
 
+function str(val: unknown, fallback: string): string {
+  return typeof val === "string" && val.length > 0 ? val : fallback;
+}
+
 /** Drill 4: an instant-loan SMS with red flags, a calculator and a lender check. */
-export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function LoanOfferScene({ drill, vars, stepProps, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
   const [screen, setScreen] = useState<Screen>("sms");
   const [contacts, setContacts] = useState(true);
   const [gallery, setGallery] = useState(true);
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
-  const principal = Number(vars.amount.replace(/,/g, "")) || 10000;
+
+  const lender = str(stepProps?.lender ?? stepProps?.merchantName, vars.lender || vars.merchantName || "Instant Lender");
+  const amount = str(stepProps?.amount, vars.amount || "10,000");
+  const sender = str(stepProps?.sender, payload.sender || lender);
+  const time = str(stepProps?.time, payload.time || vars.time || "now");
+  const body = str(stepProps?.body, payload.body || "");
+  const principal = Number(amount.replace(/,/g, "")) || 10000;
   const declined = doneKeys.has("decline_revoke");
 
   const wrongTap = (key: string, label: string) => {
@@ -26,14 +36,14 @@ export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
 
   if (screen === "lender") {
     return (
-      <MockLenderCheck lender={vars.lender} onChecked={() => emit("check_lender")} onBack={() => setScreen("offer")} />
+      <MockLenderCheck lender={lender} onChecked={() => emit("check_lender")} onBack={() => setScreen("offer")} />
     );
   }
 
   if (screen === "offer") {
     return (
       <>
-        <MockLoanOffer lender={vars.lender} amount={vars.amount} onBack={() => setScreen("sms")}>
+        <MockLoanOffer lender={lender} amount={amount} onBack={() => setScreen("sms")}>
           <MockInterestCalculator principal={principal} onCalculate={() => emit("use_calculator")} />
 
           <PhoneSection title="Before you decide">
@@ -87,7 +97,7 @@ export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
   return (
     <MockInbox
       title="Messages"
-      messages={[{ id: "m1", sender: payload.sender, time: payload.time, body: payload.body }]}
+      messages={[{ id: "m1", sender, time, body }]}
       redFlags={drill.redFlags}
       found={flagsFound}
       onFlag={tapFlag}

@@ -14,21 +14,35 @@ export interface InboxMessage {
 
 interface MockInboxProps {
   title: string;
+  subtitle?: string;
   messages: InboxMessage[];
   redFlags: RedFlag[];
+  redFlagPhrases?: string[];
   found: string[];
   onFlag: (flagId: string) => void;
   onMiss: () => void;
+  onBack?: () => void;
   /** Extra controls rendered under the messages (quick replies, actions). */
   children?: ReactNode;
 }
 
 /** Messages screen. Suspicious fragments inside sender lines and bodies are tappable. */
-export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, children }: MockInboxProps) {
+export function MockInbox({
+  title,
+  subtitle = "Tap anything that looks suspicious",
+  messages,
+  redFlags,
+  redFlagPhrases,
+  found,
+  onFlag,
+  onMiss,
+  onBack,
+  children,
+}: MockInboxProps) {
   return (
     <>
       <div className="absolute inset-x-0 top-0 z-10">
-        <PhoneHeader title={title} subtitle="Tap anything that looks suspicious" />
+        <PhoneHeader title={title} subtitle={subtitle} onBack={onBack} />
       </div>
       <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
         {messages.map((m) => (
@@ -41,6 +55,7 @@ export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, ch
                 <RedFlagText
                   text={m.sender}
                   flags={redFlags}
+                  phrases={redFlagPhrases}
                   found={found}
                   onFlag={onFlag}
                   onMiss={onMiss}
@@ -52,7 +67,14 @@ export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, ch
                 </p>
               </div>
             </header>
-            <RedFlagText text={m.body} flags={redFlags} found={found} onFlag={onFlag} onMiss={onMiss} />
+            <RedFlagText
+              text={m.body}
+              flags={redFlags}
+              phrases={redFlagPhrases}
+              found={found}
+              onFlag={onFlag}
+              onMiss={onMiss}
+            />
           </article>
         ))}
         {children}

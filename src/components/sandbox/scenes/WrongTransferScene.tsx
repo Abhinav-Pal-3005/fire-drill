@@ -17,11 +17,25 @@ interface ActionRow {
   doneKey?: string;
 }
 
+function str(val: unknown, fallback: string): string {
+  return typeof val === "string" && val.length > 0 ? val : fallback;
+}
+
 /** Drill 3: money went to a stranger who now pressures you. */
-export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function WrongTransferScene({ drill, vars, stepProps, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
   const [screen, setScreen] = useState<Screen>("receipt");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const appName = str(stepProps?.appName, vars.app || "PayWave");
+  const bank = str(stepProps?.bankName ?? stepProps?.bank, vars.bank || vars.bankName || "Your Bank");
+  const amount = str(stepProps?.amount, vars.amount || "4,500");
+  const sender = str(stepProps?.sender, payload.sender || vars.name || "Unknown");
+  const senderId = str(stepProps?.scammerVpa ?? stepProps?.senderId, payload.senderId || vars.upiId || vars.scammerVpa || "stranger@upi");
+  const txnId = str(stepProps?.utrNumber ?? stepProps?.txnId, payload.txnId || vars.txnId || vars.utrNumber || "T0000000000");
+  const alert = str(stepProps?.alert, payload.alert || `₹${amount} sent to ${senderId}`);
+  const time = str(stepProps?.time, payload.time || vars.time || "now");
+  const body = str(stepProps?.body, payload.body || "");
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -51,7 +65,7 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
     },
     {
       id: "complaint",
-      title: `Raise a complaint in ${vars.app}`,
+      title: `Raise a complaint in ${appName}`,
       icon: FileWarning,
       onClick: () => setScreen("complaint"),
     },
@@ -62,7 +76,7 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
       onClick: () => emit("skip_pleading"),
       doneKey: "skip_pleading",
     },
-    { id: "bank", title: `Contact ${vars.bank}`, icon: Landmark, onClick: () => setScreen("bank") },
+    { id: "bank", title: `Contact ${bank}`, icon: Landmark, onClick: () => setScreen("bank") },
     distractor("pay_release_fee"),
     { id: "dispute", title: "Dispute help", icon: Scale, onClick: () => setScreen("dispute") },
     distractor("delete_chat"),
@@ -72,12 +86,12 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
     return (
       <>
         <MockComplaintForm
-          title={`Complaint in ${vars.app}`}
+          title={`Complaint in ${appName}`}
           intro="Tell the app what went wrong. Keep your transaction ID handy."
           details={[
-            { label: "Transaction ID", value: payload.txnId },
-            { label: "Amount", value: `₹${vars.amount}` },
-            { label: "Sent to", value: payload.senderId },
+            { label: "Transaction ID", value: txnId },
+            { label: "Amount", value: `₹${amount}` },
+            { label: "Sent to", value: senderId },
           ]}
           reasons={["Sent to the wrong person", "Money debited but not received", "Possible fraud"]}
           submitLabel="Submit complaint"
@@ -98,7 +112,7 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
         contacts={[
           {
             id: "bank-line",
-            name: `${vars.bank} 24×7 helpline`,
+            name: `${bank} 24×7 helpline`,
             subtitle: "Official bank helpline",
             onCall: () => emit("contact_bank"),
           },
@@ -134,26 +148,26 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
   return (
     <>
       <div className="absolute inset-x-0 top-0 z-10">
-        <PhoneHeader title="Payment sent" subtitle={vars.app} />
+        <PhoneHeader title="Payment sent" subtitle={appName} />
       </div>
       <PhoneBody className="space-y-4 px-3 pb-24 pt-[68px]">
         <div className="rounded-[20px] bg-white p-4 text-center ring-1 ring-[#e3eaf6]">
-          <p className="tnum text-[30px] font-bold tracking-tight text-[#0b1b3a]">₹{vars.amount}</p>
-          <p className="mt-0.5 text-[13px] text-[#4f5f7a]">sent to {payload.senderId}</p>
-          <p className="tnum mt-2 text-[12px] text-[#4f5f7a]">Transaction ID {payload.txnId}</p>
+          <p className="tnum text-[30px] font-bold tracking-tight text-[#0b1b3a]">₹{amount}</p>
+          <p className="mt-0.5 text-[13px] text-[#4f5f7a]">sent to {senderId}</p>
+          <p className="tnum mt-2 text-[12px] text-[#4f5f7a]">Transaction ID {txnId}</p>
         </div>
 
         <p className="flex items-start gap-2 rounded-2xl bg-[#fff4e0] p-3 text-[13px] font-medium text-[#8f4b00]">
           <TriangleAlert size={16} strokeWidth={2} className="mt-0.5 shrink-0" aria-hidden />
-          {payload.alert}. This is not the person you meant to pay.
+          {alert}. This is not the person you meant to pay.
         </p>
 
         <article className="rounded-[20px] bg-white p-3.5 text-[14px] text-[#0b1b3a] ring-1 ring-[#e3eaf6]">
           <p className="mb-1.5 text-[12px] font-semibold text-[#4f5f7a]">
-            {payload.sender} · {payload.time}
+            {sender} · {time}
           </p>
           <RedFlagText
-            text={payload.body}
+            text={body}
             flags={drill.redFlags}
             found={flagsFound}
             onFlag={tapFlag}

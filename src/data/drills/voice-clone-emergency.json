@@ -1,0 +1,221 @@
+{
+  "id": "voice-clone-emergency",
+  "title": "AI voice-clone emergency call",
+  "tagline": "A frantic cloned voice sounding like a close relative begs for urgent hospital money from an unknown number.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["upi-safety", "phishing-indicators"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["arrest-01", "upi-01"],
+  "intro": "You receive an urgent call from unknown number {{maskedPhone}}. A panicked voice sounding remarkably like your {{relativeRole}} claims they were just in an accident and need ₹{{amount}} sent immediately to a stranger's UPI handle {{scammerVpa}}. Pause, verify independently, and protect your {{bankName}} balance.",
+  "variables": {
+    "amount": { "min": 8000, "max": 45000, "step": 1000 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "channel": "Unknown Voice Call",
+      "sender": "{{relativeRole}}? ({{maskedPhone}})",
+      "senderId": "{{maskedPhone}}",
+      "time": "{{time}}",
+      "body": "Please help me! My phone broke after a road accident and I'm at the hospital desk. Send ₹{{amount}} right now to the attendant's UPI {{scammerVpa}} — don't call my old number!"
+    }
+  },
+  "steps": [
+    {
+      "id": "step-call",
+      "label": "Hang up & refuse to pay on an unverified call",
+      "actionKey": "HANG_UP_CALL",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "AI voice clones mimic relatives from short social-media clips. Hang up so you can call your {{relativeRole}}'s real saved number.",
+      "explanation": "Scammers can clone a family member's voice from a few seconds of public video. Hanging up breaks the panic loop so you can verify directly.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "step-balance",
+      "label": "Verify your {{bankName}} balance & callback result",
+      "actionKey": "CHECK_BALANCE",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "After calling your {{relativeRole}}'s saved number and confirming they are safe, verify no transfer left your account.",
+      "explanation": "Calling the real saved number (or asking a private family safe-word) exposes AI voice clones in seconds while keeping your money untouched.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "step-report",
+      "label": "Block {{maskedPhone}} & report {{scammerVpa}} to 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Report both the spoofed caller number and the stranger's UPI ID {{scammerVpa}} to 1930.",
+      "explanation": "Reporting voice-clone emergency numbers and mule UPI IDs helps warn others and block repeat targeting.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "step-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Phone · Unknown Number",
+        "title": "{{maskedPhone}} · Urgent Call",
+        "body": "Sounds like your {{relativeRole}} asking for ₹{{amount}} hospital money!",
+        "urgent": true
+      },
+      "props": {
+        "callerName": "Sounds like: {{relativeRole}}",
+        "callerNumber": "{{maskedPhone}}",
+        "agency": "Not in your contacts · Possible AI Voice Clone",
+        "channel": "Incoming Voice Call",
+        "badge": "Unknown Number",
+        "transcript": "Please help! I met with an accident and my phone screen cracked. Do not call my regular number, it is off. Send ₹{{amount}} urgently to the hospital attendant's UPI {{scammerVpa}} right now before they refuse admission!",
+        "actions": [
+          {
+            "intent": "HANG_UP_CALL",
+            "label": "Hang up & call {{relativeRole}}'s real saved number",
+            "variant": "primary"
+          },
+          {
+            "intent": "ANSWER_CALL",
+            "label": "Stay on call & promise to pay immediately",
+            "variant": "secondary"
+          },
+          {
+            "intent": "ENTER_UPI_PIN",
+            "label": "Send ₹{{amount}} immediately to {{scammerVpa}}",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "redFlagPhrases": [
+        "Do not call my regular number",
+        "hospital attendant's UPI {{scammerVpa}}",
+        "right now before they refuse admission"
+      ],
+      "validIntents": ["HANG_UP_CALL"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on the line keeps you inside the scammer's panic script. Hang up and dial your {{relativeRole}}'s real saved number directly.",
+        "ENTER_UPI_PIN": "You sent ₹{{amount}} to a scammer's mule UPI ({{scammerVpa}}) without independently calling your {{relativeRole}}'s real number!"
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "step-balance"
+      }
+    },
+    {
+      "stepId": "step-balance",
+      "screenType": "BALANCE_VIEW",
+      "notification": {
+        "app": "Callback Verified",
+        "title": "Your {{relativeRole}} answered & is safe!",
+        "body": "They never called from {{maskedPhone}} — it was an AI voice-clone scam.",
+        "urgent": false
+      },
+      "props": {
+        "bankName": "{{bankName}}",
+        "balance": "{{balance}}",
+        "note": "Callback confirmed your {{relativeRole}} is completely safe. ₹{{amount}} never left your {{bankName}} account.",
+        "transactions": [
+          {
+            "id": "vc-tx-1",
+            "title": "Blocked scam demand ({{scammerVpa}})",
+            "subtitle": "Prevented · UTR {{utrNumber}}",
+            "amount": "{{amount}}",
+            "direction": "credit"
+          },
+          {
+            "id": "vc-tx-2",
+            "title": "Grocery Mart UPI",
+            "subtitle": "Yesterday",
+            "amount": "640",
+            "direction": "debit"
+          }
+        ],
+        "actions": [
+          {
+            "intent": "CHECK_BALANCE",
+            "label": "Balance safe — block & report {{maskedPhone}}",
+            "variant": "primary"
+          },
+          {
+            "intent": "ACCEPT_COLLECT",
+            "label": "Pay ₹{{amount}} to {{scammerVpa}} anyway",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "validIntents": ["CHECK_BALANCE", "BLOCK_SENDER"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "Your callback already confirmed the emergency was fake — never send money to {{scammerVpa}}."
+      },
+      "nextStepMap": {
+        "CHECK_BALANCE": "step-report",
+        "BLOCK_SENDER": "step-report"
+      }
+    },
+    {
+      "stepId": "step-report",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Voice-Clone Scam · 1930",
+        "intro": "Block {{maskedPhone}} and report mule UPI handle {{scammerVpa}} to 1930 / cybercrime.gov.in.",
+        "details": [
+          { "label": "Unknown Caller", "value": "{{maskedPhone}}" },
+          { "label": "Impersonated Contact", "value": "{{relativeRole}} (AI voice clone)" },
+          { "label": "Mule UPI Handle", "value": "{{scammerVpa}}" },
+          { "label": "Requested Amount", "value": "₹{{amount}}" }
+        ],
+        "reasons": [
+          "AI Voice-Clone / Relative Impersonation",
+          "Fake Medical Emergency UPI Demand",
+          "Suspicious Mule UPI Handle"
+        ],
+        "submitLabel": "Block caller & file 1930 report",
+        "successText": "Reported {{maskedPhone}} & {{scammerVpa}} in 1930 sandbox."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ENTER_UPI_PIN", "SHARE_OTP"],
+  "critical": {
+    "title": "You paid a stranger's UPI during a voice-clone emergency call",
+    "explanation": "AI tools can clone a relative's voice from short public audio clips. Whenever someone calls from an unknown number begging for urgent money to a third-party UPI ID, hang up and call your relative back on their saved number (or verify with a family safe-word) before sending a single rupee.",
+    "reason": "You transferred money under emotional pressure from a cloned voice, so practise independent callback verification next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "vc-flag-nocall",
+      "textFragment": "Do not call my regular number",
+      "label": "Blocks independent verification",
+      "explanation": "Scammers always invent an excuse why you cannot call your relative's real saved number."
+    },
+    {
+      "id": "vc-flag-vpa",
+      "textFragment": "hospital attendant's UPI {{scammerVpa}}",
+      "label": "Third-party personal UPI",
+      "explanation": "Real hospitals issue official receipts and billing desks — they don't demand urgent transfers to a personal UPI handle."
+    },
+    {
+      "id": "vc-flag-panic",
+      "textFragment": "right now before they refuse admission",
+      "label": "Emotional panic trigger",
+      "explanation": "Extreme emotional urgency is engineered to bypass calm verification."
+    }
+  ],
+  "hints": {
+    "step-call": "Spot the red flags ('Do not call my regular number' and the stranger's UPI handle), then hang up so you can call your {{relativeRole}}'s real saved number.",
+    "step-balance": "Your callback confirmed your {{relativeRole}} is safe and your balance is untouched. Tap to proceed to blocking & reporting.",
+    "step-report": "Pick the AI Voice-Clone / Relative Impersonation reason and submit the 1930 report."
+  },
+  "quizId": "fraud-response"
+}

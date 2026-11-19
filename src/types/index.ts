@@ -18,7 +18,73 @@ export type Difficulty = "easy" | "medium" | "hard";
 
 export type TimerMode = "relaxed" | "panicked" | "none";
 
-export type TriggerType = "sms" | "chat" | "collect_request" | "loan_offer" | "lost_phone" | "balance_alert" | "digital_arrest";
+export type TriggerType =
+  | "sms"
+  | "chat"
+  | "collect_request"
+  | "loan_offer"
+  | "lost_phone"
+  | "balance_alert"
+  | "digital_arrest"
+  | "composable";
+
+/** Composable PracticeOS widget registry screen keys. */
+export type ScreenWidgetType =
+  | "UPI_HOME"
+  | "COLLECT_SHEET"
+  | "PIN_PAD"
+  | "BALANCE_VIEW"
+  | "TX_HISTORY"
+  | "SMS_INBOX"
+  | "INCOMING_CALL"
+  | "LOAN_OFFER"
+  | "LENDER_CHECK"
+  | "INTEREST_CALC"
+  | "COMPLAINT_FORM"
+  | "LEGACY_SCENE";
+
+export type DefensiveIntent =
+  | "DECLINE_REQUEST"
+  | "HANG_UP_CALL"
+  | "BLOCK_SENDER"
+  | "VERIFY_LENDER"
+  | "CHECK_HISTORY"
+  | "CHECK_BALANCE"
+  | "FILE_1930_REPORT"
+  | "FREEZE_UPI"
+  | "IGNORE_MESSAGE"
+  | "OPEN_UPI_APP";
+
+export type TrapIntent =
+  | "ACCEPT_COLLECT"
+  | "ENTER_UPI_PIN"
+  | "ANSWER_CALL"
+  | "CLICK_EXTERNAL_LINK"
+  | "SHARE_OTP"
+  | "INSTALL_APK"
+  | "APPROVE_LOAN";
+
+/** Standardized user actions emitted by PracticeOS sandbox widgets. */
+export type SemanticIntent = DefensiveIntent | TrapIntent;
+
+export interface ComposableNotification {
+  app: string;
+  title: string;
+  body: string;
+  urgent?: boolean;
+}
+
+/** Declarative, JSON-driven PracticeOS screen step. */
+export interface ComposableDrillStep {
+  stepId: string;
+  screenType: ScreenWidgetType;
+  notification?: ComposableNotification;
+  props: Record<string, unknown>;
+  redFlagPhrases?: string[];
+  validIntents: SemanticIntent[];
+  trapIntents: Partial<Record<SemanticIntent, string>>;
+  nextStepMap?: Partial<Record<SemanticIntent, string>>;
+}
 
 export type VariableSpec = Array<string | number> | { min: number; max: number; step: number };
 
@@ -74,6 +140,8 @@ export interface Drill {
   intro: string;
   variables: Record<string, VariableSpec>;
   trigger: { type: TriggerType; payloadTemplate: Record<string, string> };
+  /** Declarative screen flow rendered by the PracticeOS Widget Registry. */
+  composableSteps?: ComposableDrillStep[];
   steps: Step[];
   distractors: Action[];
   criticalActions: string[];
@@ -81,6 +149,9 @@ export interface Drill {
   redFlags: RedFlag[];
   hints: Record<string, string>;
   quizId: string;
+  /** True for user-generated or AI-compiled drills stored in localStorage. */
+  isCustom?: boolean;
+  createdAt?: number;
 }
 
 /* ---------------- Run + grading ---------------- */
@@ -93,6 +164,14 @@ export interface LoggedAction {
   tMs: number;
   kind: ActionKind;
   stepId?: string;
+  explanation?: string;
+}
+
+export interface TrapMistake {
+  stepId: string;
+  intent: SemanticIntent;
+  explanation: string;
+  tMs: number;
 }
 
 export interface RunState {
@@ -101,6 +180,7 @@ export interface RunState {
   wrongTaps: number;
   hintsUsed: string[];
   critical: boolean;
+  trapMistakes?: TrapMistake[];
 }
 
 export type StepStatus = "correct" | "wrong" | "out_of_order" | "missed" | "critical";
@@ -288,3 +368,15 @@ export interface SeedAnalytics {
 }
 
 export type Role = "learner" | "admin";
+
+export type {
+  AttackVector,
+  AttackVectorMeta,
+  DispatchStatus,
+  EmergencyState,
+  ForensicDisputePayload,
+  ForensicSnapshot,
+  OutboundTransaction,
+  RemediationAction,
+} from "@/features/emergency/types";
+

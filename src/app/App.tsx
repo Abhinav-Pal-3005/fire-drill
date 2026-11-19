@@ -9,18 +9,23 @@ function isCapacitorNative(): boolean {
   return Boolean(cap?.isNativePlatform?.());
 }
 
+const routerFuture = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+};
+
 /** Client-side app root. Loaded without SSR from src/app/[[...slug]]/ClientApp.tsx. */
 export default function App() {
   if (isCapacitorNative()) {
     return (
-      <HashRouter>
+      <HashRouter future={routerFuture}>
         <AppRoutes />
       </HashRouter>
     );
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={routerFuture}>
       <AppRoutes />
     </BrowserRouter>
   );

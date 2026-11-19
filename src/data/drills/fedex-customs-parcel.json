@@ -1,0 +1,276 @@
+{
+  "id": "fedex-customs-parcel",
+  "title": "Fake FedEx & Customs parcel call",
+  "tagline": "An automated IVR claims an illegal parcel is in your name and demands a verification transfer.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["phishing-indicators", "upi-safety"],
+  "difficulty": "hard",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["arrest-01", "arrest-02"],
+  "intro": "An automated courier IVR connects you to {{scammerName}} claiming to be from {{callerAgency}} ({{maskedPhone}}). They claim a seized parcel linked to your Aadhaar contains contraband and demand an urgent ₹{{amount}} 'RBI verification transfer' to {{scammerVpa}}.",
+  "variables": {
+    "amount": { "min": 15000, "max": 85000, "step": 2500 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "channel": "Automated IVR · Voice Call",
+      "sender": "{{scammerName}} · {{callerAgency}}",
+      "senderId": "{{maskedPhone}}",
+      "time": "{{time}}",
+      "body": "Press 1 for {{callerAgency}}. A parcel booked under your Aadhaar was seized with illegal items. Transfer ₹{{amount}} to verification account {{scammerVpa}} immediately to avoid arrest."
+    }
+  },
+  "steps": [
+    {
+      "id": "step-call",
+      "label": "Spot the IVR coercion & hang up immediately",
+      "actionKey": "HANG_UP_CALL",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Real Customs, FedEx, or police never demand 'verification transfers' over a phone call.",
+      "explanation": "Courier-to-customs call transfers are a scripted impersonation scam. Hanging up immediately breaks their psychological pressure.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "step-upi",
+      "label": "Refuse the ₹{{amount}} transfer & check UPI activity",
+      "actionKey": "CHECK_HISTORY",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Ignore any pending verification transfer prompt in {{app}} and inspect your own transaction history.",
+      "explanation": "Law enforcement and RBI never operate 'safe custody' or 'verification' UPI accounts. Inspecting your own ledger confirms nothing was sent.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "step-history",
+      "label": "Confirm no unauthorised debit & move to 1930",
+      "actionKey": "CHECK_BALANCE",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Review recent UTR entries ({{utrNumber}}) to verify your account is untouched, then proceed to report.",
+      "explanation": "Verifying your ledger ensures no accidental debit occurred before logging the official cybercrime report.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "step-report",
+      "label": "Report {{callerAgency}} impersonation to 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Submit the caller number {{maskedPhone}} and mule handle {{scammerVpa}} to 1930 / cybercrime.gov.in.",
+      "explanation": "Reporting mule UPI IDs and spoofed IVR numbers helps law enforcement freeze scam networks rapidly.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "step-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Phone · IVR Alert",
+        "title": "{{callerAgency}} · Urgent Notice",
+        "body": "Illegal parcel linked to your Aadhaar — stay on line.",
+        "urgent": true
+      },
+      "props": {
+        "callerName": "{{scammerName}}",
+        "callerNumber": "{{maskedPhone}}",
+        "agency": "{{callerAgency}}",
+        "channel": "Automated IVR -> Officer Call",
+        "badge": "Unverified VoIP Call",
+        "transcript": "This is {{scammerName}} from {{callerAgency}}. A parcel in your name was seized at customs. Do not tell anyone. Transfer ₹{{amount}} to RBI verification handle {{scammerVpa}} within 10 minutes or an arrest warrant executes today.",
+        "actions": [
+          {
+            "intent": "HANG_UP_CALL",
+            "label": "Hang up & refuse intimidation",
+            "variant": "primary"
+          },
+          {
+            "intent": "ANSWER_CALL",
+            "label": "Stay on call & confirm Aadhaar digits",
+            "variant": "secondary"
+          },
+          {
+            "intent": "SHARE_OTP",
+            "label": "Share Aadhaar / bank verification OTP",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "redFlagPhrases": [
+        "Do not tell anyone",
+        "RBI verification handle {{scammerVpa}}",
+        "arrest warrant executes today"
+      ],
+      "validIntents": ["HANG_UP_CALL"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on an IVR impersonation call gives scammers more time to isolate and panic you. Real agencies never threaten arrest over a phone call.",
+        "SHARE_OTP": "Sharing an Aadhaar or bank OTP with a stranger claiming to be Customs exposes your accounts to instant takeover."
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "step-upi"
+      }
+    },
+    {
+      "stepId": "step-upi",
+      "screenType": "UPI_HOME",
+      "notification": {
+        "app": "{{app}} Alert",
+        "title": "Do NOT transfer to {{scammerVpa}}",
+        "body": "Inspect your transaction history safely before reporting.",
+        "urgent": false
+      },
+      "props": {
+        "appName": "{{app}}",
+        "pendingTitle": "Caller demanded ₹{{amount}} to {{scammerVpa}}",
+        "pendingSubtitle": "Claimed: 'Refundable RBI verification deposit'",
+        "actions": [
+          {
+            "intent": "CHECK_HISTORY",
+            "label": "Check transaction history",
+            "variant": "primary"
+          },
+          {
+            "intent": "FREEZE_UPI",
+            "label": "Freeze & review outbound UPI",
+            "variant": "primary"
+          },
+          {
+            "intent": "ENTER_UPI_PIN",
+            "label": "Send ₹{{amount}} verification transfer",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "validIntents": ["CHECK_HISTORY", "FREEZE_UPI", "CHECK_BALANCE"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "There is no such thing as a 'refundable verification deposit' to Customs or RBI. Never approve transfers demanded on a call.",
+        "ENTER_UPI_PIN": "Sending ₹{{amount}} to {{scammerVpa}} transfers your money straight to a mule account — it is NEVER refunded!"
+      },
+      "nextStepMap": {
+        "CHECK_HISTORY": "step-history",
+        "FREEZE_UPI": "step-history",
+        "CHECK_BALANCE": "step-history"
+      }
+    },
+    {
+      "stepId": "step-history",
+      "screenType": "TX_HISTORY",
+      "props": {
+        "title": "Transaction History",
+        "subtitle": "{{app}} · {{bankName}}",
+        "infoBanner": "Good news: No transfer was sent to {{scammerVpa}}. Your ₹{{amount}} stayed completely safe.",
+        "transactions": [
+          {
+            "id": "fx-1",
+            "title": "City Pharmacy UPI",
+            "subtitle": "Yesterday · UTR {{utrNumber}}",
+            "amount": "420",
+            "direction": "debit"
+          },
+          {
+            "id": "fx-2",
+            "title": "Salary / Allowance Credit",
+            "subtitle": "3 days ago",
+            "amount": "18,000",
+            "direction": "credit"
+          },
+          {
+            "id": "fx-3",
+            "title": "Mobile Postpaid AutoPay",
+            "subtitle": "5 days ago",
+            "amount": "599",
+            "direction": "debit"
+          }
+        ],
+        "actions": [
+          {
+            "intent": "CHECK_BALANCE",
+            "label": "Ledger verified — file 1930 impersonation report",
+            "variant": "primary"
+          },
+          {
+            "intent": "ENTER_UPI_PIN",
+            "label": "Send ₹{{amount}} to clear parcel notice anyway",
+            "variant": "secondary"
+          }
+        ]
+      },
+      "validIntents": ["CHECK_BALANCE", "FILE_1930_REPORT"],
+      "trapIntents": {
+        "ENTER_UPI_PIN": "Never send money to 'clear' a fake customs notice. Government agencies never collect fines via personal UPI handles."
+      },
+      "nextStepMap": {
+        "CHECK_BALANCE": "step-report",
+        "FILE_1930_REPORT": "step-report"
+      }
+    },
+    {
+      "stepId": "step-report",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Impersonation · 1930",
+        "intro": "File a report with 1930 / cybercrime.gov.in documenting the fake {{callerAgency}} IVR call and mule handle {{scammerVpa}}.",
+        "details": [
+          { "label": "Impersonated Agency", "value": "{{callerAgency}}" },
+          { "label": "Caller Number", "value": "{{maskedPhone}}" },
+          { "label": "Demanded Mule Handle", "value": "{{scammerVpa}}" },
+          { "label": "Demanded Amount", "value": "₹{{amount}}" }
+        ],
+        "reasons": [
+          "Fake Courier / Customs Parcel Scam",
+          "Government / Police Impersonation Call",
+          "Fraudulent 'Verification Transfer' Demand"
+        ],
+        "submitLabel": "Submit 1930 cybercrime report",
+        "successText": "Impersonation attempt logged on 1930 sandbox & caller blocked."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ENTER_UPI_PIN", "SHARE_OTP"],
+  "critical": {
+    "title": "You transferred money or shared OTP with a fake customs caller",
+    "explanation": "Courier and customs parcel scams use fear of arrest and fake 'RBI verification transfers' to empty savings accounts. No court, police force, or customs desk ever asks you to transfer money to verify your innocence. Hang up and call 1930 immediately.",
+    "reason": "You complied with a fake customs verification demand, so rehearse shutting down impersonation calls next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "fx-flag-secret",
+      "textFragment": "Do not tell anyone",
+      "label": "Isolation tactic",
+      "explanation": "Scammers forbid you from speaking to family so nobody punctures the lie."
+    },
+    {
+      "id": "fx-flag-rbi",
+      "textFragment": "RBI verification handle {{scammerVpa}}",
+      "label": "Fake RBI account",
+      "explanation": "RBI never collects 'verification transfers' via UPI handles."
+    },
+    {
+      "id": "fx-flag-warrant",
+      "textFragment": "arrest warrant executes today",
+      "label": "Coercive arrest threat",
+      "explanation": "Threatening instant arrest over a voice call is a hallmark of impersonation fraud."
+    }
+  ],
+  "hints": {
+    "step-call": "Tap the isolation and fake RBI red flags in the transcript, then tap Hang Up immediately.",
+    "step-upi": "Do NOT transfer ₹{{amount}} to {{scammerVpa}}. Open Transaction History to verify your account is untouched.",
+    "step-history": "Confirm the clean transaction ledger and advance to the 1930 complaint form.",
+    "step-report": "Select the Fake Courier / Customs Parcel Scam reason and submit your report."
+  },
+  "quizId": "digital-arrest"
+}
