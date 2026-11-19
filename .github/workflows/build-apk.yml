@@ -41,18 +41,58 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK 35 & Build Tools
+      - name: Configure Android SDK & Licenses
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          set -euo pipefail
+          SDK_DIR="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ ! -d "$SDK_DIR" ]; then
+            sudo mkdir -p "$SDK_DIR/cmdline-tools" 2>/dev/null || mkdir -p "$SDK_DIR/cmdline-tools"
+            sudo chown -R "$(id -u):$(id -g)" "$SDK_DIR" 2>/dev/null || true
+            curl -fsSL -o /tmp/cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
+            unzip -q /tmp/cmdline-tools.zip -d /tmp/cmdline-tools-unpack
+            mv /tmp/cmdline-tools-unpack/cmdline-tools "$SDK_DIR/cmdline-tools/latest"
+            rm -rf /tmp/cmdline-tools.zip /tmp/cmdline-tools-unpack
+          elif [ ! -w "$SDK_DIR" ] && command -v sudo >/dev/null 2>&1; then
+            sudo chown -R "$(id -u):$(id -g)" "$SDK_DIR"
+          fi
+
+          echo "ANDROID_HOME=$SDK_DIR" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_DIR" >> "$GITHUB_ENV"
+
+          SDKMANAGER=""
+          if command -v sdkmanager >/dev/null 2>&1; then
+            SDKMANAGER="$(command -v sdkmanager)"
+          else
+            SDKMANAGER="$(find "$SDK_DIR/cmdline-tools" -name sdkmanager -type f 2>/dev/null | sort -V | tail -n 1 || true)"
+          fi
+
+          if [ -z "$SDKMANAGER" ]; then
+            mkdir -p "$SDK_DIR/cmdline-tools"
+            curl -fsSL -o /tmp/cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
+            unzip -q /tmp/cmdline-tools.zip -d /tmp/cmdline-tools-unpack
+            mv /tmp/cmdline-tools-unpack/cmdline-tools "$SDK_DIR/cmdline-tools/latest"
+            rm -rf /tmp/cmdline-tools.zip /tmp/cmdline-tools-unpack
+            SDKMANAGER="$SDK_DIR/cmdline-tools/latest/bin/sdkmanager"
+          fi
+
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+          echo "$SDK_DIR/platform-tools" >> "$GITHUB_PATH"
+
+          # Accept SDK licenses (disable pipefail briefly so yes SIGPIPE does not fail)
+          set +o pipefail
+          yes | "$SDKMANAGER" --sdk_root="$SDK_DIR" --licenses > /dev/null 2>&1 || true
+          set -o pipefail
+
+          mkdir -p "$SDK_DIR/licenses"
+          printf "\n24333f8a63b6825ea9c5514f83c2829b004d1fee\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n" > "$SDK_DIR/licenses/android-sdk-license"
+          printf "\n84831b9409646a918e30573bab4c9c91346d8abd\n" > "$SDK_DIR/licenses/android-sdk-preview-license"
+
+          "$SDKMANAGER" --sdk_root="$SDK_DIR" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Install app dependencies & Capacitor
         run: |
           npm install --legacy-peer-deps --no-audit --no-fund
-          npm install --no-save --legacy-peer-deps --no-audit --no-fund @capacitor/core@^7.0.0 @capacitor/cli@^7.0.0 @capacitor/android@^7.0.0
+          npm install --legacy-peer-deps --no-audit --no-fund @capacitor/core@^7.0.0 @capacitor/cli@^7.0.0 @capacitor/android@^7.0.0
 
       - name: Build Next.js static export
         run: |
@@ -75,10 +115,12 @@ jobs:
           fi
           npx cap sync android
 
-      - name: Configure Gradle version & ensure _next assets are packaged
+      - name: Configure Gradle SDK, version & asset packaging
         env:
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
+          set -euo pipefail
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
           node -e '
             const fs = require("fs");
             const path = "android/app/build.gradle";
@@ -92,7 +134,7 @@ jobs:
                 `ignoreAssetsPattern "${safePattern}"`);
             } else {
               gradle = gradle.replace(/android\s*\{/,
-                `android {\n    androidResources {\n        ignoreAssetsPattern "${safePattern}"\n    }`);
+                `android {\n    aaptOptions {\n        ignoreAssetsPattern "${safePattern}"\n    }`);
             }
             fs.writeFileSync(path, gradle);
           '
@@ -113,7 +155,7 @@ jobs:
 
           if [ -n "${KEYSTORE_B64:-}" ] && [ -n "${KEYSTORE_PASS:-}" ] && [ -n "${KEY_ALIAS:-}" ] && [ -n "${KEY_PASS:-}" ] && { [ "$REQUESTED_TYPE" = "release" ] || [[ "${GITHUB_REF:-}" == refs/tags/v* ]]; }; then
             echo "$KEYSTORE_B64" | base64 --decode > app/release.keystore
-            ./gradlew assembleRelease \
+            ./gradlew assembleRelease --no-daemon \
               -Pandroid.injected.signing.store.file="$(pwd)/app/release.keystore" \
               -Pandroid.injected.signing.store.password="$KEYSTORE_PASS" \
               -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
@@ -121,18 +163,19 @@ jobs:
             RAW_APK="app/build/outputs/apk/release/app-release.apk"
             VARIANT="release"
           else
-            ./gradlew assembleDebug
+            ./gradlew assembleDebug --no-daemon
             RAW_APK="app/build/outputs/apk/debug/app-debug.apk"
             VARIANT="debug"
           fi
 
-          # Verify Next.js static bundle is inside the APK
-          unzip -l "$RAW_APK" | grep -q "assets/public/index.html"
-          unzip -l "$RAW_APK" | grep -q "assets/public/_next/static/"
+          # Verify Next.js static bundle is inside the APK (avoid pipe SIGPIPE)
+          unzip -Z1 "$RAW_APK" > /tmp/apk-files.txt
+          grep -q "assets/public/index.html" /tmp/apk-files.txt
+          grep -q "assets/public/_next/static/" /tmp/apk-files.txt
 
           OUT_APK="../dist-apk/Money-Fire-Drill-${VARIANT}.apk"
           cp "$RAW_APK" "$OUT_APK"
-          rm -f app/release.keystore
+          rm -f app/release.keystore /tmp/apk-files.txt
 
           echo "apk_path=dist-apk/Money-Fire-Drill-${VARIANT}.apk" >> "$GITHUB_OUTPUT"
           echo "apk_name=Money-Fire-Drill-${VARIANT}.apk" >> "$GITHUB_OUTPUT"
