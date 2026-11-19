@@ -1,0 +1,43 @@
+{
+  "id": "interest-credit",
+  "concept": "interest-credit",
+  "title": "Interest and credit quiz",
+  "questions": [
+    {
+      "id": "ic-1",
+      "prompt": "A lender promises 'no documents, instant money'. What is the best reaction?",
+      "options": [
+        { "text": "Great, accept quickly", "explanationWrong": "Speed and no checks are warning signs, not benefits." },
+        { "text": "Treat it as a red flag and check the lender first", "explanationWrong": "" },
+        { "text": "Share your ID to speed things up", "explanationWrong": "Never share ID with a lender you have not verified." },
+        { "text": "Allow contact access to prove you are real", "explanationWrong": "Contact access can be misused. A loan does not need it." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Real lenders check who you are. 'No documents' is a red flag, so check the lender before anything else."
+    },
+    {
+      "id": "ic-2",
+      "prompt": "Why use an interest calculator before borrowing?",
+      "options": [
+        { "text": "To see only the monthly payment", "explanationWrong": "The monthly payment can hide the total cost." },
+        { "text": "To see the total you will repay", "explanationWrong": "" },
+        { "text": "To make the loan cheaper", "explanationWrong": "A calculator does not change the loan. It shows the cost clearly." },
+        { "text": "It is not useful", "explanationWrong": "It is one of the best ways to understand a loan." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "The total repayment is the number that matters. A calculator makes the real cost visible."
+    },
+    {
+      "id": "ic-3",
+      "prompt": "Who regulates lenders and NBFCs?",
+      "options": [
+        { "text": "The lender itself", "explanationWrong": "A lender cannot regulate itself." },
+        { "text": "A popular app store", "explanationWrong": "App stores are not financial regulators." },
+        { "text": "RBI", "explanationWrong": "" },
+        { "text": "Anyone who sends an SMS", "explanationWrong": "A message tells you nothing about who is regulated." }
+      ],
+      "correctIndex": 2,
+      "explanationCorrect": "RBI regulates lenders and NBFCs. Check a lender through official channels."
+    }
+  ]
+}

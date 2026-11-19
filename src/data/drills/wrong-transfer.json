@@ -1,0 +1,141 @@
+{
+  "id": "wrong-transfer",
+  "title": "Wrong-person transfer",
+  "tagline": "Money went to a stranger. Follow the right order to raise a dispute.",
+  "concept": "reversals",
+  "relatedConcepts": ["phishing-indicators"],
+  "difficulty": "medium",
+  "timeLimitSec": 150,
+  "linkedLibraryIds": ["refund-01", "refund-02", "refund-03"],
+  "intro": "You paid ₹{{amount}} using {{app}} but typed one character wrong in the UPI ID. The money went to {{name}}, a stranger, and {{name}} has already messaged you. Stay calm and follow the right order.",
+  "variables": {
+    "name": ["Sanjay", "Priya", "Imran", "Divya", "Karan"],
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce"],
+    "amount": { "min": 1500, "max": 48000, "step": 500 }
+  },
+  "trigger": {
+    "type": "balance_alert",
+    "payloadTemplate": {
+      "alert": "₹{{amount}} sent to {{upiId}}",
+      "sender": "{{name}} · Unknown",
+      "senderId": "{{upiId}}",
+      "time": "{{time}}",
+      "txnId": "{{txnId}}",
+      "body": "Hi, you sent me money by mistake. Pay ₹{{amount}} more as a 'release fee' and I will send everything back. Do it now, and don't tell your bank."
+    }
+  },
+  "steps": [
+    {
+      "id": "skip-pleading",
+      "label": "Do not contact or plead with the stranger",
+      "actionKey": "skip_pleading",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Avoid negotiating with the stranger, especially when they demand an upfront fee or secrecy.",
+      "explanation": "Do not send pleading or return requests to unknown people. It does not help, and it can lead to more pressure or scams.",
+      "mistakeConcept": "reversals"
+    },
+    {
+      "id": "note-txn",
+      "label": "Note the transaction ID and take a screenshot",
+      "actionKey": "note_txn_id",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Preserve the transaction proof first—official complaints require exact reference details.",
+      "explanation": "The transaction ID and a screenshot are the proof every complaint needs. Save them before you do anything else.",
+      "mistakeConcept": "reversals"
+    },
+    {
+      "id": "raise-complaint",
+      "label": "Raise a complaint in {{app}}",
+      "actionKey": "raise_complaint",
+      "order": 3,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Start the official dispute inside the payment app used for the transfer.",
+      "explanation": "Use the complaint option in the payment app as soon as possible. It starts the official process.",
+      "mistakeConcept": "reversals"
+    },
+    {
+      "id": "contact-bank",
+      "label": "Contact {{bank}}",
+      "actionKey": "contact_bank",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Notify your bank's official helpline so they can log a wrong-credit reversal request.",
+      "explanation": "Your bank can see your side of the payment and can log the issue. Use the official helpline.",
+      "mistakeConcept": "reversals"
+    },
+    {
+      "id": "escalate-npci",
+      "label": "Escalate through the NPCI dispute process if unresolved",
+      "actionKey": "escalate_npci",
+      "order": 5,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Know where to escalate next if the app and bank do not resolve the dispute.",
+      "explanation": "If the app and bank do not resolve it, NPCI has a dispute redressal process. Check the current steps on the official channels.",
+      "mistakeConcept": "reversals"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-plead",
+      "actionKey": "send_pleading",
+      "label": "Message {{name}} and ask for the money back",
+      "screen": "receipt",
+      "mistakeConcept": "reversals",
+      "explanation": "Contacting an unknown person is not a safe way to reverse a payment. Use the official complaint routes."
+    },
+    {
+      "id": "d-fee",
+      "actionKey": "pay_release_fee",
+      "label": "Pay the 'release fee' to get the money back",
+      "screen": "receipt",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Paying more to get money back is a classic trick. You would just lose more.",
+      "opensPin": "pin"
+    },
+    {
+      "id": "d-delete",
+      "actionKey": "delete_chat",
+      "label": "Delete the chat and the payment alert",
+      "screen": "receipt",
+      "mistakeConcept": "reversals",
+      "explanation": "Deleting evidence makes a complaint harder. Keep messages and the transaction ID."
+    }
+  ],
+  "criticalActions": ["enter_pin_release_fee"],
+  "critical": {
+    "title": "You entered your UPI PIN to pay a 'release fee'",
+    "explanation": "Paying more money to get money back is a common trick. A stranger who asks for a fee or secrecy is a red flag. Raise a complaint in your payment app and contact your bank's 24×7 helpline as soon as possible.",
+    "reason": "You paid a 'release fee' to a stranger last time, so rehearse the reversal steps next.",
+    "concept": "reversals"
+  },
+  "redFlags": [
+    {
+      "id": "f-fee",
+      "textFragment": "Pay ₹{{amount}} more as a 'release fee'",
+      "label": "Pay more to get paid back",
+      "explanation": "Real refunds never need you to pay extra first."
+    },
+    {
+      "id": "f-secret",
+      "textFragment": "don't tell your bank",
+      "label": "Secrecy",
+      "explanation": "Anyone who asks you to hide something from your bank wants to avoid being caught."
+    }
+  ],
+  "hints": {
+    "skip-pleading": "Engaging with a stranger who asks for a 'release fee' or secrecy only invites double loss—never pay extra to recover money. Choose 'Not now. Do not contact them.' in the action list (you can also tap red flags in the message).",
+    "note-txn": "Banks and apps cannot trace or reverse an unintended UPI transfer without its exact Transaction ID and timestamp. Tap 'Save the transaction ID and a screenshot' before filing any report.",
+    "raise-complaint": "Filing inside the payment app logs an official ticket against the transfer ID while the trail is fresh. Tap 'Raise a complaint in {{app}}' and submit the form.",
+    "contact-bank": "Because funds already settled in the recipient's bank, your bank must formally request a reversal from theirs. Tap 'Contact {{bank}}' and call the 24×7 official helpline.",
+    "escalate-npci": "When app support and your bank do not close a UPI dispute within official timelines, NPCI provides the formal escalation path. Open 'Dispute help' and select the NPCI escalation option."
+  },
+  "quizId": "reversals"
+}

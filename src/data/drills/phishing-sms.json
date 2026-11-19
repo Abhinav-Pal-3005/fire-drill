@@ -1,0 +1,137 @@
+{
+  "id": "phishing-sms",
+  "title": "Fake KYC SMS link",
+  "tagline": "A text warns your bank account will be blocked today unless you tap a KYC link.",
+  "concept": "phishing-indicators",
+  "relatedConcepts": ["upi-safety", "fraud-response"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["phish-01", "phish-02", "phish-03"],
+  "intro": "An SMS arrives claiming your {{bank}} account will be frozen unless you update your PAN and KYC through a link. Stay calm and handle it safely without falling for the link.",
+  "variables": {
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce"],
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"]
+  },
+  "trigger": {
+    "type": "sms",
+    "payloadTemplate": {
+      "sender": "AX-BNKALRT · Unknown",
+      "time": "{{time}}",
+      "channel": "SMS Inbox",
+      "body": "URGENT: Your {{bank}} account will be BLOCKED today! Complete PAN/KYC update at bit.ly/kyc-9x2 or call +91-98XXX-0142 immediately. Enter OTP to avoid suspension."
+    }
+  },
+  "steps": [
+    {
+      "id": "spot-flags",
+      "label": "Spot the red flags in the KYC SMS",
+      "actionKey": "spot_red_flags",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Inspect the SMS for urgency threats, shortened links, and OTP requests before tapping anything.",
+      "explanation": "Scam texts threaten immediate account blocks, hide fake pages behind short links, and ask for OTPs or personal numbers.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "open-bank-app",
+      "label": "Open {{bank}}'s official app yourself",
+      "actionKey": "open_official_app",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Always open your bank's official app directly instead of tapping any link inside an SMS.",
+      "explanation": "Going directly to the official app ensures you never land on a lookalike phishing page built to steal credentials.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "check-kyc",
+      "label": "Check your real KYC status inside the bank app",
+      "actionKey": "check_kyc_status",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Verify inside the official app whether any real KYC update is actually pending.",
+      "explanation": "Banks display genuine KYC notices inside your logged-in app or branch—never via an unknown short link.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "report-phishing",
+      "label": "Block the sender and report the phishing link",
+      "actionKey": "block_report_sms",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Report the phishing message and block the sender so it cannot target others.",
+      "explanation": "Blocking stops repeat texts, and reporting phishing links to your bank or 1930 / cybercrime.gov.in helps take fake pages down.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-link",
+      "actionKey": "tap_kyc_link",
+      "label": "Open bit.ly/kyc-9x2 to update KYC",
+      "screen": "messages",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Shortened links in unsolicited SMS messages often open lookalike bank sites that capture your customer ID, password, and OTP.",
+      "opensPin": "otp"
+    },
+    {
+      "id": "d-call",
+      "actionKey": "call_sms_helpline",
+      "label": "Call +91-98XXX-0142 from the SMS",
+      "screen": "messages",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Phone numbers inside an unexpected alert belong to scammers pretending to be bank staff. Always use the number on your card or official app."
+    },
+    {
+      "id": "d-reply",
+      "actionKey": "reply_sms",
+      "label": "Reply to ask why the account is blocked",
+      "screen": "messages",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Replying confirms your number is active and invites follow-up scam calls."
+    }
+  ],
+  "criticalActions": ["enter_otp_kyc"],
+  "critical": {
+    "title": "You entered an OTP on a fake KYC link",
+    "explanation": "Fake KYC websites imitate your bank's colours and ask for credentials plus an OTP to approve unauthorised transfers. Never tap KYC links or enter OTPs from an SMS. Call your bank's 24×7 helpline and report on 1930 or cybercrime.gov.in straight away.",
+    "reason": "You entered an OTP from a KYC link last time, so rehearse checking official channels next.",
+    "concept": "phishing-indicators"
+  },
+  "redFlags": [
+    {
+      "id": "f-block",
+      "textFragment": "account will be BLOCKED today!",
+      "label": "Account-block threat",
+      "explanation": "Banks do not threaten same-day account blocks through random short-link texts."
+    },
+    {
+      "id": "f-link",
+      "textFragment": "bit.ly/kyc-9x2",
+      "label": "Shortened link",
+      "explanation": "Short links hide the real web address so you cannot verify it is your bank."
+    },
+    {
+      "id": "f-call",
+      "textFragment": "call +91-98XXX-0142",
+      "label": "Personal mobile number",
+      "explanation": "Legitimate bank notices do not route KYC support to random mobile numbers."
+    },
+    {
+      "id": "f-otp",
+      "textFragment": "Enter OTP to avoid suspension.",
+      "label": "OTP demand",
+      "explanation": "An OTP authorises logins or payments—never enter one on a link from an SMS."
+    }
+  ],
+  "hints": {
+    "spot-flags": "Phishing texts combine fear ('blocked today') with a hidden short link, a private mobile number, and an OTP request. Tap at least 3 suspicious phrases directly in the SMS bubble.",
+    "open-bank-app": "Never verify a bank warning by tapping links or numbers inside the message itself. Open {{bank}}'s official app directly from the bottom navigation.",
+    "check-kyc": "Once inside {{bank}}'s real app, check your profile and account status panel to confirm whether any KYC update is actually pending.",
+    "report-phishing": "After confirming your account is safe, open the Report tab to block the SMS sender and flag the phishing URL for fraud takedown."
+  },
+  "quizId": "phishing-indicators"
+}

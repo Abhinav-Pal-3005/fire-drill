@@ -1,0 +1,140 @@
+{
+  "id": "lost-phone",
+  "title": "Lost phone",
+  "tagline": "Your phone is gone. Block, secure and report, in the right order.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["phishing-indicators"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["phone-01", "phone-02", "phone-03"],
+  "intro": "You have just realised your phone is missing. It has your {{app}} app, your SIM and your email signed in. You are on a friend's phone. Every minute counts, so what do you do, and in what order?",
+  "variables": {
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce"],
+    "telco": ["Zephyr Mobile", "Nimbus Telecom", "Orbit Cellular"],
+    "name": ["Rohit", "Meera", "Karan", "Ananya"]
+  },
+  "trigger": {
+    "type": "lost_phone",
+    "payloadTemplate": {
+      "sender": "Unknown number",
+      "time": "{{time}}",
+      "body": "Hello, we found your phone! To get it back, tap qk.to/pf2 and verify with your UPI PIN. Reply within minutes or we will sell it."
+    }
+  },
+  "steps": [
+    {
+      "id": "call-bank",
+      "label": "Call your bank's 24×7 helpline to block UPI and cards",
+      "actionKey": "call_bank_helpline",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Freeze payment channels first—stopping money movement is the most urgent step.",
+      "explanation": "Your money is the biggest risk, so block UPI and cards first. Banks have 24×7 helplines for exactly this.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "block-sim",
+      "label": "Ask {{telco}} to block your SIM",
+      "actionKey": "block_sim",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Cut off SMS OTPs and phone-number resets by blocking your mobile SIM next.",
+      "explanation": "Blocking the SIM stops calls and one-time codes from reaching whoever has your phone.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "secure-accounts",
+      "label": "Secure your email and cloud accounts and sign out sessions",
+      "actionKey": "secure_accounts",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Lock down email and cloud backups so password-reset links cannot be intercepted.",
+      "explanation": "From another device, change passwords and sign out the lost phone. Email is often the key to resetting other accounts.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "report-cybercrime",
+      "label": "Report it on 1930 or cybercrime.gov.in",
+      "actionKey": "report_cybercrime",
+      "order": 4,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "File an official cybercrime report to create a formal record for recovery or misuse.",
+      "explanation": "The national cybercrime helpline is 1930 and the portal is cybercrime.gov.in. A report creates a record that can help later.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-call-sms",
+      "actionKey": "call_sms_number",
+      "label": "Call the number from the 'found your phone' message",
+      "screen": "calls",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "That message came from an unknown number and pushes you to act. Never rely on contacts that appear in a suspicious message."
+    },
+    {
+      "id": "d-wait",
+      "actionKey": "wait_and_see",
+      "label": "Wait a day to see if it turns up",
+      "screen": "accounts",
+      "mistakeConcept": "fraud-response",
+      "explanation": "Waiting gives a thief more time. Acting quickly limits the damage."
+    },
+    {
+      "id": "d-post",
+      "actionKey": "post_on_social",
+      "label": "Post your number and details on social media",
+      "screen": "accounts",
+      "mistakeConcept": "fraud-response",
+      "explanation": "Sharing personal details publicly makes you a target for more scams."
+    },
+    {
+      "id": "d-link",
+      "actionKey": "open_found_link",
+      "label": "Open the link in the message",
+      "screen": "messages",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Links in unexpected messages can lead to fake pages that ask for secrets.",
+      "opensPin": "pin"
+    }
+  ],
+  "criticalActions": ["enter_pin_found_link"],
+  "critical": {
+    "title": "You entered your UPI PIN on a 'found phone' page",
+    "explanation": "A real finder never needs your PIN. Pages like this exist to steal it. In real life, contact your bank's 24×7 helpline straight away, then report on 1930 or cybercrime.gov.in.",
+    "reason": "You entered a PIN on a 'found your phone' link last time, so rehearse the lost-phone steps next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "f-pin",
+      "textFragment": "verify with your UPI PIN",
+      "label": "Asks for your PIN",
+      "explanation": "No genuine finder needs your UPI PIN."
+    },
+    {
+      "id": "f-short",
+      "textFragment": "qk.to/pf2",
+      "label": "Shortened link",
+      "explanation": "Short links hide where they lead. Do not tap links from unknown senders."
+    },
+    {
+      "id": "f-threat",
+      "textFragment": "Reply within minutes or we will sell it.",
+      "label": "Threat and urgency",
+      "explanation": "Threats and deadlines are used to rush you."
+    }
+  ],
+  "hints": {
+    "call-bank": "Ignore any 'found your phone' message asking for a PIN—your bank balance is at immediate risk. Open the Calls tab and dial {{bank}}'s 24×7 helpline first to freeze UPI and cards.",
+    "block-sim": "Whoever holds your SIM can still receive bank OTPs and password-reset SMS codes on another handset. Stay in the Calls tab and call {{telco}} customer care to block the SIM.",
+    "secure-accounts": "Even with the SIM blocked, logged-in email and cloud apps on the lost phone can reset passwords or expose documents. Open the Accounts tab, check at least two accounts, and tap Change passwords and sign out sessions.",
+    "report-cybercrime": "Once money, SIM, and accounts are locked, log an official incident so law enforcement and banks have a timestamped record. Open the Report tab and choose 1930 or cybercrime.gov.in."
+  },
+  "quizId": "fraud-response"
+}

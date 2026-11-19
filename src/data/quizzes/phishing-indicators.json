@@ -1,0 +1,43 @@
+{
+  "id": "phishing-indicators",
+  "concept": "phishing-indicators",
+  "title": "Phishing indicators quiz",
+  "questions": [
+    {
+      "id": "ph-1",
+      "prompt": "Which combination is a classic phishing sign?",
+      "options": [
+        { "text": "Urgent pressure plus a shortened link", "explanationWrong": "" },
+        { "text": "A message that uses your correct first name only", "explanationWrong": "A name alone proves nothing. Scammers can find names easily." },
+        { "text": "A message with no link at all", "explanationWrong": "Scams can also ask you to call or reply, so no link is not proof of safety." },
+        { "text": "A message sent during the day", "explanationWrong": "Scammers send messages at any time." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Pressure plus a link that hides its destination is a classic warning. Slow down and check."
+    },
+    {
+      "id": "ph-2",
+      "prompt": "A message asks for your OTP 'to verify'. What do you do?",
+      "options": [
+        { "text": "Share it, since it is only a few digits", "explanationWrong": "An OTP can approve a payment or login. Never share it." },
+        { "text": "Share it only if the message looks official", "explanationWrong": "Official looks are easy to copy." },
+        { "text": "Never share it, and contact the organisation through its official app or helpline", "explanationWrong": "" },
+        { "text": "Reply asking why they need it", "explanationWrong": "Replying tells the scammer you are active. Do not engage." }
+      ],
+      "correctIndex": 2,
+      "explanationCorrect": "Never share an OTP. Check with the organisation using its official app or helpline."
+    },
+    {
+      "id": "ph-3",
+      "prompt": "A link in an SMS looks odd. What is the best action?",
+      "options": [
+        { "text": "Tap it to see where it goes", "explanationWrong": "Tapping can open a fake page. Avoid it." },
+        { "text": "Forward it to friends", "explanationWrong": "That spreads the risk. Do not forward suspicious links." },
+        { "text": "Open it on a different phone", "explanationWrong": "The link is still unsafe on any device." },
+        { "text": "Do not tap it. Open the official app yourself", "explanationWrong": "" }
+      ],
+      "correctIndex": 3,
+      "explanationCorrect": "Skip the link. Open the official app yourself and check there."
+    }
+  ]
+}

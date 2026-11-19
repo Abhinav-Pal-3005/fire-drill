@@ -1,0 +1,1897 @@
+<!-- Scam Case Library -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#002113", "secondary": "#006c48", "inverse-on-surface": "#f2f1ee", "surface-container": "#efeeeb", "on-surface": "#1a1c1a", "tertiary-fixed-dim": "#ffb4a1", "on-surface-variant": "#414844", "on-primary-fixed": "#002114", "surface-bright": "#faf9f6", "surface": "#faf9f6", "secondary-container": "#92f7c3", "surface-variant": "#e3e2e0", "primary-fixed": "#c1ecd4", "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "secondary-fixed": "#92f7c3", "primary": "#012d1d", "tertiary-container": "#6d230f", "error-container": "#ffdad6", "tertiary-fixed": "#ffdbd2", "on-background": "#1a1c1a", "error": "#ba1a1a", "inverse-primary": "#a5d0b9", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-low": "#f4f3f1", "outline-variant": "#c1c8c2", "surface-dim": "#dbdad7", "on-primary": "#ffffff", "surface-container-high": "#e9e8e5", "tertiary": "#4f0e00", "primary-container": "#1b4332", "surface-container-highest": "#e3e2e0", "secondary-fixed-dim": "#75daa8", "on-tertiary-fixed": "#3c0800", "background": "#faf9f6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#005235", "inverse-surface": "#2f312f", "outline": "#717973", "on-error-container": "#93000a", "on-primary-container": "#86af99", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#274e3d", "on-tertiary-container": "#f3896d", "surface-tint": "#3f6653", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><div class="flex flex-col min-w-0"><span class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Scam Library</span><span class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Money Fire Drill</span></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-highest"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-surface"><div class="flex flex-col w-full pb-8">
+<!-- Disclaimer Pill -->
+<div class="flex items-center justify-center my-space-xs">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps tracking-widest">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+      EDUCATION SANDBOX • NO REAL MONEY
+    </span>
+</div>
+<!-- Header Area -->
+<div class="flex flex-col gap-1 mt-space-sm mb-space-md">
+<div class="flex items-center justify-between">
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-primary tracking-tight">Verified Scam Library</h1>
+<span class="material-symbols-outlined text-secondary text-[26px]">verified_user</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Real fraud cases, verified recovery steps &amp; matching drills.</p>
+</div>
+<!-- Search Bar Component -->
+<div class="relative w-full mb-space-md">
+<div class="relative flex items-center w-full h-12 rounded-full bg-surface-container shadow-sm px-4">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-2">search</span>
+<input class="w-full bg-transparent border-none outline-none font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60" id="scamSearchInput" placeholder="Search case studies, moduses, keywords..." type="text"/>
+<button class="flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Filter Pills Horizontal Scroll -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-space-md">
+<button class="filter-pill active whitespace-nowrap px-4 py-2 rounded-full font-body-bold text-caption bg-primary-container text-surface shadow-sm transition-all" data-category="all">
+      All Scams
+    </button>
+<button class="filter-pill whitespace-nowrap px-4 py-2 rounded-full font-body-bold text-caption bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all" data-category="upi">
+      UPI Collect
+    </button>
+<button class="filter-pill whitespace-nowrap px-4 py-2 rounded-full font-body-bold text-caption bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all" data-category="customer-care">
+      Fake Customer Care
+    </button>
+<button class="filter-pill whitespace-nowrap px-4 py-2 rounded-full font-body-bold text-caption bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all" data-category="digital-arrest">
+      Digital Arrest
+    </button>
+<button class="filter-pill whitespace-nowrap px-4 py-2 rounded-full font-body-bold text-caption bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all" data-category="loan">
+      Loan Apps
+    </button>
+</div>
+<!-- Official Data Source Banner -->
+<div class="flex items-start gap-3 p-space-md rounded-2xl bg-surface-container-low shadow-sm mb-space-lg">
+<div class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container mt-0.5">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">policy</span>
+</div>
+<div class="flex flex-col gap-0.5 min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-body-bold text-caption text-secondary">OFFICIAL COMPLIANCE REPOSITORY</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps font-semibold">
+          1930 Cybercell
+        </span>
+</div>
+<p class="font-body-md text-caption text-on-surface-variant leading-relaxed">
+        Cross-verified against RBI Ombudsman guidelines, NPCI dispute resolution frameworks, and national cybersecurity logs.
+      </p>
+</div>
+</div>
+<!-- Surge Threat Alert Carousel / Banner -->
+<div class="relative overflow-hidden rounded-3xl bg-surface-container p-space-lg mb-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps tracking-wide">
+<span class="material-symbols-outlined text-[14px] text-tertiary-container">trending_up</span>
+        HIGH SCAM SURGE ALERT
+      </div>
+<span class="font-caption text-caption text-on-surface-variant font-medium">Updated 3h ago</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed-dim/40 flex items-center justify-center text-tertiary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[28px]">qr_code_scanner</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-body-bold text-body-md text-on-surface truncate">Second-Hand Portal QR Lures</h4>
+<p class="font-caption text-caption text-on-surface-variant line-clamp-1">+340% case velocity detected in student classified groups this week.</p>
+</div>
+</div>
+</div>
+<!-- Section Title -->
+<div class="flex items-center justify-between mb-space-sm px-1">
+<div class="flex items-center gap-2">
+<span class="font-title text-title text-primary tracking-tight">Active Case Studies</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container font-label-caps text-label-caps text-on-surface-variant">3 Drills Ready</span>
+</div>
+<button class="font-caption text-caption font-semibold text-secondary flex items-center gap-0.5">
+<span>Sort: Recent</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<!-- Case Studies Stack -->
+<div class="flex flex-col gap-space-md" id="caseStudiesContainer">
+<!-- Case Study 1 -->
+<div class="case-card flex flex-col rounded-3xl bg-surface-container p-space-lg shadow-sm transition-all" data-category="upi">
+<!-- Card Header Chips -->
+<div class="flex items-center justify-between gap-2 mb-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-body-bold text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+          Verified Official Source
+        </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px] mr-1">campaign</span>
+          High Scam Surge
+        </span>
+</div>
+<!-- Metadata & Origin -->
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption mb-1">
+<span class="font-semibold text-primary">UPI QR Scam</span>
+<span>•</span>
+<span>Cyber Police Advisory (Oct 2024)</span>
+</div>
+<!-- Title -->
+<h3 class="font-headline-md text-title text-on-surface tracking-tight mb-2">The ₹85,000 Marketplace "QR Code" Trap</h3>
+<!-- Media Snapshot / Illustrative Context Card -->
+<div class="flex items-center gap-3 p-3 rounded-2xl bg-surface mb-3 shadow-inner">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A smartphone screen displaying a deceptive payment app QR code prompt with simulated incoming money banner, warm paper tones, tactical banking interface aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBIlCJSSsgAx6zrHw3ENCprZc8XqOrMaVpPucQBjeoSEADxIP1Qln46UwodzAaQbaC-TfgY_AbBVsEaT3OxUvw3T_MU_DmglKpmkC2ycW7lhv7ykGsUt6CjSFrdMppeIaSeKG5Me6MjROGOrS5EX9L1f2ZpUIB5pAcaQAt18Oyl8HslH_KEnLQ2YeIb1YsZ7hTLPksobo4c931uB-tA57w5r9ByH_uLw6EGucEmE6t"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant font-semibold">Incident Archetype</span>
+<p class="font-caption text-caption text-on-surface font-medium truncate">Simulated buyer: "Please scan my business QR to accept ₹42,500 token..."</p>
+<span class="font-label-caps text-label-caps text-error font-semibold mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">lock_reset</span> Pin Entered = Account Cleared
+          </span>
+</div>
+</div>
+<!-- Key Takeaway Box -->
+<div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-lowest/90 mb-4 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] flex-shrink-0 mt-0.5">lightbulb</span>
+<div class="flex flex-col">
+<span class="font-body-bold text-caption text-primary">Golden Rule &amp; Takeaway</span>
+<p class="font-body-md text-caption text-on-surface leading-snug">
+            Scammers sent a QR code claiming "Scan to accept advance payment". Scanning any QR code or entering your UPI PIN <strong>always debits</strong> your account, never credits it.
+          </p>
+</div>
+</div>
+<!-- Interactive Call to Action / Drill Linkage -->
+<div class="flex items-center gap-2 pt-1">
+<button class="drill-launch-btn flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-full bg-primary-container text-surface font-body-bold text-body-md shadow-md active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span>Launch QR Scan Trap Drill</span>
+<span class="px-2 py-0.5 rounded-full bg-surface/20 text-caption font-medium ml-1">2 min</span>
+</button>
+<button aria-label="Bookmark Case" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-surface text-on-surface-variant hover:bg-surface-container-high transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+<!-- Case Study 2 -->
+<div class="case-card flex flex-col rounded-3xl bg-surface-container p-space-lg shadow-sm transition-all" data-category="customer-care">
+<!-- Card Header Chips -->
+<div class="flex items-center justify-between gap-2 mb-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-body-bold text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+          Verified Official Source
+        </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps">
+          Advisory Case #982
+        </span>
+</div>
+<!-- Metadata & Origin -->
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption mb-1">
+<span class="font-semibold text-primary">Banking Impersonation</span>
+<span>•</span>
+<span>RBI Ombudsman Report</span>
+</div>
+<!-- Title -->
+<h3 class="font-headline-md text-title text-on-surface tracking-tight mb-2">Search Engine Fake Helpline Number Scam</h3>
+<!-- Media Snapshot -->
+<div class="flex items-center gap-3 p-3 rounded-2xl bg-surface mb-3 shadow-inner">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close up photograph of a smartphone showing spoofed search engine sponsored advertisements claiming to be airline customer support, muted organic lighting, green and parchment tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlCal_79pKpO3VZEq_aeRel5ujpvS_E9W8U4H8CaY2PviY_Xo4vETKYeV9lKOYlfgCnfv0MhIVY_uxtagOiOqHEOM2f19UkUKVg1Q-oyy94ppsy0cXtgO5_9ri3FygKVx-RWXBSWIFY-JI5X_Zo1Q3D4lhHpbR1Zm-DKdO60onm35BBa93-H7NZOqNxJpHRnFmACibYoAng1WOiPVc_rwbwMej2A3n72VTLfh2ujxP"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant font-semibold">Incident Modus</span>
+<p class="font-caption text-caption text-on-surface font-medium truncate">Google Ad spoofing airline ticket refund desks</p>
+<span class="font-label-caps text-label-caps text-secondary font-semibold mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">verified</span> Remote APK App Installation Attempted
+          </span>
+</div>
+</div>
+<!-- Key Takeaway Box -->
+<div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-lowest/90 mb-4 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] flex-shrink-0 mt-0.5">lightbulb</span>
+<div class="flex flex-col">
+<span class="font-body-bold text-caption text-primary">Golden Rule &amp; Takeaway</span>
+<p class="font-body-md text-caption text-on-surface leading-snug">
+            Victim searched for an airline refund phone line, dialed an unverified sponsored ad listing, and was persuaded to install a remote desktop APK file.
+          </p>
+</div>
+</div>
+<!-- Interactive Call to Action / Drill Linkage -->
+<div class="flex items-center gap-2 pt-1">
+<button class="drill-launch-btn flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-full bg-primary-container text-surface font-body-bold text-body-md shadow-md active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+<span>Helpline Verification Drill</span>
+<span class="px-2 py-0.5 rounded-full bg-surface/20 text-caption font-medium ml-1">3 min</span>
+</button>
+<button aria-label="Bookmark Case" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-surface text-on-surface-variant hover:bg-surface-container-high transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+<!-- Case Study 3 -->
+<div class="case-card flex flex-col rounded-3xl bg-surface-container p-space-lg shadow-sm transition-all" data-category="loan">
+<!-- Card Header Chips -->
+<div class="flex items-center justify-between gap-2 mb-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-body-bold text-caption">
+<span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+          Verified Official Source
+        </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px] mr-1">warning</span>
+          Predatory Lending
+        </span>
+</div>
+<!-- Metadata & Origin -->
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption mb-1">
+<span class="font-semibold text-primary">Loan App Fraud</span>
+<span>•</span>
+<span>National Cybercrime Portal</span>
+</div>
+<!-- Title -->
+<h3 class="font-headline-md text-title text-on-surface tracking-tight mb-2">Urgent Instant Personal Loan Extortion</h3>
+<!-- Media Snapshot -->
+<div class="flex items-center gap-3 p-3 rounded-2xl bg-surface mb-3 shadow-inner">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="An Android phone screen highlighting invasive permissions dialogs requesting access to contacts, photos, and live camera feed with an aesthetic dark green UI accent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIr9eLjsNgdPG8yS9VAsjq76E4KYK8L57Y7CZizaXbrGMojgQvSYoeQCW-GS_wekUsiWVDRlwbi3txrluda0_gh9jpMg61-SqjILI-DJh8mCo86L2gLA_8zH2Co5PyxC78XE32Ci1HilGnxYEz8VuVNSY1RYeDYi6ATYpkbu1NPH9Rpdj3WRx9_J-Z985xCBA_GyERYIN2Ims_Jfp1p7zxnoN3weSG_A0atBp9bURC"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant font-semibold">Invasive Perms Trap</span>
+<p class="font-caption text-caption text-on-surface font-medium truncate">Contact list sync &amp; gallery harvest enabled</p>
+<span class="font-label-caps text-label-caps text-error font-semibold mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">contacts</span> Zero NBFC Certification
+          </span>
+</div>
+</div>
+<!-- Key Takeaway Box -->
+<div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-lowest/90 mb-4 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] flex-shrink-0 mt-0.5">lightbulb</span>
+<div class="flex flex-col">
+<span class="font-body-bold text-caption text-primary">Golden Rule &amp; Takeaway</span>
+<p class="font-body-md text-caption text-on-surface leading-snug">
+            App offered ₹5,000 instant loan with zero paperwork, harvested full address books, and extorted 300% interest within 72 hours under threat of harassment.
+          </p>
+</div>
+</div>
+<!-- Interactive Call to Action / Drill Linkage -->
+<div class="flex items-center gap-2 pt-1">
+<button class="drill-launch-btn flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded-full bg-primary-container text-surface font-body-bold text-body-md shadow-md active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]">security_update_warning</span>
+<span>App Permission Fire Drill</span>
+<span class="px-2 py-0.5 rounded-full bg-surface/20 text-caption font-medium ml-1">2 min</span>
+</button>
+<button aria-label="Bookmark Case" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-surface text-on-surface-variant hover:bg-surface-container-high transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+</div>
+<!-- "Did You Know?" Micro-education Card -->
+<div class="flex flex-col rounded-3xl bg-secondary-container/30 p-space-lg mt-space-lg shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">quiz</span>
+</div>
+<span class="font-title text-title text-secondary">Did You Know?</span>
+</div>
+<p class="font-body-lg text-body-md text-on-surface font-medium leading-relaxed mb-3">
+      Bank helplines will <strong>never</strong> ask for OTP, CVV, or remote screen sharing applications like AnyDesk, TeamViewer, or RustDesk.
+    </p>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-1.5 text-secondary font-caption text-caption font-semibold">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>RBI Consumer Protection Standard</span>
+</div>
+<button class="px-3 py-1.5 rounded-full bg-secondary text-surface font-body-bold text-caption shadow-sm hover:opacity-95 active:scale-95 transition-all">
+        Test Yourself
+      </button>
+</div>
+</div>
+<!-- Emergency Escape / Fast Assistance Pill -->
+<div class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-high mt-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">phone_in_talk</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-bold text-caption text-on-surface">Suspect You're Targeted Right Now?</span>
+<span class="font-caption text-caption text-on-surface-variant">Dial 1930 Cyber Fraud Helpline Immediately</span>
+</div>
+</div>
+<a class="px-4 py-2 rounded-full bg-error text-surface font-body-bold text-caption shadow-sm flex items-center gap-1" href="tel:1930">
+<span>Call</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<!-- Bottom Spacing for Floating Tab Bar -->
+<div class="h-6"></div>
+</div>
+<script>
+  // Filter pills interaction logic
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const cards = document.querySelectorAll('.case-card');
+  const searchInput = document.getElementById('scamSearchInput');
+
+  function filterCases() {
+    const activePill = document.querySelector('.filter-pill.active');
+    const category = activePill ? activePill.getAttribute('data-category') : 'all';
+    const query = searchInput.value.toLowerCase().trim();
+
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      const text = card.innerText.toLowerCase();
+      const matchesCategory = category === 'all' || cardCategory === category;
+      const matchesQuery = query === '' || text.includes(query);
+
+      if (matchesCategory && matchesQuery) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach(p => {
+        p.classList.remove('active', 'bg-primary-container', 'text-surface');
+        p.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      pill.classList.add('active', 'bg-primary-container', 'text-surface');
+      pill.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      filterCases();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', filterCases);
+  }
+
+  // Drill CTA tactile microfeedback
+  document.querySelectorAll('.drill-launch-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">refresh</span><span>Preparing Sandbox...</span>`;
+      btn.classList.add('opacity-90');
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">check</span><span>Ready! Starting Drill...</span>`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('opacity-90');
+        }, 1200);
+      }, 700);
+    });
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.05)]" data-active-classes="text-primary-container font-body-bold scale-[1.02]"><div class="max-w-[640px] mx-auto h-16 px-space-xs flex items-center justify-around"><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="drills" href="#"><span class="material-symbols-outlined text-[24px]">fitness_center</span><span class="font-caption text-caption text-center leading-none mt-1">Drills</span></a><a aria-current="page" class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 transition-all text-primary-container font-body-bold scale-[1.02]" data-path="scam-library" href="#"><span class="material-symbols-outlined text-[24px]">local_library</span><span class="font-caption text-caption text-center leading-none mt-1">Library</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-error transition-all" data-path="emergency-sos" href="#"><div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-error-container text-error shadow-[0_2px_8px_rgba(185,28,28,0.2)]"><span class="material-symbols-outlined text-[20px]">e911_emergency</span></div><span class="font-caption text-caption font-semibold text-center leading-none mt-1 text-error">SOS</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="readiness" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-caption text-caption text-center leading-none mt-1">Readiness</span></a></div></nav></body></html>
+
+<!-- Profile -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "surface": "#faf9f6", "on-primary-fixed-variant": "#274e3d", "surface-container": "#efeeeb", "on-background": "#1a1c1a", "on-secondary-fixed-variant": "#005235", "secondary-fixed": "#92f7c3", "surface-container-low": "#f4f3f1", "secondary-fixed-dim": "#75daa8", "tertiary-container": "#6d230f", "surface-dim": "#dbdad7", "tertiary": "#4f0e00", "secondary-container": "#92f7c3", "on-tertiary-fixed": "#3c0800", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-highest": "#e3e2e0", "primary-container": "#1b4332", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", "inverse-primary": "#a5d0b9", "error": "#ba1a1a", "secondary": "#006c48", "on-primary": "#ffffff", "primary": "#012d1d", "on-error": "#ffffff", "on-surface-variant": "#414844", "surface-container-high": "#e9e8e5", "on-secondary-fixed": "#002113", "background": "#faf9f6", "tertiary-fixed": "#ffdbd2", "surface-tint": "#3f6653", "outline": "#717973", "inverse-surface": "#2f312f", "surface-bright": "#faf9f6", "outline-variant": "#c1c8c2", "primary-fixed": "#c1ecd4", "on-tertiary-container": "#f3896d", "on-primary-container": "#86af99", "on-surface": "#1a1c1a", "on-primary-fixed": "#002114", "tertiary-fixed-dim": "#ffb4a1", "surface-variant": "#e3e2e0", "on-error-container": "#93000a", "inverse-on-surface": "#f2f1ee", "error-container": "#ffdad6", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "headline-xl": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><div class="flex flex-col min-w-0"><span class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Profile</span><span class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Money Fire Drill</span></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><a aria-label="Settings" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary-container hover:bg-surface-container-highest transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[24px]">settings</span></a><a aria-label="Profile" class="min-w-[44px] min-h-[44px] flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-primary-container transition-all" data-path="profile" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></a></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-surface"><div class="flex flex-col w-full pb-8 space-y-4">
+<!-- Disclaimer Capsule -->
+<div class="flex items-center justify-between px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px] text-secondary">verified_user</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Education Sandbox • No Real Money</span>
+</div>
+<span class="font-label-caps text-label-caps text-secondary font-bold">Safe Mode Active</span>
+</div>
+<!-- User Profile Header Card -->
+<section class="bg-surface-container rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<!-- Subtle top right glow badge -->
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm bg-surface-container-high" data-alt="A portrait of Aarav, a calm and confident South Asian male college student with neat hair, gentle smile, wearing a warm olive crewneck sweater, soft natural warm sunlight illuminating his face against an earthy warm ivory studio background, high-end editorial candid style, deep forest green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt9KR1rn2mNWycyf29QIdPAW_qx06EBcM9TK7xbNJVM3zAW-GhrgXZEe4nmAktaG2E9M2ZdVSDKQZOiKrbEz-8GUqhAVV1Ad8ULpVBzqfcMhMsxEPrnbxUipgMs88ekosG_NjiF1GMA31BNt5yLWnqoJvpjxskU5yfkkAW6btBhITYA_JmsxilN9w-6Vllt6c5Rg6ki0Wetox_9puUPIqSBdrq9U3Z2Ia9IgvAh6FO"/>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<h1 class="font-headline-md text-headline-md text-on-surface truncate">Aarav Ray</h1>
+<span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">Tier 1 Cyber Defender • Verified</span>
+<span class="font-caption text-caption text-on-surface-variant opacity-80 mt-0.5">Joined October 2024</span>
+</div>
+</div>
+<button aria-label="Edit Profile" class="min-w-[44px] min-h-[44px] rounded-full bg-surface-container-low text-on-surface-variant flex items-center justify-center shadow-sm active:scale-95 transition-transform" id="edit-profile-btn">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Readiness Metric Banner -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">health_and_safety</span>
+</div>
+<div>
+<div class="font-caption text-caption text-on-surface-variant">Overall Readiness Index</div>
+<div class="font-body-bold text-body-bold text-on-surface">88 / 100 <span class="text-secondary font-normal ml-1">• Low Risk</span></div>
+</div>
+</div>
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-container font-label-caps text-label-caps uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+        Protected
+      </span>
+</div>
+</section>
+<!-- Household & Family Defense Network -->
+<section class="bg-surface-container rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">family_restroom</span>
+</div>
+<h2 class="font-title text-title text-on-surface">Family Defense Network</h2>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps">3 Synced</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+      Protected 3 household members against active impersonation &amp; UPI drain threats.
+    </p>
+<!-- Family Member Avatars List -->
+<div class="flex items-center justify-between bg-surface-container-lowest rounded-DEFAULT p-space-md shadow-sm">
+<div class="flex items-center -space-x-2">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm bg-surface-container-high" data-alt="A dignified warm portrait of an elderly South Asian mother smiling gently wearing a maroon shawl, soft morning warm light, tranquil sage green background tones, realistic portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiIcQPzx_gKTUElFcTrBDH1Gmx4pJl4vPmk-3OXDzfx99H0Z-hUNcLGuMEW_BqeipULjqGHuNCUFax-wLVFl4IeUzE7V6ZamjDx2a2sNrqocetfRHQtLonXhsQnQQehMSOPpCkElTGA-LQd69CshfCO48v8U9pHd3gFVwEYEiXv-D2n7YECdAEgJu6bVtkqFFl7CorpCH7CYaTylB4iomep5Sg6jH8V_aY7oFJ5_XF"/>
+<img class="w-10 h-10 rounded-full object-cover shadow-sm bg-surface-container-high" data-alt="A cheerful middle-aged South Asian father with silver-streaked hair and wire spectacles wearing a warm beige linen shirt, natural daylight, soft focus background, authentic portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbiOigz3bdNdEeDzazkjtA7a_ciIhk10pjJOpvxChq4V4Do_0lg-O3YDuUXYfouMIniTGUY5lQKBg7IffjbFtaihxos9ih1ERih-1G0rpFBBoHEniuYj4Vs2z11mdgIy-y_OGoVzpHKkCMiOaH-BbBSDBANy3wPWC8zLaoblbnsEp041JOpniXGCWsEH07NYYc8b7rj9bV9ZArMtFd1-XaEZeilS6JTrxUnloeXMHv"/>
+<img class="w-10 h-10 rounded-full object-cover shadow-sm bg-surface-container-high" data-alt="A youthful South Asian teenage sister with her hair tied in a casual bun smiling warmly, wearing a forest green cardigan, soft sunlight, warm earthy tones, candid high quality portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9LZruCLye3iy5rPMpm8-9UZHBBTIgXkWWoRBiNuRs7OfxVoogrEYG99v4P_DtMDq1fQhGbH8CjAYP2t0cp7NbS0lH13gLm6wnGGhLXMFGCZocgDo5hgoagfY79HHJ_oY1Rypj6x0-kIRIUgwLpRbPy3gcq2tr_EWkP7OEaSEIa1QVlb7V5RtNgqQ9LxIwu2yYshZGqHmr-_dUXTEBcHWKl1lJn-PziCBwqj4p_O4_"/>
+<div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-body-bold text-caption flex items-center justify-center shadow-sm">
+          +0
+        </div>
+</div>
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-caption text-caption font-semibold">SOS Link Active</span>
+</div>
+</div>
+<button class="w-full h-[52px] rounded-full bg-surface-container-lowest text-on-surface font-body-bold text-body-bold shadow-sm flex items-center justify-center gap-space-xs active:scale-[0.98] transition-transform" id="manage-circle-btn">
+<span class="material-symbols-outlined text-[20px] text-secondary">group_add</span>
+<span>Manage Family Circle</span>
+</button>
+</section>
+<!-- Simulation & Drill History Summary -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<h2 class="font-title text-title text-on-surface">Simulation Metrics</h2>
+<span class="font-caption text-caption text-on-surface-variant">Live Calibration</span>
+</div>
+<!-- 2x2 Metric Grid -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Card 1 -->
+<div class="bg-surface-container rounded-DEFAULT p-space-md shadow-sm flex flex-col justify-between h-28">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-caption text-caption">Drills Done</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">task_alt</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">18</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-semibold">100% On-Track</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container rounded-DEFAULT p-space-md shadow-sm flex flex-col justify-between h-28">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-caption text-caption">Reflex Score</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">bolt</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">94%</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-semibold">Top 5% Cohort</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container rounded-DEFAULT p-space-md shadow-sm flex flex-col justify-between h-28">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-caption text-caption">Avg Response</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">timer</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">4.2s</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-semibold">Optimal Window</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container rounded-DEFAULT p-space-md shadow-sm flex flex-col justify-between h-28">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-caption text-caption">Re-Drills Cleared</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">replay</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">5 / 5</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-semibold">Zero Weak Spots</div>
+</div>
+</div>
+</div>
+<!-- Recent Completed Drills List -->
+<div class="bg-surface-container rounded-lg p-space-md shadow-sm flex flex-col gap-space-xs mt-space-xs">
+<div class="font-body-bold text-body-bold text-on-surface px-space-xs py-1">Recent Simulation Drills</div>
+<!-- Drill Item 1 -->
+<div class="flex items-center justify-between p-space-sm rounded-DEFAULT bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface truncate">Fake UPI Collect Request</div>
+<div class="font-caption text-caption text-on-surface-variant">Identified fraudulent PIN debit alert</div>
+</div>
+</div>
+<div class="flex items-center gap-1 text-secondary flex-shrink-0 pl-2">
+<span class="font-body-bold text-caption">100%</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Drill Item 2 -->
+<div class="flex items-center justify-between p-space-sm rounded-DEFAULT bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">travel_explore</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface truncate">Ad Sponsored Airline Helpline</div>
+<div class="font-caption text-caption text-on-surface-variant">Spotted spoofed call routing center</div>
+</div>
+</div>
+<div class="flex items-center gap-1 text-secondary flex-shrink-0 pl-2">
+<span class="font-body-bold text-caption">100%</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Drill Item 3 -->
+<div class="flex items-center justify-between p-space-sm rounded-DEFAULT bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">install_mobile</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface truncate">Instant Loan Sideload APK</div>
+<div class="font-caption text-caption text-on-surface-variant">Permission intercept &amp; blocked access</div>
+</div>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps uppercase flex-shrink-0">
+          Reviewed
+        </span>
+</div>
+</div>
+</section>
+<!-- Earned Certifications & Badges -->
+<section class="bg-primary-container text-on-primary rounded-lg p-space-lg shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<!-- Subtle aesthetic watermark background -->
+<div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[180px]">workspace_premium</span>
+</div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary-fixed-dim">Official Credential</span>
+<h3 class="font-title text-title text-on-primary leading-tight">Certified Cyber-Ready Household</h3>
+</div>
+</div>
+</div>
+<div class="bg-primary/40 rounded-DEFAULT p-space-md flex items-center justify-between">
+<div>
+<div class="font-caption text-caption text-primary-fixed-dim">Credential Verification</div>
+<div class="font-body-bold text-body-bold tracking-wider text-on-primary font-mono">#MFD-2025-9941</div>
+</div>
+<div class="text-right">
+<div class="font-caption text-caption text-primary-fixed-dim">Valid Through</div>
+<div class="font-body-bold text-body-bold text-on-primary">Dec 2025</div>
+</div>
+</div>
+<button class="w-full h-[52px] rounded-full bg-surface-container-lowest text-primary font-body-bold text-body-bold shadow-md flex items-center justify-center gap-space-xs active:scale-[0.98] transition-transform" id="share-credential-btn">
+<span class="material-symbols-outlined text-[20px] text-secondary">ios_share</span>
+<span>Share Certificate</span>
+</button>
+</section>
+<!-- Educational Sandbox Reassurance Notice -->
+<section class="bg-surface-container-low rounded-DEFAULT p-space-md flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-secondary flex-shrink-0 mt-0.5">lock</span>
+<p class="font-caption text-caption text-on-surface-variant leading-relaxed">
+      Your profile stores only drill practice metrics and simulation preferences. No banking credentials, UPI PINs, or personal payment accounts are ever connected or stored.
+    </p>
+</section>
+<!-- Sign out / Preferences Footer Action -->
+<div class="flex items-center justify-center pt-2">
+<button class="font-caption text-caption text-on-surface-variant/70 hover:text-error flex items-center gap-1 py-2 px-4 transition-colors">
+<span class="material-symbols-outlined text-[16px]">logout</span>
+<span>Sign out of Sandbox Account</span>
+</button>
+</div>
+</div>
+<script>
+  (function() {
+    const shareBtn = document.getElementById('share-credential-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        if (navigator.share) {
+          navigator.share({
+            title: 'Money Fire Drill Credential',
+            text: 'I earned the Certified Cyber-Ready Household 2025 credential! Verification #MFD-2025-9941.',
+            url: window.location.href
+          }).catch(function() {});
+        } else {
+          const originalText = shareBtn.querySelector('span:last-child').textContent;
+          shareBtn.querySelector('span:last-child').textContent = 'Credential Link Copied!';
+          setTimeout(function() {
+            shareBtn.querySelector('span:last-child').textContent = originalText;
+          }, 2000);
+        }
+      });
+    }
+
+    const editBtn = document.getElementById('edit-profile-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', function() {
+        editBtn.classList.add('rotate-45');
+        setTimeout(function() {
+          editBtn.classList.remove('rotate-45');
+        }, 300);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.05)]" data-active-classes="text-primary-container font-body-bold scale-[1.02]"><div class="max-w-[640px] mx-auto h-16 px-space-xs flex items-center justify-around"><a class="group flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="drills" href="#"><span class="material-symbols-outlined text-[24px]">fitness_center</span><span class="font-caption text-caption text-center leading-none mt-1">Drills</span></a><a class="group flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="scam-case-library" href="#"><span class="material-symbols-outlined text-[24px]">local_library</span><span class="font-caption text-caption text-center leading-none mt-1">Library</span></a><a class="group flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-error transition-all" data-path="emergency-sos-triage" href="#"><div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-error-container text-error shadow-[0_2px_8px_rgba(185,28,28,0.2)]"><span class="material-symbols-outlined text-[20px]">e911_emergency</span></div><span class="font-caption text-caption font-semibold text-center leading-none mt-1 text-error">SOS</span></a><a class="group flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="readiness-analytics" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-caption text-caption text-center leading-none mt-1">Readiness</span></a><a aria-current="page" class="group flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 transition-all text-primary-container font-body-bold scale-[1.02]" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-caption text-caption text-center leading-none mt-1">Profile</span></a></div></nav></body></html>
+
+<!-- Settings -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "surface": "#faf9f6", "on-primary-fixed-variant": "#274e3d", "surface-container": "#efeeeb", "on-background": "#1a1c1a", "on-secondary-fixed-variant": "#005235", "secondary-fixed": "#92f7c3", "surface-container-low": "#f4f3f1", "secondary-fixed-dim": "#75daa8", "tertiary-container": "#6d230f", "surface-dim": "#dbdad7", "tertiary": "#4f0e00", "secondary-container": "#92f7c3", "on-tertiary-fixed": "#3c0800", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-highest": "#e3e2e0", "primary-container": "#1b4332", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", "inverse-primary": "#a5d0b9", "error": "#ba1a1a", "secondary": "#006c48", "on-primary": "#ffffff", "primary": "#012d1d", "on-error": "#ffffff", "on-surface-variant": "#414844", "surface-container-high": "#e9e8e5", "on-secondary-fixed": "#002113", "background": "#faf9f6", "tertiary-fixed": "#ffdbd2", "surface-tint": "#3f6653", "outline": "#717973", "inverse-surface": "#2f312f", "surface-bright": "#faf9f6", "outline-variant": "#c1c8c2", "primary-fixed": "#c1ecd4", "on-tertiary-container": "#f3896d", "on-primary-container": "#86af99", "on-surface": "#1a1c1a", "on-primary-fixed": "#002114", "tertiary-fixed-dim": "#ffb4a1", "surface-variant": "#e3e2e0", "on-error-container": "#93000a", "inverse-on-surface": "#f2f1ee", "error-container": "#ffdad6", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "headline-xl": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="min-w-[44px] min-h-[44px] -ml-2 flex items-center justify-center text-primary-container rounded-full hover:bg-surface-container-highest transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><h1 class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Settings</h1></div><div class="flex items-center gap-space-xs flex-shrink-0"><a aria-label="Settings" class="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary-container hover:bg-surface-container-highest transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[24px]">settings</span></a><a aria-label="Profile" class="min-w-[44px] min-h-[44px] flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-primary-container transition-all" data-path="profile" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></a></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-safe bg-surface"><div class="flex flex-col w-full pb-10">
+<!-- Status & Sandbox Assurance Badge -->
+<div class="flex items-center justify-between bg-surface-container-high px-space-md py-space-sm rounded-full mb-space-md shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-on-surface-variant">Sandbox Safety Shield Active</span>
+</div>
+<span class="font-caption text-caption text-secondary font-body-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+      100% Mock Data
+    </span>
+</div>
+<!-- User Profile Micro-Card -->
+<div class="bg-surface-container-low rounded-lg p-space-md mb-space-lg shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img alt="Active User Profile" class="w-12 h-12 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[12px]">bolt</span>
+</div>
+</div>
+<div class="min-w-0">
+<h2 class="font-body-bold text-body-bold text-on-surface truncate">Cadet Aditi Rao</h2>
+<p class="font-caption text-caption text-on-surface-variant truncate">Level 4 Preparedness • 92% Calm Score</p>
+</div>
+</div>
+<button aria-label="View readiness profile" class="bg-surface-container-highest text-primary-container px-space-md py-space-xs rounded-full font-caption text-caption font-body-bold hover:bg-primary-container hover:text-on-primary transition-all">
+      Inspect
+    </button>
+</div>
+<!-- SECTION 1: SIMULATION & DRILL PREFERENCES -->
+<div class="mb-space-lg">
+<div class="px-space-xs mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Simulation &amp; Drill Engine</span>
+</div>
+<div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm flex flex-col">
+<!-- Item: Difficulty Mode -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer" id="row-difficulty">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Difficulty Mode</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Pressure curves adapt to your pulse rate</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs flex-shrink-0">
+<span class="font-caption text-caption text-on-surface-variant bg-surface-container-highest px-space-sm py-0.5 rounded-full">Adaptive (Standard)</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Timed Pressure Drills -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">timer</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Timed Pressure Drills</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Simulate 45s urgent UPI collect traps</div>
+</div>
+</div>
+<!-- iOS Toggle -->
+<button aria-checked="true" aria-label="Toggle Timed Pressure Drills" class="toggle-btn w-12 h-7 rounded-full bg-primary-container relative p-0.5 transition-colors duration-200 focus:outline-none flex-shrink-0" onclick="toggleSwitch(this)">
+<div class="toggle-knob w-6 h-6 rounded-full bg-surface-container-lowest shadow-md transform translate-x-5 transition-transform duration-200"></div>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Voice Simulation Prompts -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">record_voice_over</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Voice Simulation Audio</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Simulates bank IVR &amp; aggressive caller tones</div>
+</div>
+</div>
+<button aria-checked="true" aria-label="Toggle Voice Simulation Audio" class="toggle-btn w-12 h-7 rounded-full bg-primary-container relative p-0.5 transition-colors duration-200 focus:outline-none flex-shrink-0" onclick="toggleSwitch(this)">
+<div class="toggle-knob w-6 h-6 rounded-full bg-surface-container-lowest shadow-md transform translate-x-5 transition-transform duration-200"></div>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Scenario Randomization -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">casino</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Dynamic Deception Shield</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Scrambles merchant names, logos &amp; VPA IDs</div>
+</div>
+</div>
+<button aria-checked="true" aria-label="Toggle Dynamic Deception Shield" class="toggle-btn w-12 h-7 rounded-full bg-primary-container relative p-0.5 transition-colors duration-200 focus:outline-none flex-shrink-0" onclick="toggleSwitch(this)">
+<div class="toggle-knob w-6 h-6 rounded-full bg-primary-container shadow-md transform translate-x-5 transition-transform duration-200 bg-surface-container-lowest"></div>
+</button>
+</div>
+</div>
+</div>
+<!-- SECTION 2: EMERGENCY SOS & DEFENSIVE PROTOCOLS -->
+<div class="mb-space-lg">
+<div class="px-space-xs mb-space-xs flex items-center justify-between">
+<span class="font-label-caps text-label-caps uppercase text-tertiary-container tracking-wider font-body-bold">Emergency SOS &amp; Triage Guard</span>
+<span class="font-caption text-caption text-on-surface-variant">Live Hotline</span>
+</div>
+<div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm flex flex-col">
+<!-- Item: National Cyber Helpline -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-error text-on-error flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">call</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface flex items-center gap-1.5">
+<span>National Fraud Desk</span>
+<span class="font-label-caps text-label-caps bg-error-container text-on-error-container px-2 py-0.5 rounded-full font-body-bold">1930</span>
+</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Instant dial prompt on 3rd triage failure</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0">chevron_right</span>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Family SOS Broadcast -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Family Panic Broadcast</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">SMS preset to alert trusted kin during real traps</div>
+</div>
+</div>
+<button aria-checked="false" aria-label="Toggle Family Panic Broadcast" class="toggle-btn w-12 h-7 rounded-full bg-surface-dim relative p-0.5 transition-colors duration-200 focus:outline-none flex-shrink-0" onclick="toggleSwitch(this)">
+<div class="toggle-knob w-6 h-6 rounded-full bg-surface-container-lowest shadow-md transform translate-x-0 transition-transform duration-200"></div>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Bank Speed Dial Card -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Emergency Bank Desk</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">State Bank of India • Rapid Card Freeze</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs flex-shrink-0">
+<span class="font-caption text-caption text-secondary font-body-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Linked
+          </span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Quick Exit Gesture -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">touch_app</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Double-Tap Panic Flush</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Instantly blank simulation &amp; lock phone screen</div>
+</div>
+</div>
+<button aria-checked="true" aria-label="Toggle Double-Tap Panic Flush" class="toggle-btn w-12 h-7 rounded-full bg-primary-container relative p-0.5 transition-colors duration-200 focus:outline-none flex-shrink-0" onclick="toggleSwitch(this)">
+<div class="toggle-knob w-6 h-6 rounded-full bg-surface-container-lowest shadow-md transform translate-x-5 transition-transform duration-200"></div>
+</button>
+</div>
+</div>
+</div>
+<!-- SECTION 3: PRIVACY & OFFLINE RESILIENCE -->
+<div class="mb-space-lg">
+<div class="px-space-xs mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Privacy &amp; Offline Resilience</span>
+</div>
+<div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm flex flex-col">
+<!-- Item: Zero Real Data -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Zero Data Collection Guarantee</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">No real UPI pins, passwords, or balance tracking</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[22px] flex-shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Offline USSD -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer" onclick="triggerCheatSheetDownload()">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">pin</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Offline USSD Guide (*99#)</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Emergency disable offline without internet connectivity</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs flex-shrink-0">
+<span class="material-symbols-outlined text-primary-container text-[20px]">download</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Reset Data -->
+<button class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-error-container/20 transition-colors text-left w-full" onclick="showResetDialog()">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-error-container text-on-error-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-error">Reset History &amp; Stress Metrics</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Clears all simulation drill records and mastery levels</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-error text-[18px] flex-shrink-0">delete_outline</span>
+</button>
+</div>
+</div>
+<!-- SECTION 4: APP INFORMATION & COLLABORATIVE DEFENSE -->
+<div class="mb-space-lg">
+<div class="px-space-xs mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Verified Sources &amp; Insights</span>
+</div>
+<div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm flex flex-col">
+<!-- Item: Official Guidelines -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">RBI &amp; NPCI Safety Canon</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Zero liability guidelines &amp; 3-day reporting mandates</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0">open_in_new</span>
+</div>
+<div class="h-[1px] bg-surface-container-highest w-full mx-space-md"></div>
+<!-- Item: Report New Scam Archetype -->
+<div class="p-space-md flex items-center justify-between gap-space-sm bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">campaign</span>
+</div>
+<div class="min-w-0">
+<div class="font-body-bold text-body-bold text-on-surface">Submit New Scam Archetype</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Help community drill writers build safe simulations</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Warm Reassuring Footer Branding -->
+<div class="flex flex-col items-center justify-center text-center px-space-md mt-space-sm mb-space-md">
+<div class="flex items-center gap-2 mb-1">
+<div class="w-4 h-4 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[10px]">lock</span>
+</div>
+<span class="font-body-bold text-body-bold text-on-surface">Money Fire Drill</span>
+<span class="bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps px-2 py-0.5 rounded-full">v1.2.4</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant max-w-[280px]">
+      Built with calm empathy for safer human decision-making under financial duress.
+    </p>
+</div>
+<!-- Reset Confirmation Toast Modal (Hidden by Default) -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end justify-center px-margin pb-safe hidden transition-opacity" id="reset-modal">
+<div class="bg-surface-container-low w-full max-w-[640px] rounded-lg p-space-lg shadow-2xl mb-space-md flex flex-col gap-space-md transform transition-transform">
+<div class="flex items-center gap-space-sm text-error">
+<span class="material-symbols-outlined text-[28px]">warning</span>
+<h3 class="font-headline-md text-headline-md font-body-bold text-on-surface">Reset All Drill Progress?</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        This wipes your completed scenarios, calm telemetry response curves, and stress endurance badges. This action cannot be reversed.
+      </p>
+<div class="flex flex-col gap-space-xs mt-space-xs">
+<button class="w-full h-[52px] bg-error text-on-error rounded-full font-body-bold text-body-md flex items-center justify-center shadow-md active:scale-95 transition-transform" onclick="confirmReset()">
+          Confirm Complete Reset
+        </button>
+<button class="w-full h-[48px] bg-surface-container-highest text-on-surface rounded-full font-body-bold text-body-md flex items-center justify-center hover:bg-surface-container-high transition-colors" onclick="hideResetDialog()">
+          Cancel
+        </button>
+</div>
+</div>
+</div>
+<!-- Notification Banner (Toast) -->
+<div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 max-w-[400px] w-[90%] bg-primary-container text-on-primary px-space-md py-space-sm rounded-full shadow-lg flex items-center gap-space-sm transition-all duration-300 opacity-0 pointer-events-none z-50" id="toast-banner">
+<span class="material-symbols-outlined text-[20px] text-secondary">check_circle</span>
+<span class="font-caption text-caption font-body-bold truncate" id="toast-message">Setting saved smoothly</span>
+</div>
+</div>
+<script>
+  function toggleSwitch(button) {
+    const isChecked = button.getAttribute('aria-checked') === 'true';
+    const nextState = !isChecked;
+    button.setAttribute('aria-checked', nextState.toString());
+
+    const knob = button.querySelector('.toggle-knob');
+    if (nextState) {
+      button.classList.remove('bg-surface-dim');
+      button.classList.add('bg-primary-container');
+      knob.classList.remove('translate-x-0');
+      knob.classList.add('translate-x-5');
+      showToast('Preference enabled');
+    } else {
+      button.classList.remove('bg-primary-container');
+      button.classList.add('bg-surface-dim');
+      knob.classList.remove('translate-x-5');
+      knob.classList.add('translate-x-0');
+      showToast('Preference disabled');
+    }
+  }
+
+  function showResetDialog() {
+    const modal = document.getElementById('reset-modal');
+    modal.classList.remove('hidden');
+  }
+
+  function hideResetDialog() {
+    const modal = document.getElementById('reset-modal');
+    modal.classList.add('hidden');
+  }
+
+  function confirmReset() {
+    hideResetDialog();
+    showToast('Simulation metrics completely cleared');
+  }
+
+  function triggerCheatSheetDownload() {
+    showToast('Offline USSD Cheatsheet saved to device');
+  }
+
+  function showToast(text) {
+    const toast = document.getElementById('toast-banner');
+    const msg = document.getElementById('toast-message');
+    msg.textContent = text;
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2400);
+  }
+</script></main></body></html>
+
+<!-- Active Simulation Drill -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#002113", "secondary": "#006c48", "inverse-on-surface": "#f2f1ee", "surface-container": "#efeeeb", "on-surface": "#1a1c1a", "tertiary-fixed-dim": "#ffb4a1", "on-surface-variant": "#414844", "on-primary-fixed": "#002114", "surface-bright": "#faf9f6", "surface": "#faf9f6", "secondary-container": "#92f7c3", "surface-variant": "#e3e2e0", "primary-fixed": "#c1ecd4", "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "secondary-fixed": "#92f7c3", "primary": "#012d1d", "tertiary-container": "#6d230f", "error-container": "#ffdad6", "tertiary-fixed": "#ffdbd2", "on-background": "#1a1c1a", "error": "#ba1a1a", "inverse-primary": "#a5d0b9", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-low": "#f4f3f1", "outline-variant": "#c1c8c2", "surface-dim": "#dbdad7", "on-primary": "#ffffff", "surface-container-high": "#e9e8e5", "tertiary": "#4f0e00", "primary-container": "#1b4332", "surface-container-highest": "#e3e2e0", "secondary-fixed-dim": "#75daa8", "on-tertiary-fixed": "#3c0800", "background": "#faf9f6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#005235", "inverse-surface": "#2f312f", "outline": "#717973", "on-error-container": "#93000a", "on-primary-container": "#86af99", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#274e3d", "on-tertiary-container": "#f3896d", "surface-tint": "#3f6653", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="min-w-[44px] min-h-[44px] -ml-2 flex items-center justify-center text-primary-container rounded-full hover:bg-surface-container-highest transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><h1 class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Simulation Session</h1></div><div class="flex items-center gap-space-sm flex-shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-safe bg-surface"><div class="flex flex-col w-full pb-8">
+<!-- Safeguard Ribbon & Live Countdown -->
+<div class="flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center justify-between gap-space-sm bg-surface-container-low px-space-md py-space-xs rounded-full">
+<div class="flex items-center gap-1.5 min-w-0">
+<span class="material-symbols-outlined text-[16px] text-secondary flex-shrink-0" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider truncate">Sandbox Mode • No Real Money</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-highest px-2.5 py-0.5 rounded-full flex-shrink-0">
+<span class="material-symbols-outlined text-[14px] text-error flex-shrink-0 animate-pulse">timer</span>
+<span class="font-label-caps text-label-caps text-error tracking-tight font-semibold" id="drillTimer">01:42</span>
+</div>
+</div>
+<!-- Drill Title & Meta -->
+<div class="flex items-center justify-between px-space-xs pt-1">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Active Fire Drill</p>
+<h2 class="font-headline-md text-headline-md text-primary tracking-tight">#1: OLX UPI Collect Trap</h2>
+</div>
+<span class="font-caption text-caption text-secondary font-semibold bg-secondary-container/40 px-space-sm py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+        Decision Mode
+      </span>
+</div>
+</div>
+<!-- Narrative Context Card -->
+<div class="bg-surface-container rounded-lg p-space-md mb-space-md shadow-sm">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0 text-on-primary">
+<span class="material-symbols-outlined text-[20px]">storefront</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-caption text-caption text-on-surface-variant font-semibold">Simulation Premise</span>
+<span class="font-label-caps text-label-caps text-secondary font-bold">Item Value: ₹4,500</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+          You listed a wooden study table for sale. Buyer <span class="font-body-bold text-body-bold text-primary">"Rajesh K."</span> claims he has pre-paid via UPI and an authorization notification instantly appears on your phone screen.
+        </p>
+</div>
+</div>
+</div>
+<!-- Simulated Mock Smartphone Display (UPI Collect Screen) -->
+<div class="bg-surface-container rounded-lg p-space-md mb-space-md shadow-md relative overflow-hidden">
+<!-- Top System Status Strip inside Mock -->
+<div class="flex items-center justify-between pb-space-sm mb-space-sm text-on-surface-variant font-caption text-caption">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<span class="font-body-bold text-caption text-primary">Mock UPI Interface</span>
+</div>
+<span class="bg-surface-bright px-2 py-0.5 rounded-full font-label-caps text-label-caps text-on-surface-variant">Incoming Request</span>
+</div>
+<!-- The Trap Dialogue Container -->
+<div class="bg-surface-bright rounded-DEFAULT p-space-md mb-space-sm shadow-sm">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-11 h-11 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-headline-md text-title flex-shrink-0">
+          RK
+        </div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-bold text-body-bold text-on-surface truncate">Rajesh Kumar</h3>
+<p class="font-caption text-caption text-on-surface-variant truncate">rkumar982@okaxis</p>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="font-caption text-caption text-on-surface-variant block">Requested</span>
+<span class="font-headline-md text-headline-md text-error tracking-tight font-bold">₹4,500</span>
+</div>
+</div>
+<!-- Bogus prompt mimicking the trap -->
+<div class="bg-surface-container-low rounded-DEFAULT p-space-sm mb-space-xs flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px] flex-shrink-0">password</span>
+<p class="font-caption text-caption text-on-surface leading-tight">
+          "Enter your 6-Digit UPI PIN to confirm and credit ₹4,500 instantly into your State Bank account."
+        </p>
+</div>
+</div>
+<!-- Red Flag Diagnostic Banner -->
+<div class="bg-tertiary-fixed rounded-DEFAULT p-space-sm flex items-start gap-space-xs text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[18px] text-tertiary flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">error</span>
+<div class="flex-1 min-w-0">
+<span class="font-body-bold text-caption text-tertiary block">Golden Rule Breach Detected</span>
+<p class="font-caption text-caption text-on-tertiary-fixed-variant leading-snug">
+          UPI PIN is strictly for <strong>sending</strong> money from your account. You NEVER enter a PIN to receive payments.
+        </p>
+</div>
+</div>
+</div>
+<!-- Interactive Scenario Decisions Section -->
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<div class="flex items-center justify-between px-space-xs mb-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">What is your immediate reaction?</span>
+<span class="font-label-caps text-label-caps text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">Step 1 of 3</span>
+</div>
+<!-- Option A: Primary Safe Path -->
+<button class="w-full text-left bg-primary-container text-on-primary rounded-lg p-space-md shadow-sm transition-transform active:scale-[0.98] flex items-center justify-between gap-space-sm group" id="btn-opt-a" onclick="handleChoice('A')">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-body-bold text-body-bold flex-shrink-0">
+          A
+        </span>
+<div class="min-w-0">
+<p class="font-body-bold text-body-bold text-on-primary leading-tight">Decline Request &amp; Block Buyer</p>
+<p class="font-caption text-caption text-on-primary-container truncate">Refuse transaction immediately on the UPI platform</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-secondary-container flex-shrink-0">check_circle</span>
+</button>
+<!-- Option B: Danger/Trap Path -->
+<button class="w-full text-left bg-surface-container rounded-lg p-space-md shadow-sm transition-transform active:scale-[0.98] flex items-center justify-between gap-space-sm" id="btn-opt-b" onclick="handleChoice('B')">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-body-bold text-body-bold flex-shrink-0">
+          B
+        </span>
+<div class="min-w-0">
+<p class="font-body-bold text-body-bold text-on-surface leading-tight">Enter PIN to complete authorization</p>
+<p class="font-caption text-caption text-on-surface-variant truncate">Follow buyer instructions to receive funds</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline flex-shrink-0">radio_button_unchecked</span>
+</button>
+<!-- Option C: Banking Check -->
+<button class="w-full text-left bg-surface-container rounded-lg p-space-md shadow-sm transition-transform active:scale-[0.98] flex items-center justify-between gap-space-sm" id="btn-opt-c" onclick="handleChoice('C')">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-body-bold text-body-bold flex-shrink-0">
+          C
+        </span>
+<div class="min-w-0">
+<p class="font-body-bold text-body-bold text-on-surface leading-tight">Open Bank App to verify balance independently</p>
+<p class="font-caption text-caption text-on-surface-variant truncate">Safely check statement without pressing accept</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline flex-shrink-0">radio_button_unchecked</span>
+</button>
+<!-- Option D: Cybercrime Report -->
+<button class="w-full text-left bg-surface-container rounded-lg p-space-md shadow-sm transition-transform active:scale-[0.98] flex items-center justify-between gap-space-sm" id="btn-opt-d" onclick="handleChoice('D')">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-body-bold text-body-bold flex-shrink-0">
+          D
+        </span>
+<div class="min-w-0">
+<p class="font-body-bold text-body-bold text-on-surface leading-tight">Flag Account &amp; Dial Cyber Helpline (1930)</p>
+<p class="font-caption text-caption text-on-surface-variant truncate">Report the malicious UPI VPA to authorities</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline flex-shrink-0">radio_button_unchecked</span>
+</button>
+</div>
+<!-- Feedback Sheet Overlay (Interactive State) -->
+<div class="hidden bg-secondary-container text-on-secondary-container rounded-lg p-space-md mb-space-md shadow-sm transition-all duration-300" id="feedbackBox">
+<div class="flex items-center gap-space-sm mb-1">
+<span class="material-symbols-outlined text-[22px] text-secondary font-bold">verified</span>
+<h4 class="font-body-bold text-body-bold text-on-secondary-fixed">Outstanding Defense!</h4>
+</div>
+<p class="font-caption text-caption text-on-secondary-container leading-relaxed mb-space-sm">
+      Declining the request prevents money from leaving your account. By identifying the collect request scam early, you protected your ₹4,500 balance.
+    </p>
+<div class="flex items-center justify-end">
+<button class="bg-primary-container text-on-primary font-body-bold text-caption px-space-md py-2 rounded-full transition-transform active:scale-95" onclick="resetFeedback()">
+        Continue to Scenario Phase 2
+      </button>
+</div>
+</div>
+<!-- Trap Alert Sheet (Interactive State) -->
+<div class="hidden bg-error-container text-on-error-container rounded-lg p-space-md mb-space-md shadow-sm transition-all duration-300" id="trapBox">
+<div class="flex items-center gap-space-sm mb-1">
+<span class="material-symbols-outlined text-[22px] text-error">gpp_bad</span>
+<h4 class="font-body-bold text-body-bold text-on-error-container">Critical Financial Loss!</h4>
+</div>
+<p class="font-caption text-caption text-on-error-container leading-relaxed mb-space-sm">
+      Entering your UPI PIN authorizes a withdrawal. You would have sent ₹4,500 to Rajesh Kumar instead of getting paid! Always remember: <strong>Receiving money requires zero PIN entries.</strong>
+</p>
+<div class="flex items-center justify-end">
+<button class="bg-error text-on-error font-body-bold text-caption px-space-md py-2 rounded-full transition-transform active:scale-95" onclick="resetFeedback()">
+        Try Drill Again
+      </button>
+</div>
+</div>
+<!-- Grounding Reassurance & Emergency Escape Dock -->
+<div class="mt-auto pt-space-sm flex flex-col items-center gap-space-sm">
+<div class="flex items-center justify-center gap-space-xs text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<span>Safe sandbox environment. Your real device accounts are disconnected.</span>
+</div>
+<!-- Red SOS Panic Button -->
+<a class="w-full flex items-center justify-center gap-2 bg-error text-on-error h-[52px] rounded-full shadow-lg transition-transform active:scale-95 text-center" href="tel:1930">
+<span class="material-symbols-outlined text-[20px] animate-pulse">sos</span>
+<span class="font-body-bold text-body-bold text-on-error">Real Panic? Tap for Cyber Helpline (1930)</span>
+</a>
+</div>
+</div>
+<script>
+  let secondsRemaining = 102;
+  const timerElement = document.getElementById('drillTimer');
+  
+  const timerInterval = setInterval(() => {
+    if (secondsRemaining <= 0) {
+      clearInterval(timerInterval);
+      timerElement.textContent = "00:00";
+      return;
+    }
+    secondsRemaining--;
+    const mins = Math.floor(secondsRemaining / 60);
+    const secs = secondsRemaining % 60;
+    timerElement.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }, 1000);
+
+  function handleChoice(option) {
+    const feedbackBox = document.getElementById('feedbackBox');
+    const trapBox = document.getElementById('trapBox');
+    
+    if (option === 'A') {
+      trapBox.classList.add('hidden');
+      feedbackBox.classList.remove('hidden');
+      feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else if (option === 'B') {
+      feedbackBox.classList.add('hidden');
+      trapBox.classList.remove('hidden');
+      trapBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else if (option === 'C' || option === 'D') {
+      feedbackBox.classList.remove('hidden');
+      trapBox.classList.add('hidden');
+      feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function resetFeedback() {
+    document.getElementById('feedbackBox').classList.add('hidden');
+    document.getElementById('trapBox').classList.add('hidden');
+  }
+</script></main></body></html>
+
+<!-- Emergency SOS Triage -->
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#002113", "secondary": "#006c48", "inverse-on-surface": "#f2f1ee", "surface-container": "#efeeeb", "on-surface": "#1a1c1a", "tertiary-fixed-dim": "#ffb4a1", "on-surface-variant": "#414844", "on-primary-fixed": "#002114", "surface-bright": "#faf9f6", "surface": "#faf9f6", "secondary-container": "#92f7c3", "surface-variant": "#e3e2e0", "primary-fixed": "#c1ecd4", "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "secondary-fixed": "#92f7c3", "primary": "#012d1d", "tertiary-container": "#6d230f", "error-container": "#ffdad6", "tertiary-fixed": "#ffdbd2", "on-background": "#1a1c1a", "error": "#ba1a1a", "inverse-primary": "#a5d0b9", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-low": "#f4f3f1", "outline-variant": "#c1c8c2", "surface-dim": "#dbdad7", "on-primary": "#ffffff", "surface-container-high": "#e9e8e5", "tertiary": "#4f0e00", "primary-container": "#1b4332", "surface-container-highest": "#e3e2e0", "secondary-fixed-dim": "#75daa8", "on-tertiary-fixed": "#3c0800", "background": "#faf9f6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#005235", "inverse-surface": "#2f312f", "outline": "#717973", "on-error-container": "#93000a", "on-primary-container": "#86af99", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#274e3d", "on-tertiary-container": "#f3896d", "surface-tint": "#3f6653", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"><div class="flex flex-col min-w-0"><span class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Emergency Sos</span><span class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Money Fire Drill</span></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-highest"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-surface"><div class="flex flex-col w-full pb-10">
+<!-- Top Emergency Escape Active Banner -->
+<div class="w-full bg-error text-on-error rounded-2xl p-space-md shadow-[0_8px_24px_-2px_rgba(186,26,26,0.3)] mb-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[24px] text-on-error" style="font-variation-settings: 'FILL' 1;">e911_emergency</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-surface animate-ping"></span>
+<span class="font-body-bold text-caption tracking-wider uppercase">Emergency Escape Mode Active</span>
+</div>
+<p class="font-headline-md text-title font-bold mt-1 text-on-error leading-tight">
+          Stay calm. Act now to freeze your funds.
+        </p>
+<p class="font-body-md text-caption text-on-error/90 mt-1 flex items-center justify-between"><span>Golden window: Act immediately to halt unauthorized interbank settlement.</span></p>
+</div>
+</div>
+</div>
+<!-- Primary One-Tap Helplines Grid -->
+<div class="w-full mb-space-lg flex flex-col gap-space-sm">
+<!-- Huge 1930 Call Button -->
+<a class="group relative flex items-center justify-between w-full bg-error text-on-error rounded-3xl p-space-lg shadow-[0_12px_32px_-4px_rgba(186,26,26,0.4)] active:scale-[0.98] transition-transform" href="tel:1930" id="call-1930-btn">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-14 h-14 rounded-full bg-surface/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[32px] text-on-error animate-pulse" style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-on-error/80">Govt of India • 24x7 Priority Desk</span>
+<span class="font-headline-xl-mobile text-headline-xl-mobile font-bold tracking-tight text-on-error leading-none mt-1">CALL 1930</span>
+<span class="font-body-md text-caption text-on-error/90 mt-1 truncate">Direct National Cyber Financial Fraud Line</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface text-error flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">call</span>
+</div>
+</a>
+<!-- Quick Micro Actions Bar -->
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="flex items-center justify-center gap-space-xs bg-surface-container text-on-surface py-3 px-space-sm rounded-full active:scale-95 transition-transform" onclick="navigator.clipboard.writeText('1930'); document.getElementById('copied-toast').classList.remove('hidden'); setTimeout(() =&gt; document.getElementById('copied-toast').classList.add('hidden'), 2200);" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="font-body-bold text-caption">Copy 1930</span>
+</button>
+<a class="flex items-center justify-center gap-space-xs bg-surface-container text-on-surface py-3 px-space-sm rounded-full active:scale-95 transition-transform" href="https://cybercrime.gov.in" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+<span class="font-body-bold text-caption">cybercrime.gov.in</span>
+</a>
+</div>
+<!-- Small copy notification -->
+<div class="hidden text-center py-1.5 px-3 rounded-full bg-secondary-container text-on-secondary-container font-body-bold text-caption mx-auto" id="copied-toast">
+      Copied 1930 to clipboard
+    </div>
+</div>
+<!-- Calming Assurance & Triage Timer Banner -->
+<div class="w-full bg-surface-container-high rounded-2xl p-space-md mb-space-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<div>
+<span class="font-body-bold text-body-md text-on-surface">Golden Hour Protocol</span>
+<p class="font-caption text-caption text-on-surface-variant">RBI guidelines hold banks liable if reported without delay.</p>
+</div>
+</div>
+<div class="text-right pl-2 flex-shrink-0">
+<span class="font-headline-md text-headline-md font-bold text-secondary">T+0</span>
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase">Critical</span>
+</div>
+</div>
+<!-- Single-Column Immediate Steps Section -->
+<div class="w-full mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm">
+<h2 class="font-title text-title text-on-surface font-bold tracking-tight">Recovery Playbook</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Execute Sequentially</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Step 1 -->
+<div class="w-full bg-surface-container rounded-3xl p-space-lg shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-body-bold text-caption flex-shrink-0">
+            1
+          </div>
+<div class="flex-1 min-w-0"><div class="flex items-center justify-between"><span class="font-body-bold text-body-lg text-on-surface font-semibold">Block UPI &amp; Freeze Bank</span><span class="bg-error-container text-on-error-container font-label-caps text-label-caps px-2 py-0.5 rounded-full uppercase">Priority</span></div><p class="font-body-md text-caption text-on-surface-variant mt-1">Stop outbound transactions before money leaves initial accounts.</p><div class="mt-space-sm flex flex-col gap-space-xs"><a class="flex items-center justify-between bg-surface p-space-sm rounded-2xl active:bg-surface-variant transition-colors" href="tel:1800"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-primary-container">support_agent</span><span class="font-body-bold text-caption text-on-surface">Dial Bank 24x7 Emergency Desk</span></div><span class="material-symbols-outlined text-[18px] text-on-surface-variant">chevron_right</span></a><details class="group bg-surface p-space-sm rounded-2xl"><summary class="flex items-center justify-between cursor-pointer list-none"><span class="font-body-bold text-caption text-primary-container flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">sms</span>SMS codes &amp; details</span><span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span></summary><div class="mt-2 pt-2 border-t border-outline-variant/30"><p class="font-caption text-caption text-on-surface-variant">Text <strong class="text-on-surface">BLOCK UPI</strong> to your bank shortcode (e.g. 567676 for SBI, 9223166166 for HDFC).</p><div class="mt-2 bg-secondary-container/50 text-on-secondary-container rounded-xl p-space-xs px-2 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">verified</span><span class="font-caption text-caption font-medium">Reversible within 2 hrs.</span></div></div></details></div></div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="w-full bg-surface-container rounded-3xl p-space-lg shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-body-bold text-caption flex-shrink-0">
+            2
+          </div>
+<div class="flex-1 min-w-0"><div class="flex items-center justify-between"><span class="font-body-bold text-body-lg text-on-surface font-semibold">Save Proof &amp; 12-Digit UTR</span></div><p class="font-body-md text-caption text-on-surface-variant mt-1">Crucial transaction artifacts required to freeze recipient wallets.</p><div class="mt-space-sm flex flex-col gap-1.5"><label class="flex items-center gap-space-sm bg-surface p-space-sm rounded-xl cursor-pointer"><input checked="" class="w-5 h-5 rounded-md accent-secondary" type="checkbox"><span class="font-body-bold text-caption text-on-surface">Screenshot transaction &amp; UTR No.</span></label><label class="flex items-center gap-space-sm bg-surface p-space-sm rounded-xl cursor-pointer"><input class="w-5 h-5 rounded-md accent-secondary" type="checkbox"><span class="font-body-bold text-caption text-on-surface">Note fraudster UPI ID / phone / link</span></label><details class="group bg-surface p-space-sm rounded-xl"><summary class="flex items-center justify-between cursor-pointer list-none text-caption font-body-bold text-primary-container"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">info</span>Tips on locating UTR</span><span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span></summary><p class="font-caption text-caption text-on-surface-variant mt-2 pt-2 border-t border-outline-variant/30">Look under transaction history in GPay, PhonePe or bank SMS for a 12-digit numeric reference (e.g. 4123XXXXXXXX).</p></details></div></div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="w-full bg-surface-container rounded-3xl p-space-lg shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-body-bold text-caption flex-shrink-0">
+            3
+          </div>
+<div class="flex-1 min-w-0"><div class="flex items-center justify-between"><span class="font-body-bold text-body-lg text-on-surface font-semibold">File at cybercrime.gov.in</span></div><p class="font-body-md text-caption text-on-surface-variant mt-1">Official government portal complaint creates legal acknowledgement.</p><div class="mt-space-sm flex flex-col gap-2"><a class="w-full inline-flex items-center justify-center gap-space-xs bg-primary-container text-on-primary font-body-bold text-caption py-2.5 px-4 rounded-full active:scale-95 transition-transform shadow-sm" href="https://cybercrime.gov.in" rel="noopener noreferrer" target="_blank"><span>Open Cybercrime Portal Form</span><span class="material-symbols-outlined text-[18px]">north_east</span></a><details class="group bg-surface p-space-sm rounded-xl"><summary class="flex items-center justify-between cursor-pointer list-none text-caption font-body-bold text-primary-container"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>Details to have ready</span><span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span></summary><ul class="font-caption text-caption text-on-surface-variant space-y-1 list-disc list-inside mt-2 pt-2 border-t border-outline-variant/30"><li>Bank account number &amp; IFSC</li><li>Suspect UPI ID / phone</li><li>Debit timestamp &amp; SMS copy</li></ul></details></div></div>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="w-full bg-surface-container rounded-3xl p-space-lg shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-body-bold text-caption flex-shrink-0">
+            4
+          </div>
+<div class="flex-1 min-w-0"><div class="flex items-center justify-between"><span class="font-body-bold text-body-lg text-on-surface font-semibold">De-link UPI from SIM</span></div><p class="font-body-md text-caption text-on-surface-variant mt-1">Revoke device binding to block recurring unauthorized OTP relays.</p><div class="mt-space-sm flex flex-col gap-2"><a class="bg-surface p-space-sm rounded-2xl flex items-center justify-between active:bg-surface-variant transition-colors" href="tel:*99%23"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">dialpad</span></div><div class="min-w-0"><span class="font-body-bold text-caption text-on-surface block">Dial *99# Kill-Switch</span><span class="font-caption text-caption text-on-surface-variant">Option 7 &gt; Deregister UPI</span></div></div><span class="material-symbols-outlined text-[18px] text-on-surface-variant">call</span></a><details class="group bg-surface p-space-sm rounded-xl"><summary class="flex items-center justify-between cursor-pointer list-none text-caption font-body-bold text-primary-container"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">phonelink_erase</span>App logout instructions</span><span class="material-symbols-outlined text-[18px] text-on-surface-variant group-open:rotate-180 transition-transform">expand_more</span></summary><p class="font-caption text-caption text-on-surface-variant mt-2 pt-2 border-t border-outline-variant/30">In GPay, PhonePe, or Paytm: Open Settings &gt; Security &gt; Log out of all active devices immediately.</p></details></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Shared Checklist & Support Section -->
+<div class="w-full bg-surface-container rounded-3xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">diversity_3</span>
+</div>
+<div>
+<h3 class="font-title text-title text-on-surface font-bold">Family &amp; Trusted Ally Support</h3>
+<p class="font-caption text-caption text-on-surface-variant">Two heads handle triage better under panic.</p>
+</div>
+</div>
+<p class="font-body-md text-caption text-on-surface-variant mb-space-sm">Share this actionable playbook with trusted allies to divide triage calls under panic.</p>
+<button class="w-full h-[52px] bg-primary-container text-on-primary rounded-full font-body-bold text-body-md flex items-center justify-center gap-space-xs shadow-md active:scale-[0.98] transition-transform" id="share-checklist-btn" onclick="if(navigator.share){navigator.share({title:'EMERGENCY: Financial Fraud Recovery Checklist',text:'I need emergency help following fraud triage: 1. Call 1930 immediately. 2. Freeze bank account. 3. File acknowledgment at cybercrime.gov.in.',url:window.location.href});}else{alert('Checklist copied to clipboard for sharing!');}" type="button">
+<span class="material-symbols-outlined text-[20px]">share</span>
+<span>Share Emergency Checklist with Family</span>
+</button>
+</div>
+<!-- Emergency Escape Exit Safeguard -->
+<div class="w-full flex flex-col items-center text-center p-space-md">
+<button class="text-on-surface-variant font-body-bold text-caption flex items-center gap-1.5 py-2 px-4 rounded-full bg-surface-container active:bg-surface-variant transition-colors" onclick="history.back();" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Exit Emergency Mode &amp; Return to Readiness</span>
+</button>
+<p class="font-caption text-caption text-on-surface-variant mt-2 max-w-[400px]">
+      Safe mode does not transmit your personal details to commercial servers. All phone numbers connect to statutory agencies.
+    </p>
+</div>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.05)]" data-active-classes="text-primary-container font-body-bold scale-[1.02]"><div class="max-w-[640px] mx-auto h-16 px-space-xs flex items-center justify-around"><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="drills" href="#"><span class="material-symbols-outlined text-[24px]">fitness_center</span><span class="font-caption text-caption text-center leading-none mt-1">Drills</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="scam-library" href="#"><span class="material-symbols-outlined text-[24px]">local_library</span><span class="font-caption text-caption text-center leading-none mt-1">Library</span></a><a aria-current="page" class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 transition-all text-primary-container font-body-bold scale-[1.02]" data-path="emergency-sos" href="#"><div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-error-container text-error shadow-[0_2px_8px_rgba(185,28,28,0.2)]"><span class="material-symbols-outlined text-[20px]">e911_emergency</span></div><span class="font-caption text-caption font-semibold text-center leading-none mt-1 text-error">SOS</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="readiness" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-caption text-caption text-center leading-none mt-1">Readiness</span></a></div></nav>
+
+</body></html>
+
+<!-- Readiness & Analytics -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#002113", "secondary": "#006c48", "inverse-on-surface": "#f2f1ee", "surface-container": "#efeeeb", "on-surface": "#1a1c1a", "tertiary-fixed-dim": "#ffb4a1", "on-surface-variant": "#414844", "on-primary-fixed": "#002114", "surface-bright": "#faf9f6", "surface": "#faf9f6", "secondary-container": "#92f7c3", "surface-variant": "#e3e2e0", "primary-fixed": "#c1ecd4", "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "secondary-fixed": "#92f7c3", "primary": "#012d1d", "tertiary-container": "#6d230f", "error-container": "#ffdad6", "tertiary-fixed": "#ffdbd2", "on-background": "#1a1c1a", "error": "#ba1a1a", "inverse-primary": "#a5d0b9", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-low": "#f4f3f1", "outline-variant": "#c1c8c2", "surface-dim": "#dbdad7", "on-primary": "#ffffff", "surface-container-high": "#e9e8e5", "tertiary": "#4f0e00", "primary-container": "#1b4332", "surface-container-highest": "#e3e2e0", "secondary-fixed-dim": "#75daa8", "on-tertiary-fixed": "#3c0800", "background": "#faf9f6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#005235", "inverse-surface": "#2f312f", "outline": "#717973", "on-error-container": "#93000a", "on-primary-container": "#86af99", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#274e3d", "on-tertiary-container": "#f3896d", "surface-tint": "#3f6653", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><div class="flex flex-col min-w-0"><span class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Readiness</span><span class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Money Fire Drill</span></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-highest"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-surface"><div class="flex flex-col w-full pb-6 space-y-space-md">
+<!-- Top Sandbox Disclaimer Chip -->
+<div class="flex items-center justify-center gap-space-xs py-1 px-space-md rounded-full bg-surface-container self-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">verified_user</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-on-surface-variant">Educational Sandbox • Post-Drill Analysis</span>
+</div>
+<!-- Section 1: Overall Readiness Header Card -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm relative overflow-hidden flex flex-col items-center text-center">
+<!-- Subtle Background Accent Glow -->
+<div class="absolute -top-12 -right-12 w-40 h-40 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary-fixed-dim/30 rounded-full blur-xl pointer-events-none"></div>
+<!-- Interactive / Delightful Badge -->
+<div class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-secondary-container text-on-secondary-container mb-3 shadow-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+<span class="font-caption text-caption font-semibold">Tier 1 Defender: Shield Verified</span>
+</div>
+<!-- Circular Progress Gauge with SVG -->
+<div class="relative w-36 h-36 flex items-center justify-center my-2">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 120 120">
+<!-- Track circle -->
+<circle class="text-surface-variant" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" stroke-width="10"></circle>
+<!-- Active stroke (88% = 314 * 0.88 = 276.32) -->
+<circle class="text-secondary transition-all duration-1000 ease-out" cx="60" cy="60" fill="transparent" id="score-ring" r="50" stroke="currentColor" stroke-dasharray="314" stroke-dashoffset="37.68" stroke-linecap="round" stroke-width="10"></circle>
+</svg>
+<!-- Score center readout -->
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<div class="flex items-baseline">
+<span class="font-headline-xl-mobile text-headline-xl-mobile text-primary tracking-tight">88</span>
+<span class="font-caption text-caption text-on-surface-variant ml-0.5">/100</span>
+</div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-secondary font-bold">Excellent</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mt-1">Financial Cyber Readiness</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-[280px]">
+      You are prepared for <span class="font-body-bold text-primary font-semibold">9 out of 10</span> common retail digital payment traps.
+    </p>
+<!-- Micro Metric Quick Bar -->
+<div class="grid grid-cols-2 gap-space-sm w-full mt-4 pt-3 border-t-0 bg-surface-container/60 rounded-xl p-3">
+<div class="flex flex-col items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Drill Velocity</span>
+<span class="font-body-bold text-body-bold text-primary mt-0.5">4.2s (Fast)</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Trap Reflex</span>
+<span class="font-body-bold text-body-bold text-secondary mt-0.5">Calm / Methodical</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Post-Drill Concept Breakdown (The "Why") -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]">psychology_alt</span>
+</div>
+<div>
+<h3 class="font-title text-title text-primary leading-tight">Concept Mastery</h3>
+<span class="font-caption text-caption text-on-surface-variant">The iron-clad logic behind the split decisions</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<!-- Quiz Question & Clarified Logic -->
+<div class="bg-surface rounded-xl p-space-md flex flex-col space-y-space-sm">
+<div class="flex items-start gap-space-xs">
+<span class="font-caption text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface">Rule 01</span>
+<span class="font-body-bold text-body-bold text-on-surface">Why is a UPI PIN never needed to receive money?</span>
+</div>
+<!-- Explanatory Core Box -->
+<div class="rounded-lg bg-secondary-container/40 p-space-sm flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">check_circle</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption font-bold text-primary">Core Security Principle</span>
+<p class="font-body-md text-body-md text-on-secondary-fixed mt-0.5 leading-snug">
+            Your UPI PIN is a private digital authorization key strictly reserved for <span class="underline font-semibold">debiting (sending)</span> funds from your account. Inward credits flow automatically via banking VPA address routing.
+          </p>
+</div>
+</div>
+<!-- Regulatory Citation Tag -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px]">assured_workload</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Official Reference: NPCI UPI Safety Advisory</span>
+</div>
+<button class="font-caption text-caption text-secondary font-semibold hover:underline flex items-center gap-0.5" onclick="this.textContent = 'Rule book verified ✓'" type="button">
+          Read Clause
+          <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section 3: Habit Formation & Mistake Analytics -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-title text-title text-primary">Adaptive Mistake Tracking</h3>
+<p class="font-caption text-caption text-on-surface-variant">Real-time simulation behavioral telemetry</p>
+</div>
+<div class="p-1.5 rounded-full bg-surface-container-highest text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</div>
+</div>
+<!-- Practice Rows -->
+<div class="space-y-space-sm">
+<!-- Area 1: UPI Collect Requests (100%) -->
+<div class="bg-surface rounded-xl p-space-md flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-bold text-body-bold text-on-surface">UPI Collect Requests</span>
+</div>
+<span class="font-body-bold text-body-bold text-secondary">100% Mastery</span>
+</div>
+<!-- Progress track -->
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full w-full"></div>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">3 out of 3 traps successfully flagged &amp; declined. Zero hesitation.</span>
+</div>
+<!-- Area 2: Reversal Procedures (80%) -->
+<div class="bg-surface rounded-xl p-space-md flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">timelapse</span>
+<span class="font-body-bold text-body-bold text-on-surface">Reversal &amp; Dispute Escalation</span>
+</div>
+<span class="font-body-bold text-body-bold text-primary">80%</span>
+</div>
+<!-- Progress track -->
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-secondary-fixed-dim h-2 rounded-full w-4/5"></div>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">Noticeable delay locating the 12-digit UTR reference code. Practice recommended.</span>
+</div>
+<!-- Area 3: Fake Customer Care Detection (70% - Attention needed) -->
+<div class="bg-surface rounded-xl p-space-md flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-[20px]">warning</span>
+<span class="font-body-bold text-body-bold text-on-surface">Fake Customer Care Detection</span>
+</div>
+<span class="font-body-bold text-body-bold text-tertiary-container">70% Review</span>
+</div>
+<!-- Progress track -->
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-tertiary-fixed-dim h-2 rounded-full w-[70%]"></div>
+</div>
+<div class="p-2 rounded-lg bg-tertiary-fixed/30 flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px] mt-0.5">lightbulb</span>
+<span class="font-caption text-caption text-tertiary leading-tight">
+            Vulnerability spotted: Susceptible to sponsored Google Search contact numbers. Always use official in-app help desks!
+          </span>
+</div>
+</div>
+</div>
+<!-- Quick Retest CTA Button -->
+<button class="w-full h-[48px] rounded-full bg-surface-container-highest hover:bg-surface-variant text-primary font-body-bold text-body-bold flex items-center justify-center gap-2 transition-transform active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+      Run 90-Second Target Micro-Drill
+    </button>
+</div>
+<!-- Section 4: Readiness Checklist for Real Life -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+<div>
+<h3 class="font-title text-title text-primary leading-tight">Real-Life Armor Checklist</h3>
+<span class="font-caption text-caption text-on-surface-variant">Hardware &amp; account protection safeguards</span>
+</div>
+</div>
+<span class="font-caption text-caption font-bold text-secondary bg-secondary-container px-2 py-0.5 rounded-full">3 / 4 Done</span>
+</div>
+<!-- Check items list -->
+<div class="space-y-space-xs" id="checklist-container">
+<!-- Item 1 (Done) -->
+<label class="flex items-center gap-3 p-3 rounded-xl bg-surface cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded-full text-secondary accent-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-body-bold text-body-bold text-on-surface line-through opacity-70">Bank 24x7 Fraud Helpline saved</span>
+<span class="font-caption text-caption text-on-surface-variant">Stored on speed-dial contact card</span>
+</div>
+<span class="material-symbols-outlined text-secondary ml-auto text-[20px]">check</span>
+</label>
+<!-- Item 2 (Done) -->
+<label class="flex items-center gap-3 p-3 rounded-xl bg-surface cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded-full text-secondary accent-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-body-bold text-body-bold text-on-surface line-through opacity-70">1930 Cyber Crime Helpline saved</span>
+<span class="font-caption text-caption text-on-surface-variant">National cyber reporting emergency line</span>
+</div>
+<span class="material-symbols-outlined text-secondary ml-auto text-[20px]">check</span>
+</label>
+<!-- Item 3 (Done) -->
+<label class="flex items-center gap-3 p-3 rounded-xl bg-surface cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded-full text-secondary accent-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-body-bold text-body-bold text-on-surface line-through opacity-70">UPI daily transaction limits configured</span>
+<span class="font-caption text-caption text-on-surface-variant">Capped at ₹15,000 for standard merchant scans</span>
+</div>
+<span class="material-symbols-outlined text-secondary ml-auto text-[20px]">check</span>
+</label>
+<!-- Item 4 (Pending action item) -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-highest cursor-pointer hover:bg-surface-variant transition-colors" onclick="const checkbox = this.querySelector('input'); checkbox.checked = !checkbox.checked; this.classList.toggle('bg-surface');">
+<div class="flex items-center gap-3 min-w-0">
+<input class="w-5 h-5 rounded-full text-secondary accent-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div class="flex flex-col min-w-0">
+<span class="font-body-bold text-body-bold text-primary font-semibold">Enable biometric lock on banking app</span>
+<span class="font-caption text-caption text-on-surface-variant">Tap to configure FaceID/Fingerprint</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Section 5: Shareable Certificate / Family Drill Card -->
+<div class="bg-primary text-on-primary rounded-lg p-space-lg shadow-md relative overflow-hidden flex flex-col space-y-space-md">
+<!-- Ornamental ambient graphics -->
+<div class="absolute -right-8 -top-8 w-36 h-36 bg-secondary-container/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-[24px]">workspace_premium</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary-fixed">Official Badge</span>
+</div>
+<span class="font-caption text-caption text-surface-container-high/80">Issue #MFD-2025-9941</span>
+</div>
+<!-- Credential Body -->
+<div class="flex flex-col space-y-1">
+<span class="font-caption text-caption text-surface-container-high">Certified Cyber-Ready Household</span>
+<h3 class="font-headline-md text-headline-md text-on-primary">Money Fire Drill • 2025</h3>
+<p class="font-body-md text-body-md text-primary-fixed-dim leading-snug">
+        Demonstrated decisive reflex against UPI collect phishing, social engineering scripts, and counterfeit banking QR codes.
+      </p>
+</div>
+<!-- Verified User Badge Signature Layout -->
+<div class="flex items-center justify-between pt-2 border-t-0 bg-primary-container/40 p-3 rounded-xl">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-caption">
+          AR
+        </div>
+<div class="flex flex-col">
+<span class="font-body-bold text-body-bold text-on-primary">Aarav Ray</span>
+<span class="font-label-caps text-label-caps text-primary-fixed">Score: 88/100 (Pass)</span>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-primary text-secondary-fixed px-2.5 py-1 rounded-full text-caption font-semibold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>Valid 1 Year</span>
+</div>
+</div>
+<!-- Interactive Actions: Share & Save -->
+<div class="grid grid-cols-2 gap-space-sm pt-1">
+<button class="h-[48px] rounded-full bg-secondary text-on-secondary hover:bg-secondary/90 font-body-bold text-body-bold flex items-center justify-center gap-1.5 transition-transform active:scale-[0.98]" id="share-card-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span>Share Badge</span>
+</button>
+<button class="h-[48px] rounded-full bg-primary-container text-on-primary hover:bg-primary-container/80 font-body-bold text-body-bold flex items-center justify-center gap-1.5 transition-transform active:scale-[0.98]" id="challenge-family-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">group_add</span>
+<span>Challenge Family</span>
+</button>
+</div>
+</div>
+<!-- Micro Toast Notification Element for Delight Interactions -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-4 py-2 rounded-full shadow-lg flex items-center gap-2 transition-all opacity-0 pointer-events-none translate-y-4 z-50" id="toast-delight">
+<span class="material-symbols-outlined text-secondary-fixed text-[18px]">check_circle</span>
+<span class="font-caption text-caption font-semibold" id="toast-message">Badge copied to clipboard!</span>
+</div>
+</div>
+<script>
+  (function initReadinessScreen() {
+    const shareBtn = document.getElementById('share-card-btn');
+    const challengeBtn = document.getElementById('challenge-family-btn');
+    const toast = document.getElementById('toast-delight');
+    const toastMessage = document.getElementById('toast-message');
+
+    function showToast(msg) {
+      if (!toast) return;
+      toastMessage.textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+      }, 2400);
+    }
+
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        if (navigator.share) {
+          navigator.share({
+            title: 'Money Fire Drill Certificate',
+            text: 'I scored 88/100 on the Financial Cyber Readiness Simulation! Test your scam reflexes here.',
+            url: window.location.href,
+          }).catch(() => {
+            showToast('Certificate link copied to clipboard!');
+          });
+        } else {
+          showToast('Certificate link copied to clipboard!');
+        }
+      });
+    }
+
+    if (challengeBtn) {
+      challengeBtn.addEventListener('click', () => {
+        showToast('Invite link generated for family drill!');
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.05)]" data-active-classes="text-primary-container font-body-bold scale-[1.02]"><div class="max-w-[640px] mx-auto h-16 px-space-xs flex items-center justify-around"><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="drills" href="#"><span class="material-symbols-outlined text-[24px]">fitness_center</span><span class="font-caption text-caption text-center leading-none mt-1">Drills</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="scam-library" href="#"><span class="material-symbols-outlined text-[24px]">local_library</span><span class="font-caption text-caption text-center leading-none mt-1">Library</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-error transition-all" data-path="emergency-sos" href="#"><div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-error-container text-error shadow-[0_2px_8px_rgba(185,28,28,0.2)]"><span class="material-symbols-outlined text-[20px]">e911_emergency</span></div><span class="font-caption text-caption font-semibold text-center leading-none mt-1 text-error">SOS</span></a><a aria-current="page" class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 transition-all text-primary-container font-body-bold scale-[1.02]" data-path="readiness" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-caption text-caption text-center leading-none mt-1">Readiness</span></a></div></nav></body></html>
+
+<!-- Money Fire Drill - Drills -->
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#002113", "secondary": "#006c48", "inverse-on-surface": "#f2f1ee", "surface-container": "#efeeeb", "on-surface": "#1a1c1a", "tertiary-fixed-dim": "#ffb4a1", "on-surface-variant": "#414844", "on-primary-fixed": "#002114", "surface-bright": "#faf9f6", "surface": "#faf9f6", "secondary-container": "#92f7c3", "surface-variant": "#e3e2e0", "primary-fixed": "#c1ecd4", "on-secondary-container": "#00734d", "primary-fixed-dim": "#a5d0b9", "secondary-fixed": "#92f7c3", "primary": "#012d1d", "tertiary-container": "#6d230f", "error-container": "#ffdad6", "tertiary-fixed": "#ffdbd2", "on-background": "#1a1c1a", "error": "#ba1a1a", "inverse-primary": "#a5d0b9", "on-tertiary-fixed-variant": "#7c2e19", "surface-container-low": "#f4f3f1", "outline-variant": "#c1c8c2", "surface-dim": "#dbdad7", "on-primary": "#ffffff", "surface-container-high": "#e9e8e5", "tertiary": "#4f0e00", "primary-container": "#1b4332", "surface-container-highest": "#e3e2e0", "secondary-fixed-dim": "#75daa8", "on-tertiary-fixed": "#3c0800", "background": "#faf9f6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#005235", "inverse-surface": "#2f312f", "outline": "#717973", "on-error-container": "#93000a", "on-primary-container": "#86af99", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#274e3d", "on-tertiary-container": "#f3896d", "surface-tint": "#3f6653", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "gutter": "1rem", "space-xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "body-bold": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "caption": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-caps": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }], "body-bold": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "22px", "fontWeight": "400" }], "caption": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }], "title": ["20px", { "lineHeight": "25px", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["34px", { "lineHeight": "41px", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "13px", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { -webkit-tap-highlight-color: transparent; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]"><div class="h-16 max-w-[640px] mx-auto px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Money Fire Drill Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrCI0C4HTzNfM7Kbir3s9Msn68EhQSVGhnKa0QJPh23MzynerodtWEVEwT4Ue5krLEfiCfc8Lnj4z4gbpW5zTASg2s7v23p_0MvYKSVNztFyM3Td3gPDS2tyV5UkudranbBU8x59Jr1-4KK9N-Td7_BxZCpRYGKUylOO6FWxcTZ8BZC2z2D8m3ZCZRUQVRko0qaYXHuiuvXUyeHGnYOv0NVWbO4LTCt9xxO4wsnCDwZG4Q"/><div class="flex flex-col min-w-0"><span class="text-primary-container font-headline-md text-title tracking-tight leading-tight truncate">Drills</span><span class="text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">Money Fire Drill</span></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-highest"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qjLbn2BsNHMnBfgBwhUPNNPimkZ-0gERGWbk9gGsquN0jxy-DN0oHZ2lXkmz53VfflClMZKSpRLIPa5bJl74wR6HMhQ48NCp__PwhdeJo6QftFaVgBBt9quzH3zFJGIkAlH8GqJ3Kwd3C26iYmm-X3fNLl2qvCvF_mF18xBrmr_97OqPnzmV36kBgffgPqvMS27CDVmxbBxoyvM3lxzn4en7j0v-q5TD868V2Y-P"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-surface"><div class="flex flex-col w-full gap-space-md">
+<!-- 1. Top Reassurance & Disclaimer Banner -->
+<div class="w-full bg-surface-container rounded-DEFAULT p-space-sm px-space-md flex items-center gap-space-sm shadow-sm">
+<div class="flex items-center justify-center w-7 h-7 rounded-full bg-primary-fixed text-primary shrink-0">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-secondary font-semibold">Safe Sandbox Mode</span>
+<p class="font-caption text-caption text-on-surface-variant truncate">Education simulation only. No real money or bank accounts accessed.</p>
+</div>
+</div>
+<!-- 2. Quick Readiness Stat Card (iOS Widget feel) -->
+<div class="w-full bg-surface-container rounded-lg p-space-lg flex items-center justify-between shadow-sm relative overflow-hidden">
+<div class="flex flex-col gap-space-xs z-10">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container w-fit">
+<span class="material-symbols-outlined text-[14px]">format_image_left</span>
+<span class="font-label-caps text-label-caps font-semibold uppercase">Fraud Readiness</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl-mobile text-headline-xl-mobile text-primary tracking-tight font-bold">84%</span>
+<span class="font-title text-title text-secondary font-semibold">Ready</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">3 of 3 Core Drills mastered • Last practiced: Today</p>
+</div>
+<!-- Circular Progress Indicator Ring -->
+<div class="relative w-20 h-20 shrink-0 flex items-center justify-center z-10">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 72 72">
+<circle class="text-surface-variant" cx="36" cy="36" fill="transparent" r="30" stroke="currentColor" stroke-width="7"></circle>
+<circle class="text-secondary" cx="36" cy="36" fill="transparent" r="30" stroke="currentColor" stroke-dasharray="188.5" stroke-dashoffset="30.16" stroke-linecap="round" stroke-width="7"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[24px]">verified</span>
+</div>
+</div>
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-secondary-container/20 pointer-events-none"></div>
+</div>
+<!-- 3. Active Fire Drills Section -->
+<div class="flex flex-col gap-space-sm mt-1">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">local_fire_department</span>
+<h2 class="font-title text-title text-primary tracking-tight font-bold">Active Fire Drills</h2>
+</div>
+<span class="font-caption text-caption text-secondary font-semibold cursor-pointer">View All (7)</span>
+</div>
+<!-- Card 1: Featured Drill (Fake UPI Request) -->
+<div class="w-full bg-surface-container rounded-lg p-space-lg flex flex-col gap-space-md shadow-sm relative">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-caps text-label-caps font-semibold">
+<span class="material-symbols-outlined text-[13px]">timer</span>
+            Timed Simulation • 2 mins
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-tertiary-container/10 text-tertiary font-label-caps text-label-caps font-semibold">
+            High Severity
+          </span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-primary-container shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[18px]">currency_rupee</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title text-title text-primary font-bold">Fake UPI “Receive Money” Collect Trap</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          A secondhand buyer sends a ₹4,500 collect request disguised as payment. Learn firsthand why a UPI PIN is never entered to receive money.
+        </p>
+</div>
+<!-- Micro Sandbox Visual Pill -->
+<div class="w-full bg-surface rounded-DEFAULT p-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-bold text-body-bold text-on-surface text-xs truncate">Simulated: ₹4,500 Collect Request</span>
+<span class="font-caption text-caption text-tertiary text-xs">Deceptive message: “Approve to receive instant transfer”</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_forward</span>
+</div>
+<button class="w-full h-13 py-3.5 px-6 rounded-full bg-primary-container text-on-primary font-body-bold text-body-bold flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span>Start Drill</span>
+</button>
+</div>
+<!-- Card 2: Wrong-Person Transfer Drill (Completed State) -->
+<div class="w-full bg-surface-container rounded-lg p-space-lg flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-caps text-label-caps font-semibold">
+<span class="material-symbols-outlined text-[13px]">published_with_changes</span>
+          Recovery Workflow
+        </span>
+<span class="inline-flex items-center gap-1 text-secondary font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+          Completed (100%)
+        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title text-title text-primary font-bold">Wrong-Person Transfer Drill</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Funds mistransferred to a cloned UPI handle. Run through the golden 4-hour reversal protocol and bank dispute workflow.
+        </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-caption text-caption text-on-surface-variant">Mastered • Score: 10/10</span>
+<button class="px-4 py-2 rounded-full bg-surface text-primary font-body-bold text-caption shadow-sm active:scale-[0.98] transition-transform flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">replay</span>
+<span>Review Path</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Urgent Instant Loan APK Scam -->
+<div class="w-full bg-surface-container rounded-lg p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps font-semibold">
+<span class="material-symbols-outlined text-[13px]">policy</span>
+          Permission Audit
+        </span>
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-tertiary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[18px]">install_mobile</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title text-title text-primary font-bold">Urgent Instant Loan APK Scam</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Inspect predatory sideloaded app permissions (Contacts, Photos access), extortion triggers, and verify against the official RBI whitelist.
+        </p>
+</div>
+<button class="w-full h-12 py-3 px-6 rounded-full bg-surface text-primary font-body-bold text-body-bold flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span>Practice Drill</span>
+</button>
+</div>
+</div>
+<!-- 4. Adaptive Recommendation Pill Box -->
+<div class="w-full bg-surface-container rounded-lg p-space-md flex items-center gap-space-md shadow-sm mt-1">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">psychology</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider">Adaptive Recommendation</span>
+</div>
+<h4 class="font-body-bold text-body-bold text-primary truncate mt-0.5">NPCI Reversal Window Rules</h4>
+<p class="font-caption text-caption text-on-surface-variant line-clamp-1">Targeted review based on your previous hesitation in UPI timing scenarios.</p>
+</div>
+<span class="material-symbols-outlined text-outline shrink-0 text-[20px]">chevron_right</span>
+</div>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.05)]" data-active-classes="text-primary-container font-body-bold scale-[1.02]"><div class="max-w-[640px] mx-auto h-16 px-space-xs flex items-center justify-around"><a aria-current="page" class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 transition-all text-primary-container font-body-bold scale-[1.02]" data-path="drills" href="#"><span class="material-symbols-outlined text-[24px]">fitness_center</span><span class="font-caption text-caption text-center leading-none mt-1">Drills</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="scam-library" href="#"><span class="material-symbols-outlined text-[24px]">local_library</span><span class="font-caption text-caption text-center leading-none mt-1">Library</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-error transition-all" data-path="emergency-sos" href="#"><div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-error-container text-error shadow-[0_2px_8px_rgba(185,28,28,0.2)]"><span class="material-symbols-outlined text-[20px]">e911_emergency</span></div><span class="font-caption text-caption font-semibold text-center leading-none mt-1 text-error">SOS</span></a><a class="group flex flex-col items-center justify-center min-w-[68px] min-h-[48px] py-1 text-on-surface-variant transition-all" data-path="readiness" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-caption text-caption text-center leading-none mt-1">Readiness</span></a></div></nav></body></html>

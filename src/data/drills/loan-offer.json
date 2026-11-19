@@ -1,0 +1,138 @@
+{
+  "id": "loan-offer",
+  "title": "Instant loan offer",
+  "tagline": "A pre-approved loan text arrives. Check it before you tap anything.",
+  "concept": "interest-credit",
+  "relatedConcepts": ["phishing-indicators"],
+  "difficulty": "hard",
+  "timeLimitSec": 150,
+  "linkedLibraryIds": ["loan-01", "loan-02", "loan-03"],
+  "intro": "An SMS from {{lender}} says you are pre-approved for ₹{{amount}} with no documents. You could use some cash this week. Before you tap anything, rehearse how to check an offer.",
+  "variables": {
+    "lender": ["QuickRupee Now", "InstaCash Hub", "FastFunds Lend"],
+    "amount": { "min": 5000, "max": 48000, "step": 1000 },
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"]
+  },
+  "trigger": {
+    "type": "loan_offer",
+    "payloadTemplate": {
+      "sender": "{{lender}}",
+      "time": "{{time}}",
+      "link": "qkl.to/Lx92",
+      "body": "Pre-approved instant loan of ₹{{amount}}! No documents needed, money in minutes. Tap qkl.to/Lx92 to claim. Offer ends today! Allow access to your contacts and gallery to proceed."
+    }
+  },
+  "steps": [
+    {
+      "id": "spot-flags",
+      "label": "Spot the red flags in the offer SMS",
+      "actionKey": "spot_red_flags",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Scan the loan SMS for 'no checks', short links, urgency, or invasive permission demands.",
+      "explanation": "Shortened links, 'no documents', deadlines and requests for contacts or gallery access are common warning signs.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "use-calculator",
+      "label": "Open the offer and use the interest calculator",
+      "actionKey": "use_calculator",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Check the real total repayment and fees—small weekly numbers can hide steep rates.",
+      "explanation": "The monthly amount can look small. The calculator shows the total you would repay, which is the number that matters.",
+      "mistakeConcept": "interest-credit"
+    },
+    {
+      "id": "check-lender",
+      "label": "Check the lender in the registration lookup",
+      "actionKey": "check_lender",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Verify whether the lender is genuinely registered with the RBI before sharing any info.",
+      "explanation": "RBI regulates lenders and NBFCs. Check that a lender is genuine through official channels before you share anything.",
+      "mistakeConcept": "interest-credit"
+    },
+    {
+      "id": "decline-revoke",
+      "label": "Decline the offer and revoke permissions",
+      "actionKey": "decline_revoke",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Turn down the unverified loan and strip away contacts and gallery access.",
+      "explanation": "Say no, and turn off any contact or gallery access. Never share an OTP or KYC details with an unknown app.",
+      "mistakeConcept": "interest-credit"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-accept",
+      "actionKey": "accept_offer",
+      "label": "Accept the offer and verify with an OTP",
+      "screen": "offer",
+      "mistakeConcept": "interest-credit",
+      "explanation": "An OTP can approve a loan or a payment. Never enter one for an offer you have not checked.",
+      "opensPin": "otp"
+    },
+    {
+      "id": "d-perm",
+      "actionKey": "grant_permissions",
+      "label": "Allow access to contacts and gallery",
+      "screen": "offer",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Unknown apps can misuse your contacts and photos. Do not grant access just to see an offer."
+    },
+    {
+      "id": "d-kyc",
+      "actionKey": "upload_kyc",
+      "label": "Upload your ID and a selfie",
+      "screen": "offer",
+      "mistakeConcept": "interest-credit",
+      "explanation": "Never share ID or KYC details with a lender you have not verified."
+    }
+  ],
+  "criticalActions": ["enter_otp_loan"],
+  "critical": {
+    "title": "You entered an OTP to accept an unchecked loan",
+    "explanation": "Never share an OTP or KYC details with an unknown app. In real life, if you did this, contact your bank's 24×7 helpline and report on 1930 or cybercrime.gov.in as soon as possible.",
+    "reason": "You accepted an unchecked loan offer with an OTP last time, so rehearse checking lenders next.",
+    "concept": "interest-credit"
+  },
+  "redFlags": [
+    {
+      "id": "f-nodocs",
+      "textFragment": "No documents needed",
+      "label": "No checks at all",
+      "explanation": "A genuine lender checks who you are. 'No documents' is a warning sign."
+    },
+    {
+      "id": "f-link",
+      "textFragment": "qkl.to/Lx92",
+      "label": "Shortened link",
+      "explanation": "Short links hide where they lead."
+    },
+    {
+      "id": "f-urgent",
+      "textFragment": "Offer ends today!",
+      "label": "Deadline pressure",
+      "explanation": "Urgency is used so you do not read the terms."
+    },
+    {
+      "id": "f-perm",
+      "textFragment": "Allow access to your contacts and gallery",
+      "label": "Invasive permissions",
+      "explanation": "A loan does not need your contacts or photos. This can be used to pressure you later."
+    }
+  ],
+  "hints": {
+    "spot-flags": "Legitimate lenders never skip KYC documents or demand your phone contacts and photo gallery—predatory apps use those to harass you later. Tap at least 3 suspicious phrases in the SMS before opening the offer.",
+    "use-calculator": "Predatory loan apps advertise small weekly instalments while hiding steep interest and fees. Tap 'Open the offer', review the calculator sliders, and tap 'Show total repayment' to reveal the full cost.",
+    "check-lender": "Only RBI-registered banks and NBFCs can legally lend digitally, and unregulated apps often impersonate real names. On the offer screen, tap 'Check the lender's registration', tap 'Use the lender from the SMS', and check the list.",
+    "decline-revoke": "Because this offer fails the cost and registration checks, accepting or entering an OTP traps you in debt or fraud. Scroll to the bottom, uncheck Contacts/Gallery permissions, and tap 'Decline offer and revoke permissions'."
+  },
+  "quizId": "interest-credit"
+}

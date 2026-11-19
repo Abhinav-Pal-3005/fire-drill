@@ -1,0 +1,137 @@
+{
+  "id": "digital-arrest",
+  "title": "Fake authority call",
+  "tagline": "A video caller in uniform claims your number is in a legal case and demands money.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["phishing-indicators", "upi-safety"],
+  "difficulty": "hard",
+  "timeLimitSec": 150,
+  "linkedLibraryIds": ["arrest-01", "arrest-02", "arrest-03"],
+  "intro": "An unknown WhatsApp video caller wearing a uniform claims your Aadhaar and mobile number are tied to money laundering. They say you are under 'digital arrest' and must transfer ₹{{amount}} for verification without telling anyone. What do you do?",
+  "variables": {
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce"],
+    "amount": { "min": 15000, "max": 48000, "step": 1000 }
+  },
+  "trigger": {
+    "type": "digital_arrest",
+    "payloadTemplate": {
+      "sender": "Inspector Vikram · Unknown Video Call",
+      "time": "{{time}}",
+      "channel": "WhatsApp Video Call",
+      "body": "You are placed under digital arrest by Cyber Crime & CBI. Your Aadhaar and mobile number are linked to money laundering. Do not hang up or tell anyone. Transfer ₹{{amount}} for verification now."
+    }
+  },
+  "steps": [
+    {
+      "id": "spot-flags",
+      "label": "Spot the red flags in the video call notice",
+      "actionKey": "spot_red_flags",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Look closely at the claims—there is no legal process called 'digital arrest' in India.",
+      "explanation": "Real police and investigative agencies never arrest people over WhatsApp video calls, forbid speaking to family, or demand money for verification.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "end-call",
+      "label": "Hang up and end the fake authority call",
+      "actionKey": "end_fake_call",
+      "order": 2,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Cut off the intimidation immediately—staying on the call lets scammers keep pressuring you.",
+      "explanation": "Scammers keep victims on long video calls to create panic and stop them from checking. Hanging up breaks their control immediately.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "verify-trusted",
+      "label": "Tell a trusted person and verify through official channels",
+      "actionKey": "talk_trusted_verify",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Break the secrecy trap by checking with family and official agency numbers independently.",
+      "explanation": "Talking to a family member or trusted friend restores perspective, and official agencies can always be verified via official government directories.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "report-cybercrime",
+      "label": "Report the impersonation call on 1930 or cybercrime.gov.in",
+      "actionKey": "report_digital_arrest",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Log an official cybercrime report so the impersonator numbers can be traced and blocked.",
+      "explanation": "Reporting fake police or CBI calls to 1930 and cybercrime.gov.in creates an official record and helps block mule accounts and scam lines.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-stay",
+      "actionKey": "stay_on_call",
+      "label": "Stay on the video call to avoid 'contempt'",
+      "screen": "call",
+      "mistakeConcept": "fraud-response",
+      "explanation": "Keeping you on video call is how scammers isolate you from help and build panic."
+    },
+    {
+      "id": "d-share",
+      "actionKey": "share_bank_details",
+      "label": "Share bank balance & Aadhaar photo to 'clear' your name",
+      "screen": "call",
+      "mistakeConcept": "fraud-response",
+      "explanation": "Real investigators never ask for your account balances or sensitive KYC photos over WhatsApp video."
+    },
+    {
+      "id": "d-pay",
+      "actionKey": "pay_verification_fee",
+      "label": "Transfer ₹{{amount}} to the 'verification account'",
+      "screen": "call",
+      "mistakeConcept": "upi-safety",
+      "explanation": "Law enforcement agencies never ask citizens to transfer savings into bank accounts to prove innocence.",
+      "opensPin": "pin"
+    }
+  ],
+  "criticalActions": ["enter_pin_digital_arrest"],
+  "critical": {
+    "title": "You entered your UPI PIN for a 'verification' transfer",
+    "explanation": "There is NO legal process called 'digital arrest' in India, and no court or police agency ever asks you to transfer money for verification or clearance. If this happens in real life, hang up immediately, call your bank's 24×7 helpline, and report on 1930 or cybercrime.gov.in.",
+    "reason": "You transferred money during a fake authority call last time, so rehearse hanging up and verifying next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "f-arrest",
+      "textFragment": "placed under digital arrest",
+      "label": "Fake 'digital arrest' claim",
+      "explanation": "Indian law has no concept of 'digital arrest' over a phone or video call."
+    },
+    {
+      "id": "f-cbi",
+      "textFragment": "Cyber Crime & CBI",
+      "label": "Unsolicited agency impersonation",
+      "explanation": "Uniforms and agency logos on a WhatsApp call can be faked easily."
+    },
+    {
+      "id": "f-secret",
+      "textFragment": "Do not hang up or tell anyone.",
+      "label": "Forced secrecy & isolation",
+      "explanation": "Telling you not to contact family is a classic tactic to prevent someone else from spotting the scam."
+    },
+    {
+      "id": "f-transfer",
+      "textFragment": "Transfer ₹{{amount}} for verification now.",
+      "label": "Money demand for clearance",
+      "explanation": "Police and courts never ask you to transfer your money to 'verify' innocence."
+    }
+  ],
+  "hints": {
+    "spot-flags": "Government agencies never arrest citizens over WhatsApp video calls, forbid talking to family, or ask for money to prove innocence. Tap at least 3 suspicious phrases in the caller's statement.",
+    "end-call": "Staying on a live video call keeps you isolated and under pressure. Tap 'Hang up and block caller' right away—no real warrant works through staying on a call.",
+    "verify-trusted": "Secrecy is the scammer's strongest weapon. Open the Verify tab to inform a trusted family member and check official helpline channels independently.",
+    "report-cybercrime": "Once you are off the call and safe, open the Report tab to log the impersonation attempt on 1930 or cybercrime.gov.in."
+  },
+  "quizId": "fraud-response"
+}

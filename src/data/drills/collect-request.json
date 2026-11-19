@@ -1,0 +1,178 @@
+{
+  "id": "collect-request",
+  "title": "Collect-request scam",
+  "tagline": "A buyer says: just accept and enter your PIN to receive money.",
+  "concept": "upi-safety",
+  "relatedConcepts": ["phishing-indicators"],
+  "difficulty": "easy",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["upi-01", "upi-02", "upi-03"],
+  "intro": "You listed an old phone on a second-hand marketplace. {{name}} replies within minutes and says a payment of ₹{{amount}} is on the way. Your {{app}} app now shows a request. What do you do?",
+  "variables": {
+    "name": ["Rohit", "Meera", "Karan", "Ananya", "Imran", "Divya"],
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce"],
+    "amount": { "min": 1500, "max": 48000, "step": 500 },
+    "wording": [
+      "I'm travelling, so a friend will collect it.",
+      "I've already paid the delivery person.",
+      "I'm buying it as a gift."
+    ]
+  },
+  "trigger": {
+    "type": "collect_request",
+    "payloadTemplate": {
+      "channel": "Marketplace chat",
+      "sender": "{{name}} · Not in your contacts",
+      "senderId": "{{upiId}}",
+      "time": "{{time}}",
+      "note": "Payment to receive ₹{{amount}}",
+      "body": "Hi! I'll buy your item right now at full price, no bargaining. {{wording}} I'm sending a payment request of ₹{{amount}}. Just accept it and enter your UPI PIN to receive the money. I can't talk on a call, only chat. Do it urgently or I'll buy from someone else!"
+    }
+  },
+  "steps": [
+    {
+      "id": "spot-flags",
+      "label": "Spot the red flags in the buyer's message",
+      "actionKey": "spot_red_flags",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Inspect the buyer's message first to spot manipulation cues before acting.",
+      "explanation": "Scam messages use pressure, secrecy and odd requests. Spotting them early keeps you calm and in control.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "open-app",
+      "label": "Open {{app}} yourself",
+      "actionKey": "open_app",
+      "order": 2,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Verify any payment claim directly inside your own payment app, never through chat.",
+      "explanation": "Go to your payment app directly. You can then see the real request and its details instead of trusting what a message says.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "decline-request",
+      "label": "Decline the collect request",
+      "actionKey": "decline_request",
+      "order": 3,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Remember: receiving money never requires approving a collect request or entering a PIN.",
+      "explanation": "Approving a collect request sends money out of your account. Declining it is the safe choice. Receiving money never needs your approval.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "check-balance",
+      "label": "Check your balance and history",
+      "actionKey": "check_balance",
+      "order": 4,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Confirm your account activity so you know for sure no money was debited.",
+      "explanation": "A quick check confirms that nothing was debited and helps you notice anything odd straight away.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "block-report",
+      "label": "Block and report the sender's UPI ID",
+      "actionKey": "block_report",
+      "order": 5,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Stop repeat requests from this sender and flag the ID to help protect others.",
+      "explanation": "Blocking stops more requests from that ID. Reporting helps protect other people too.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "distractors": [
+    {
+      "id": "d-reply",
+      "actionKey": "reply_buyer",
+      "label": "Reply to the buyer and agree",
+      "screen": "inbox",
+      "mistakeConcept": "phishing-indicators",
+      "explanation": "Replying tells a scammer that you are active and easy to pressure. Do not chat further with someone who pushes you."
+    },
+    {
+      "id": "d-approve",
+      "actionKey": "approve_request",
+      "label": "Approve the request",
+      "screen": "request",
+      "mistakeConcept": "upi-safety",
+      "explanation": "Approving a collect request means you are paying, not receiving. The next screen would ask for your PIN.",
+      "opensPin": "pin"
+    },
+    {
+      "id": "d-send",
+      "actionKey": "send_money",
+      "label": "Send money to a contact",
+      "screen": "upi_home",
+      "mistakeConcept": "upi-safety",
+      "explanation": "Sending money does not cancel or fix anything. It only moves more of your money out."
+    },
+    {
+      "id": "d-scan",
+      "actionKey": "scan_qr",
+      "label": "Scan a QR code",
+      "screen": "upi_home",
+      "mistakeConcept": "upi-safety",
+      "explanation": "Scanning a QR code is a way to pay. It is not a way to receive money, and it does not help here."
+    }
+  ],
+  "criticalActions": ["enter_pin_to_receive"],
+  "critical": {
+    "title": "You entered your UPI PIN to receive money",
+    "explanation": "A UPI PIN is only for sending money. It is never needed to receive money. If anyone says 'enter your PIN to receive', it is a scam. In real life, contact your bank's 24×7 helpline and report on 1930 or cybercrime.gov.in as soon as possible.",
+    "reason": "You entered a PIN on a collect request last time, so rehearse this next.",
+    "concept": "upi-safety"
+  },
+  "redFlags": [
+    {
+      "id": "f-bargain",
+      "textFragment": "I'll buy your item right now at full price, no bargaining.",
+      "label": "Too easy a deal",
+      "explanation": "Scammers rush in with an easy deal so you stop checking."
+    },
+    {
+      "id": "f-request",
+      "textFragment": "sending a payment request",
+      "label": "A request pulls money out",
+      "explanation": "A real payment to you does not need you to approve anything. A request asks you to pay."
+    },
+    {
+      "id": "f-pin",
+      "textFragment": "enter your UPI PIN to receive the money",
+      "label": "PIN to receive",
+      "explanation": "A UPI PIN is only for sending money. You never need it to receive."
+    },
+    {
+      "id": "f-nocall",
+      "textFragment": "I can't talk on a call, only chat.",
+      "label": "Avoids a real conversation",
+      "explanation": "Scammers avoid calls because a voice is easier to check than a chat."
+    },
+    {
+      "id": "f-urgent",
+      "textFragment": "Do it urgently or I'll buy from someone else!",
+      "label": "Urgency pressure",
+      "explanation": "Pressure to act fast is designed to stop you from thinking."
+    },
+    {
+      "id": "f-unknown",
+      "textFragment": "Not in your contacts",
+      "label": "Unknown sender",
+      "explanation": "You do not know this person. Treat unknown senders with extra care."
+    }
+  ],
+  "hints": {
+    "spot-flags": "Scammers rush you with no-bargaining deals, refuse voice calls, and ask for a PIN to 'receive' money. Tap at least 3 suspicious phrases directly in the message bubble (avoid replying in chat).",
+    "open-app": "Never trust what a chat says about a payment—messages can lie about whether money is coming in or going out. Open {{app}} yourself from the Apps bar at the bottom to inspect the real request.",
+    "decline-request": "A UPI 'collect request' always pulls money OUT of your account when you approve it with your PIN; genuine incoming payments happen automatically. Tap the pending request in {{app}} and choose Decline.",
+    "check-balance": "Even after declining, verify your own ledger so you know for certain no unauthorised debit occurred. Tap Check balance & history on the {{app}} home screen.",
+    "block-report": "Scammers often resend collect requests hoping you slip up later. Open Security and help inside {{app}} to block the sender's UPI ID and submit a fraud report."
+  },
+  "quizId": "upi-safety"
+}

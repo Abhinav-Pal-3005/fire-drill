@@ -1,0 +1,43 @@
+{
+  "id": "upi-safety",
+  "concept": "upi-safety",
+  "title": "UPI safety quiz",
+  "questions": [
+    {
+      "id": "upi-1",
+      "prompt": "When do you need to enter your UPI PIN?",
+      "options": [
+        { "text": "Only when you are sending money", "explanationWrong": "" },
+        { "text": "To receive money from a buyer", "explanationWrong": "A UPI PIN is never needed to receive money. Anyone who says it is, is trying to trick you." },
+        { "text": "To read a message from your bank", "explanationWrong": "Reading a message never needs your PIN. Be careful with any message that asks for it." },
+        { "text": "Whenever someone asks politely", "explanationWrong": "Being polite does not make a request safe. Your PIN is private, always." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Your UPI PIN is only for sending money. You never need it to receive money."
+    },
+    {
+      "id": "upi-2",
+      "prompt": "A buyer says: 'Enter your PIN to receive the payment.' What should you do?",
+      "options": [
+        { "text": "Enter the PIN quickly so the buyer does not leave", "explanationWrong": "Rushing is what the scammer wants. Entering the PIN would send money out." },
+        { "text": "Enter the PIN, but only the first two digits", "explanationWrong": "Any part of your PIN is a secret. Do not enter it at all." },
+        { "text": "Do not enter it. Decline the request and report the sender", "explanationWrong": "" },
+        { "text": "Send the PIN in a chat so the buyer can do it for you", "explanationWrong": "Never share your PIN with anyone, for any reason." }
+      ],
+      "correctIndex": 2,
+      "explanationCorrect": "Decline, do not enter your PIN, and block and report the sender. Receiving money never needs your PIN."
+    },
+    {
+      "id": "upi-3",
+      "prompt": "What happens when you approve a collect request?",
+      "options": [
+        { "text": "You receive money", "explanationWrong": "It is the other way round. A collect request asks you to pay." },
+        { "text": "Money can leave your account", "explanationWrong": "" },
+        { "text": "Nothing, it only confirms your name", "explanationWrong": "Approving is a real action. In real life it can lead to a payment." },
+        { "text": "Your balance is hidden", "explanationWrong": "Approving a request has nothing to do with hiding your balance." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "A collect request asks you to pay. Approving it, and entering your PIN, sends money out of your account."
+    }
+  ]
+}

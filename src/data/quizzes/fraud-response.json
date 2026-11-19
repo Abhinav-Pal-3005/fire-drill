@@ -1,0 +1,43 @@
+{
+  "id": "fraud-response",
+  "concept": "fraud-response",
+  "title": "Fraud response quiz",
+  "questions": [
+    {
+      "id": "fr-1",
+      "prompt": "Your phone is lost. Which call protects your money first?",
+      "options": [
+        { "text": "Your bank's 24×7 helpline, to block UPI and cards", "explanationWrong": "" },
+        { "text": "A friend, to tell them the news", "explanationWrong": "A friend cannot block your accounts. Call your bank first." },
+        { "text": "The number in a 'found your phone' message", "explanationWrong": "That message is likely a trap. Never rely on contacts from a suspicious message." },
+        { "text": "Nobody, wait and see", "explanationWrong": "Waiting gives a thief more time. Act quickly." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Banks have 24×7 helplines. Block UPI and cards first, because that is where your money is."
+    },
+    {
+      "id": "fr-2",
+      "prompt": "Which number is the national cybercrime helpline?",
+      "options": [
+        { "text": "1010", "explanationWrong": "That is not the cybercrime helpline." },
+        { "text": "1930", "explanationWrong": "" },
+        { "text": "9090", "explanationWrong": "That is not the cybercrime helpline." },
+        { "text": "1212", "explanationWrong": "That is not the cybercrime helpline." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "The national cybercrime helpline is 1930. Save it in your phone and your family's phones."
+    },
+    {
+      "id": "fr-3",
+      "prompt": "Where can you report cyber fraud online?",
+      "options": [
+        { "text": "A website from a search advert that looks official", "explanationWrong": "Adverts can be fake. Type the official address yourself." },
+        { "text": "Only on social media", "explanationWrong": "Social media is not an official reporting route." },
+        { "text": "cybercrime.gov.in", "explanationWrong": "" },
+        { "text": "Nowhere, reports never help", "explanationWrong": "Reports create a record and can help you and others." }
+      ],
+      "correctIndex": 2,
+      "explanationCorrect": "The national portal is cybercrime.gov.in. You can also call 1930."
+    }
+  ]
+}

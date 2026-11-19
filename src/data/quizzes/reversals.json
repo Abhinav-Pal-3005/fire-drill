@@ -1,0 +1,43 @@
+{
+  "id": "reversals",
+  "concept": "reversals",
+  "title": "Reversals quiz",
+  "questions": [
+    {
+      "id": "rv-1",
+      "prompt": "You paid the wrong person. What is a safe first move?",
+      "options": [
+        { "text": "Send the stranger angry messages", "explanationWrong": "Contacting unknown people does not help and can lead to more pressure." },
+        { "text": "Note the transaction ID and take a screenshot", "explanationWrong": "" },
+        { "text": "Pay again to 'unlock' a refund", "explanationWrong": "Paying more is a classic trick. You would lose more money." },
+        { "text": "Delete the payment alert", "explanationWrong": "Keep your proof. A complaint needs the transaction details." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Save proof first: the transaction ID and a screenshot. You will need them for every complaint."
+    },
+    {
+      "id": "rv-2",
+      "prompt": "Where should you raise your first complaint?",
+      "options": [
+        { "text": "In the payment app you used, then contact your bank", "explanationWrong": "" },
+        { "text": "In a public post on social media", "explanationWrong": "That is not an official route and can expose your details." },
+        { "text": "Only to the person who got the money", "explanationWrong": "A stranger has no duty to help. Use the official routes." },
+        { "text": "Nowhere, wait for it to come back", "explanationWrong": "Waiting does not start any process. Act as soon as possible." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Start with the complaint option in your payment app and contact your bank, as soon as possible."
+    },
+    {
+      "id": "rv-3",
+      "prompt": "The app and bank have not solved it. What next?",
+      "options": [
+        { "text": "Give up", "explanationWrong": "There is another official route you can try." },
+        { "text": "Escalate through the NPCI dispute redressal process", "explanationWrong": "" },
+        { "text": "Pay a 'recovery agent' you found online", "explanationWrong": "Recovery agents found online are often scams." },
+        { "text": "Share your PIN with a helper", "explanationWrong": "Never share your PIN with anyone." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "NPCI has a dispute redressal process. Check the current steps on official channels."
+    }
+  ]
+}

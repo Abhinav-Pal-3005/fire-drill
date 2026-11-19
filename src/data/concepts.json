@@ -1,0 +1,32 @@
+[
+  {
+    "id": "upi-safety",
+    "title": "UPI safety",
+    "summary": "Keep your UPI PIN private and know when it is, and is not, needed.",
+    "keyFact": "A UPI PIN is only for sending money. You never need it to receive money."
+  },
+  {
+    "id": "fraud-response",
+    "title": "Fraud response",
+    "summary": "What to do, and in what order, when something goes wrong.",
+    "keyFact": "Act quickly. Banks have 24×7 helplines, and the national cybercrime helpline is 1930."
+  },
+  {
+    "id": "reversals",
+    "title": "Reversals and disputes",
+    "summary": "How to raise a complaint when money goes to the wrong place.",
+    "keyFact": "Start with your payment app and your bank. NPCI has a dispute redressal process if it is not resolved."
+  },
+  {
+    "id": "interest-credit",
+    "title": "Interest and credit",
+    "summary": "Understand the full cost of borrowing before you say yes.",
+    "keyFact": "RBI regulates lenders and NBFCs. Check a lender before you share anything."
+  },
+  {
+    "id": "phishing-indicators",
+    "title": "Phishing indicators",
+    "summary": "Spot urgency, odd links and requests for secrets.",
+    "keyFact": "Be suspicious of any message that pushes you to act fast or asks for your PIN or OTP."
+  }
+]
