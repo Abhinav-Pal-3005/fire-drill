@@ -368,15 +368,3 @@ export interface SeedAnalytics {
 }
 
 export type Role = "learner" | "admin";
-
-export type {
-  AttackVector,
-  AttackVectorMeta,
-  DispatchStatus,
-  EmergencyState,
-  ForensicDisputePayload,
-  ForensicSnapshot,
-  OutboundTransaction,
-  RemediationAction,
-} from "@/features/emergency/types";
-
