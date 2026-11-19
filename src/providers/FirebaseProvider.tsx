@@ -157,8 +157,15 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
         setAuthError(null);
       } else if (code === "auth/popup-blocked") {
         setAuthError("Sign-in popup was blocked by your browser. Please allow popups and try again.");
+      } else if (code === "auth/unauthorized-domain") {
+        const host = typeof window !== "undefined" ? window.location.hostname : "this domain";
+        const msg = `Domain "${host}" is not in Firebase Auth Authorized Domains yet. Add "${host}" in Firebase Console → Authentication → Settings → Authorized domains.`;
+        setAuthError(msg);
+        toast(msg);
       } else {
-        setAuthError(err instanceof Error ? err.message : "Google Sign-In failed. Please try again.");
+        const msg = err instanceof Error ? err.message : "Google Sign-In failed. Please try again.";
+        setAuthError(msg);
+        toast(msg);
       }
       return null;
     } finally {
