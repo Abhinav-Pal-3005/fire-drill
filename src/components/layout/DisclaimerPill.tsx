@@ -27,7 +27,7 @@ export function DisclaimerPill({ onClick, sandbox = false }: DisclaimerPillProps
       type="button"
       onClick={onClick}
       aria-haspopup="dialog"
-      className="inline-flex max-w-full items-center gap-2 rounded-full bg-st-surface-container-high px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-st-on-surface-variant transition-colors hover:bg-st-surface-highest active:scale-[0.98]"
+      className="inline-flex max-w-full items-center gap-2 rounded-full bg-st-surface-high px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-st-on-surface-variant transition-colors hover:bg-st-surface-highest active:scale-[0.98]"
     >
       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-st-secondary" aria-hidden />
       <span className="truncate">Education Sandbox · No Real Money</span>

@@ -1,5 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import {
+  clearUserFirestoreData,
+  persistAttemptToFirestore,
+  persistQuizToFirestore,
+  syncUserProfileFields,
+} from "@/lib/firestoreSync";
+import { getActiveUid } from "@/lib/syncBridge";
 import type { Attempt, TimerMode } from "@/types";
 import { DEMO_SEED, newSeed } from "@/utils/seedRandom";
 
@@ -30,7 +37,13 @@ export const useDrillStore = create<DrillState>()(
       attempts: [],
       timerMode: "relaxed",
       pending: {},
-      setTimerMode: (timerMode) => set({ timerMode }),
+      setTimerMode: (timerMode) => {
+        set({ timerMode });
+        const uid = getActiveUid();
+        if (uid) {
+          void syncUserProfileFields(uid, { timerMode }).catch((err) => console.error(err));
+        }
+      },
       ensureSeed: (drillId, demoAllowed) => {
         const existing = get().pending[drillId];
         if (existing) return existing;
@@ -46,10 +59,27 @@ export const useDrillStore = create<DrillState>()(
           delete rest[drillId];
           return { pending: rest };
         }),
-      addAttempt: (attempt) => set((s) => ({ attempts: [...s.attempts, attempt] })),
-      attachQuiz: (attemptId, quiz) =>
-        set((s) => ({ attempts: s.attempts.map((a) => (a.id === attemptId ? { ...a, quiz } : a)) })),
-      resetAll: () => set({ attempts: [], pending: {}, timerMode: "relaxed" }),
+      addAttempt: (attempt) => {
+        set((s) => ({ attempts: [...s.attempts, attempt] }));
+        const uid = getActiveUid();
+        if (uid) {
+          void persistAttemptToFirestore(uid, attempt).catch((err) => console.error(err));
+        }
+      },
+      attachQuiz: (attemptId, quiz) => {
+        set((s) => ({ attempts: s.attempts.map((a) => (a.id === attemptId ? { ...a, quiz } : a)) }));
+        const uid = getActiveUid();
+        if (uid) {
+          void persistQuizToFirestore(uid, attemptId, quiz).catch((err) => console.error(err));
+        }
+      },
+      resetAll: () => {
+        set({ attempts: [], pending: {}, timerMode: "relaxed" });
+        const uid = getActiveUid();
+        if (uid) {
+          void clearUserFirestoreData(uid).catch((err) => console.error(err));
+        }
+      },
     }),
     { name: "mfd-drills" },
   ),

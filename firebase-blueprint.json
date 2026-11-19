@@ -1,0 +1,254 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated learner profile and practice preferences stored per user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Learner display name shown in greetings and profile.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "Optional Google profile photo URL.",
+          "maxLength": 500
+        },
+        "demoSeed": {
+          "type": "boolean",
+          "description": "Whether first collect-request run uses deterministic demo seed."
+        },
+        "timerMode": {
+          "type": "string",
+          "description": "Preferred drill timer mode.",
+          "enum": ["relaxed", "panicked", "none"]
+        },
+        "checklist": {
+          "type": "array",
+          "description": "Completed emergency preparedness checklist item IDs."
+        },
+        "bookmarks": {
+          "type": "array",
+          "description": "Bookmarked fraud case study IDs."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the profile was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the profile was last updated."
+        }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "demoSeed",
+        "timerMode",
+        "checklist",
+        "bookmarks",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DrillAttempt": {
+      "title": "DrillAttempt",
+      "description": "A completed timed drill run, grading breakdown, and optional follow-up quiz.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique attempt identifier matching the document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the learner who completed this attempt.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "drillId": {
+          "type": "string",
+          "description": "Identifier of the drill scenario.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "concept": {
+          "type": "string",
+          "description": "Primary fraud safety concept trained by this drill.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "seed": {
+          "type": "integer",
+          "description": "Deterministic randomisation seed used for this run."
+        },
+        "demoSeed": {
+          "type": "boolean",
+          "description": "Whether this attempt used the demo seed."
+        },
+        "timerMode": {
+          "type": "string",
+          "description": "Timer mode active during the drill.",
+          "enum": ["relaxed", "panicked", "none"]
+        },
+        "startedAt": {
+          "type": "integer",
+          "description": "Client epoch milliseconds when drill started."
+        },
+        "finishedAt": {
+          "type": "integer",
+          "description": "Client epoch milliseconds when drill finished."
+        },
+        "grade": {
+          "type": "object",
+          "description": "Structured grading scores, flags, timing, and step results."
+        },
+        "quiz": {
+          "type": "object",
+          "description": "Optional follow-up quiz answers attached after drill completion."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the attempt was recorded."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the attempt was last updated."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "drillId",
+        "concept",
+        "seed",
+        "demoSeed",
+        "timerMode",
+        "startedAt",
+        "finishedAt",
+        "grade",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AnalyticsEventRecord": {
+      "title": "AnalyticsEventRecord",
+      "description": "Granular drill interaction telemetry event owned by the learner.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique event identifier matching the document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the learner.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ts": {
+          "type": "integer",
+          "description": "Client epoch milliseconds of the event."
+        },
+        "type": {
+          "type": "string",
+          "description": "Interaction event type.",
+          "enum": [
+            "drill_started",
+            "step_action",
+            "red_flag_tapped",
+            "critical_mistake",
+            "drill_completed",
+            "quiz_answered",
+            "library_opened",
+            "library_to_drill_clicked"
+          ]
+        },
+        "drillId": {
+          "type": "string",
+          "description": "Associated drill or library ID.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "concept": {
+          "type": "string",
+          "description": "Associated safety concept ID.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "stepId": {
+          "type": "string",
+          "description": "Optional step ID within the drill.",
+          "maxLength": 64
+        },
+        "correct": {
+          "type": "boolean",
+          "description": "Optional correctness indicator."
+        },
+        "timeMs": {
+          "type": "integer",
+          "description": "Elapsed time in milliseconds."
+        },
+        "seed": {
+          "type": "integer",
+          "description": "Scenario seed."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the event was stored."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "ts",
+        "type",
+        "drillId",
+        "concept",
+        "timeMs",
+        "seed",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private learner profile, timer preference, demo seed flag, checklist items, and bookmarks."
+    },
+    "/users/{userId}/attempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/DrillAttempt" },
+      "description": "Learner drill attempt history and optional attached quiz responses."
+    },
+    "/users/{userId}/events/{eventId}": {
+      "schema": { "$ref": "#/entities/AnalyticsEventRecord" },
+      "description": "Learner drill step/flag interaction events used for Readiness statistics."
+    }
+  }
+}

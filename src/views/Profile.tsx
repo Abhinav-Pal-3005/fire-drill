@@ -1,11 +1,15 @@
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Link } from "react-router-dom";
 import {
   Check,
   CheckCircle2,
+  Cloud,
   Edit3,
   HeartHandshake,
+  Loader2,
   Lock,
+  LogIn,
   LogOut,
   RotateCcw,
   Shield,
@@ -16,6 +20,7 @@ import {
 import { toast } from "@/components/glass/GlassToast";
 import { getReadiness } from "@/features/adaptive/adaptiveEngine";
 import { getDrill } from "@/features/drills/drillLoader";
+import { useFirebaseAuth } from "@/providers/FirebaseProvider";
 import { useDrillStore } from "@/store/useDrillStore";
 import { useUserStore } from "@/store/useUserStore";
 import { formatDuration } from "@/utils/formatters";
@@ -23,8 +28,10 @@ import { formatDuration } from "@/utils/formatters";
 export default function Profile() {
   const attempts = useDrillStore((s) => s.attempts);
   const displayName = useUserStore((s) => s.displayName);
+  const photoUrl = useUserStore((s) => s.photoUrl);
   const setDisplayName = useUserStore((s) => s.setDisplayName);
   const learnerId = useUserStore((s) => s.learnerId);
+  const { user, syncing, authLoading, authError, signInWithGoogle, signOutUser } = useFirebaseAuth();
 
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(displayName);
@@ -62,27 +69,73 @@ export default function Profile() {
   const saveName = () => {
     setDisplayName(draftName);
     setEditing(false);
-    toast("Profile label updated locally");
+    toast(user ? "Profile name saved to Firestore" : "Profile label updated locally");
   };
 
   return (
     <div className="mx-auto flex w-full max-w-[680px] flex-col gap-4 pb-6">
-      {/* Disclaimer Capsule */}
-      <div className="flex items-center justify-between rounded-full bg-st-surface-container px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-st-on-surface-variant">
+      {/* Status Capsule */}
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-full bg-st-surface-container px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-st-on-surface-variant">
         <span className="flex items-center gap-1.5">
-          <ShieldCheck size={14} className="text-st-secondary" aria-hidden />
-          Local Device Profile · Anonymous ID
+          {user ? (
+            <Cloud size={14} className="text-st-secondary" aria-hidden />
+          ) : (
+            <ShieldCheck size={14} className="text-st-secondary" aria-hidden />
+          )}
+          {user
+            ? syncing
+              ? "Syncing with Firestore..."
+              : "Firestore Cloud Sync · Google Auth"
+            : "Guest Mode · Local Browser Storage"}
         </span>
-        <span className="font-bold text-st-secondary">Safe Mode Active</span>
+        <span className="font-bold text-st-secondary">{user ? "Cloud Protected" : "Safe Sandbox"}</span>
       </div>
+
+      {!user && (
+        <div className="flex flex-col justify-between gap-3 rounded-[24px] bg-st-secondary-container/70 p-4 shadow-sm sm:flex-row sm:items-center">
+          <div className="min-w-0">
+            <p className="text-[14px] font-bold text-st-on-secondary-container">
+              Sign in with Google to save your progress
+            </p>
+            <p className="text-[12.5px] text-st-on-secondary-container/85">
+              Back up your drill history, readiness index, and checklist securely in Firestore.
+            </p>
+            {authError && (
+              <p role="alert" className="mt-1 text-[12px] font-semibold text-st-error">
+                {authError}
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            disabled={authLoading}
+            onClick={() => void signInWithGoogle()}
+            className="inline-flex min-h-[42px] shrink-0 items-center justify-center gap-2 rounded-full bg-st-primary-container px-4 text-[13px] font-semibold text-st-on-primary shadow-sm transition-transform active:scale-[0.98] disabled:opacity-60"
+          >
+            {authLoading ? <Loader2 size={15} className="animate-spin" aria-hidden /> : <LogIn size={15} aria-hidden />}
+            <span>{authLoading ? "Signing in..." : "Sign in with Google"}</span>
+          </button>
+        </div>
+      )}
 
       {/* User Profile Header Card */}
       <section className="relative flex flex-col gap-4 overflow-hidden rounded-[28px] bg-st-surface-container p-6 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-center gap-4">
             <div className="relative shrink-0">
-              <div className="grid h-16 w-16 place-items-center rounded-full bg-st-primary-container text-[20px] font-bold text-st-on-primary shadow-sm">
-                {initials}
+              <div className="grid h-16 w-16 overflow-hidden place-items-center rounded-full bg-st-primary-container text-[20px] font-bold text-st-on-primary shadow-sm">
+                {photoUrl ? (
+                  <Image
+                    src={photoUrl}
+                    alt={displayName}
+                    width={64}
+                    height={64}
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  initials
+                )}
               </div>
               <span className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-st-secondary text-st-on-secondary shadow-sm">
                 <Shield size={13} strokeWidth={2.2} aria-hidden />
@@ -95,7 +148,7 @@ export default function Profile() {
                     type="text"
                     value={draftName}
                     onChange={(e) => setDraftName(e.target.value)}
-                    aria-label="Local display name"
+                    aria-label="Profile display name"
                     className="w-40 rounded-full bg-st-surface-lowest px-3 py-1.5 text-[15px] font-semibold text-st-on-surface ring-1 ring-st-outline-variant focus:outline-none focus:ring-2 focus:ring-st-secondary"
                   />
                   <button
@@ -113,11 +166,18 @@ export default function Profile() {
                   <CheckCircle2 size={18} className="shrink-0 text-st-secondary" aria-hidden />
                 </div>
               )}
-              <p className="text-[13px] text-st-on-surface-variant">
-                Anonymous ID: <span className="font-mono font-semibold">{learnerId}</span>
+              <p className="truncate text-[13px] text-st-on-surface-variant">
+                {user?.email ? (
+                  <span>{user.email}</span>
+                ) : (
+                  <>
+                    Guest ID: <span className="font-mono font-semibold">{learnerId}</span>
+                  </>
+                )}
               </p>
               <p className="mt-0.5 text-[12px] text-st-on-surface-variant">
-                {readiness >= 75 ? "Tier 1 Cyber Defender" : "Active Sandbox Learner"} · Local storage only
+                {readiness >= 75 ? "Tier 1 Cyber Defender" : "Active Sandbox Learner"} ·{" "}
+                {user ? "Synced with Firestore" : "Local storage only"}
               </p>
             </div>
           </div>
@@ -128,7 +188,7 @@ export default function Profile() {
               setDraftName(displayName);
               setEditing((v) => !v);
             }}
-            aria-label="Edit local profile label"
+            aria-label="Edit profile display name"
             className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-st-surface-low text-st-on-surface-variant shadow-sm transition-transform active:scale-95"
           >
             <Edit3 size={18} strokeWidth={2} />
@@ -275,19 +335,31 @@ export default function Profile() {
       <div className="flex items-start gap-3 rounded-2xl bg-st-surface-low p-4">
         <Lock size={18} className="mt-0.5 shrink-0 text-st-secondary" aria-hidden />
         <p className="text-[13px] leading-relaxed text-st-on-surface-variant">
-          Your profile stores only drill practice metrics and local preferences in this browser. No banking credentials,
-          UPI PINs, or personal payment accounts are ever connected or stored.
+          {user
+            ? "Your Google account securely identifies your private Firestore profile. Only your practice scores, bookmarks, and preparedness checklist are saved—never real UPI PINs or bank credentials."
+            : "Your profile currently stores drill practice metrics in this browser. Sign in with Google anytime to back up and sync with Firestore."}
         </p>
       </div>
 
-      {/* Settings / Reset Link */}
-      <div className="flex justify-center pt-1">
+      {/* Settings / Auth Actions */}
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+        {user && (
+          <button
+            type="button"
+            disabled={authLoading}
+            onClick={() => void signOutUser()}
+            className="inline-flex items-center gap-1.5 rounded-full bg-st-surface-container px-4 py-2 text-[13px] font-semibold text-st-on-surface transition-colors hover:bg-st-surface-high disabled:opacity-60"
+          >
+            <LogOut size={15} aria-hidden />
+            <span>Sign out</span>
+          </button>
+        )}
         <Link
           to="/about"
           className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-medium text-st-on-surface-variant transition-colors hover:text-st-error"
         >
-          <LogOut size={15} aria-hidden />
-          <span>Manage Settings &amp; Reset Local Data</span>
+          <RotateCcw size={15} aria-hidden />
+          <span>Manage Settings &amp; Reset Data</span>
         </Link>
       </div>
     </div>

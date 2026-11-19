@@ -1,6 +1,8 @@
 "use client";
 
 import { BrowserRouter, HashRouter } from "react-router-dom";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { FirebaseProvider } from "@/providers/FirebaseProvider";
 import { AppRoutes } from "./router";
 
 function isCapacitorNative(): boolean {
@@ -11,17 +13,19 @@ function isCapacitorNative(): boolean {
 
 /** Client-side app root. Loaded without SSR from src/app/[[...slug]]/ClientApp.tsx. */
 export default function App() {
-  if (isCapacitorNative()) {
-    return (
-      <HashRouter>
-        <AppRoutes />
-      </HashRouter>
-    );
-  }
-
-  return (
+  const content = isCapacitorNative() ? (
+    <HashRouter>
+      <AppRoutes />
+    </HashRouter>
+  ) : (
     <BrowserRouter>
       <AppRoutes />
     </BrowserRouter>
+  );
+
+  return (
+    <ErrorBoundary>
+      <FirebaseProvider>{content}</FirebaseProvider>
+    </ErrorBoundary>
   );
 }

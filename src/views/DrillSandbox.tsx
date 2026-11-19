@@ -60,7 +60,7 @@ function SandboxRunner({ scenario }: { scenario: Scenario }) {
     return () => {
       if (document.fullscreenElement) {
         try {
-          void document.exitFullscreen?.();
+          void Promise.resolve(document.exitFullscreen?.()).catch(() => {});
         } catch {
           // Ignore environments without Fullscreen API
         }
@@ -69,26 +69,24 @@ function SandboxRunner({ scenario }: { scenario: Scenario }) {
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    setMobileFullscreen((prev) => {
-      const next = !prev;
-      try {
-        if (next) {
-          void document.documentElement.requestFullscreen?.();
-        } else if (document.fullscreenElement) {
-          void document.exitFullscreen?.();
-        }
-      } catch {
-        // Fallback to edge-to-edge fixed CSS layout on iOS Safari / WebViews
+    const next = !mobileFullscreen;
+    setMobileFullscreen(next);
+    try {
+      if (next) {
+        void Promise.resolve(document.documentElement.requestFullscreen?.()).catch(() => {});
+      } else if (document.fullscreenElement) {
+        void Promise.resolve(document.exitFullscreen?.()).catch(() => {});
       }
-      return next;
-    });
-  }, []);
+    } catch {
+      // Fallback to edge-to-edge fixed CSS layout on iOS Safari / WebViews
+    }
+  }, [mobileFullscreen]);
 
   const handleFinish = useCallback(
     ({ grade, startedAt }: RunnerResult) => {
       if (document.fullscreenElement) {
         try {
-          void document.exitFullscreen?.();
+          void Promise.resolve(document.exitFullscreen?.()).catch(() => {});
         } catch {
           // Ignore
         }
@@ -126,6 +124,13 @@ function SandboxRunner({ scenario }: { scenario: Scenario }) {
       if (mobileFullscreen) {
         e.preventDefault();
         setMobileFullscreen(false);
+        if (document.fullscreenElement) {
+          try {
+            void Promise.resolve(document.exitFullscreen?.()).catch(() => {});
+          } catch {
+            // Ignore
+          }
+        }
       }
     };
     window.addEventListener("mfd:back-button", onNativeBack);

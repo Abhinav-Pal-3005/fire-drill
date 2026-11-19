@@ -3,7 +3,6 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { EntryFlow } from "@/components/entry/EntryFlow";
 import { AppShell } from "@/components/layout/AppShell";
 import AboutEducation from "@/views/AboutEducation";
-import AdminDashboard from "@/views/AdminDashboard";
 import CaseDetail from "@/views/CaseDetail";
 import DrillBriefing from "@/views/DrillBriefing";
 import DrillQuiz from "@/views/DrillQuiz";
@@ -40,14 +39,14 @@ function NativeBackHandler() {
     let removed = false;
     let handle: { remove: () => Promise<void> | void } | undefined;
 
-    const listenerResult = appPlugin.addListener("backButton", ({ canGoBack } = {}) => {
+    const listenerResult = appPlugin.addListener("backButton", () => {
       const ev = new CustomEvent("mfd:back-button", { cancelable: true });
       window.dispatchEvent(ev);
       if (ev.defaultPrevented) return;
 
       if (pathname !== "/") {
         const idx = typeof window.history.state?.idx === "number" ? window.history.state.idx : 0;
-        if (idx > 0 || canGoBack) {
+        if (idx > 0) {
           navigate(-1);
         } else {
           navigate("/", { replace: true });
@@ -125,7 +124,6 @@ export function AppRoutes() {
           <Route path="sos" element={<EmergencySos />} />
           <Route path="progress" element={<ProgressChecklist />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="admin" element={<AdminDashboard />} />
           <Route path="about" element={<AboutEducation />} />
           <Route path="*" element={<NotFound />} />
         </Route>

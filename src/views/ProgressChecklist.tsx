@@ -11,7 +11,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { summariseEvents } from "@/features/analytics/adminSelectors";
+import { summariseEvents } from "@/features/analytics/eventSummary";
 import {
   getConceptWeakness,
   getMastery,

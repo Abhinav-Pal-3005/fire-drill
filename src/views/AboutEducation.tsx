@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Link } from "react-router-dom";
 import {
   AlertTriangle,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/glass/GlassToast";
 import { getReadiness } from "@/features/adaptive/adaptiveEngine";
+import { useFirebaseAuth } from "@/providers/FirebaseProvider";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useDrillStore } from "@/store/useDrillStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -28,9 +30,11 @@ export default function AboutEducation() {
   const demoSeed = useUserStore((s) => s.demoSeed);
   const setDemoSeed = useUserStore((s) => s.setDemoSeed);
   const displayName = useUserStore((s) => s.displayName);
+  const photoUrl = useUserStore((s) => s.photoUrl);
   const attempts = useDrillStore((s) => s.attempts);
   const resetDrills = useDrillStore((s) => s.resetAll);
   const clearEvents = useAnalyticsStore((s) => s.clear);
+  const { user } = useFirebaseAuth();
 
   const [confirm, setConfirm] = useState(false);
   const [showUssdGuide, setShowUssdGuide] = useState(false);
@@ -48,7 +52,7 @@ export default function AboutEducation() {
     resetDrills();
     clearEvents();
     setConfirm(false);
-    toast("Simulation history & local practice data cleared.");
+    toast(user ? "Cloud and local practice history cleared." : "Simulation history & local practice data cleared.");
   };
 
   return (
@@ -70,8 +74,19 @@ export default function AboutEducation() {
       {/* User Profile Micro-Card */}
       <div className="flex items-center justify-between gap-3 rounded-[24px] bg-st-surface-low p-4 shadow-sm">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full bg-st-primary-container text-[15px] font-bold text-st-on-primary">
-            {initials}
+          <div className="relative grid h-12 w-12 shrink-0 overflow-hidden place-items-center rounded-full bg-st-primary-container text-[15px] font-bold text-st-on-primary">
+            {photoUrl ? (
+              <Image
+                src={photoUrl}
+                alt={displayName}
+                width={48}
+                height={48}
+                referrerPolicy="no-referrer"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              initials
+            )}
             <span className="absolute -bottom-0.5 -right-0.5 grid h-5 w-5 place-items-center rounded-full bg-st-secondary text-st-on-secondary shadow-sm">
               <UserCheck size={11} strokeWidth={2.2} aria-hidden />
             </span>
@@ -215,9 +230,11 @@ export default function AboutEducation() {
                 <Lock size={18} strokeWidth={2} aria-hidden />
               </span>
               <div className="min-w-0">
-                <p className="text-[15px] font-bold text-st-on-surface">Zero Data Collection Guarantee</p>
+                <p className="text-[15px] font-bold text-st-on-surface">Privacy-First Persistence</p>
                 <p className="text-[13px] text-st-on-surface-variant">
-                  No sign-in, no real PINs checked (only digit count), and all analytics stay in browser storage.
+                  {user
+                    ? "Your drill history, readiness & checklist sync to your private Firestore space via Google Auth. No real PINs are ever stored."
+                    : "No real PINs are checked (only digit count). Sign in with Google anytime to back up your practice metrics to Firestore."}
                 </p>
               </div>
             </div>
@@ -294,17 +311,17 @@ export default function AboutEducation() {
         <div className="pt-2">
           <div className="mb-2 flex items-center gap-2">
             <Wrench size={16} className="text-st-on-surface-variant" aria-hidden />
-            <h3 className="text-[13px] font-bold uppercase tracking-wider text-st-on-surface-variant">Not in v1</h3>
+            <h3 className="text-[13px] font-bold uppercase tracking-wider text-st-on-surface-variant">Architecture</h3>
           </div>
           <ul className="space-y-2 text-[13px] text-st-on-surface-variant">
             {[
-              ["Sign-in and roles", "The Learner / Admin switch is a demo toggle only."],
-              ["Backend sync", "Progress and analytics stay locally on this device."],
-              ["Live news feed", "Scam alerts come from curated static JSON advisories."],
+              ["Google Sign-In", "Authenticates your identity securely with Firebase Auth."],
+              ["Cloud Firestore", "Persists your drill attempts, readiness, bookmarks, and checklist."],
+              ["Live advisories", "Scam alerts and case studies come from curated static scenarios."],
             ].map(([name, text]) => (
               <li key={name} className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-st-tertiary-fixed px-2 py-0.5 text-[10px] font-bold text-st-on-tertiary-fixed">
-                  LOCAL
+                  {name === "Live advisories" ? "STATIC" : "CLOUD"}
                 </span>
                 <span>
                   <strong className="font-semibold text-st-on-surface">{name}:</strong> {text}
@@ -331,8 +348,9 @@ export default function AboutEducation() {
               </h3>
             </div>
             <p className="text-[14px] leading-relaxed text-st-on-surface-variant">
-              This removes your completed attempts, readiness scores, and analytics events from this browser. This
-              cannot be undone.
+              {user
+                ? "This removes your completed attempts, readiness scores, bookmarks, and analytics events from both this browser and your Firestore account. This cannot be undone."
+                : "This removes your completed attempts, readiness scores, and analytics events from this browser. This cannot be undone."}
             </p>
             <div className="flex flex-col gap-2">
               <button

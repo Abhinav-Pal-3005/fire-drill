@@ -1,5 +1,4 @@
-import { BarChart3, BookOpenCheck, Flame, Home, Settings, Shield, Siren, User, type LucideIcon } from "lucide-react";
-import type { Role } from "@/types";
+import { BookOpenCheck, Flame, Home, Settings, Shield, Siren, User, type LucideIcon } from "lucide-react";
 
 export interface StitchNavItem {
   to: string;
@@ -47,20 +46,13 @@ const SETTINGS: StitchNavItem = {
   icon: Settings,
   match: (p) => p.startsWith("/about"),
 };
-const ADMIN: StitchNavItem = {
-  to: "/admin",
-  label: "Admin",
-  icon: BarChart3,
-  match: (p) => p.startsWith("/admin"),
-};
 
-/** Mobile tab bar matching Stitch navigation: Drills, Library, SOS, Readiness, Profile (+ Admin when active). */
-export function tabItems(role: Role): StitchNavItem[] {
-  const base = [DRILLS, LIBRARY, SOS, READINESS, PROFILE];
-  return role === "admin" ? [...base, ADMIN] : base;
+/** Mobile tab bar: Drills, Library, SOS, Readiness, Profile. */
+export function tabItems(): StitchNavItem[] {
+  return [DRILLS, LIBRARY, SOS, READINESS, PROFILE];
 }
 
 /** Desktop sidebar navigation. */
 export function sidebarItems(): StitchNavItem[] {
-  return [HOME, DRILLS, LIBRARY, SOS, READINESS, PROFILE, SETTINGS, ADMIN];
+  return [HOME, DRILLS, LIBRARY, SOS, READINESS, PROFILE, SETTINGS];
 }

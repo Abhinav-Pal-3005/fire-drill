@@ -1,0 +1,390 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ==================== Reusable Global Primitives ====================
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidShortId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 64 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidTimerMode(mode) {
+      return mode in ['relaxed', 'panicked', 'none'];
+    }
+
+    function isValidStringList(listVal, maxItems, maxItemLen) {
+      return listVal is list
+        && listVal.size() <= maxItems
+        && (listVal.size() == 0 || (listVal[0] is string && listVal[0].size() >= 1 && listVal[0].size() <= maxItemLen));
+    }
+
+    // Master Gate: verify parent user profile exists and belongs to the caller
+    function hasUserParent(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId))
+        && get(/databases/$(database)/documents/users/$(userId)).data.uid == request.auth.uid;
+    }
+
+    // ==================== Entity Validation Blueprints ====================
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll([
+          'uid',
+          'displayName',
+          'demoSeed',
+          'timerMode',
+          'checklist',
+          'bookmarks',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'displayName',
+          'photoUrl',
+          'demoSeed',
+          'timerMode',
+          'checklist',
+          'bookmarks',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidId(data.uid)
+        && data.uid == request.auth.uid
+        && data.uid == userId
+        && data.displayName is string
+        && data.displayName.size() >= 1
+        && data.displayName.size() <= 80
+        && (!('photoUrl' in data) || (data.photoUrl is string && data.photoUrl.size() <= 500))
+        && data.demoSeed is bool
+        && isValidTimerMode(data.timerMode)
+        && isValidStringList(data.checklist, 30, 40)
+        && isValidStringList(data.bookmarks, 100, 64)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidGrade(grade) {
+      return grade is map
+        && grade.keys().hasAll([
+          'total',
+          'stepScore',
+          'orderScore',
+          'redFlagScore',
+          'speedScore',
+          'hintsUsed',
+          'hintPenalty',
+          'critical',
+          'timedOut',
+          'completed',
+          'elapsedMs',
+          'flagsFound',
+          'flagsTotal',
+          'wrongTaps',
+          'results',
+          'mistakeConcepts',
+          'mistakes'
+        ])
+        && grade.keys().hasOnly([
+          'total',
+          'stepScore',
+          'orderScore',
+          'redFlagScore',
+          'speedScore',
+          'hintsUsed',
+          'hintPenalty',
+          'critical',
+          'timedOut',
+          'completed',
+          'elapsedMs',
+          'flagsFound',
+          'flagsTotal',
+          'wrongTaps',
+          'results',
+          'mistakeConcepts',
+          'mistakes'
+        ])
+        && grade.total is number && grade.total >= 0 && grade.total <= 100
+        && grade.stepScore is number && grade.stepScore >= 0 && grade.stepScore <= 100
+        && grade.orderScore is number && grade.orderScore >= 0 && grade.orderScore <= 100
+        && grade.redFlagScore is number && grade.redFlagScore >= 0 && grade.redFlagScore <= 100
+        && grade.speedScore is number && grade.speedScore >= 0 && grade.speedScore <= 100
+        && grade.hintsUsed is int && grade.hintsUsed >= 0 && grade.hintsUsed <= 50
+        && grade.hintPenalty is number && grade.hintPenalty >= 0 && grade.hintPenalty <= 100
+        && grade.critical is bool
+        && grade.timedOut is bool
+        && grade.completed is bool
+        && grade.elapsedMs is int && grade.elapsedMs >= 0 && grade.elapsedMs <= 86400000
+        && grade.flagsFound is int && grade.flagsFound >= 0 && grade.flagsFound <= 50
+        && grade.flagsTotal is int && grade.flagsTotal >= 0 && grade.flagsTotal <= 50
+        && grade.wrongTaps is int && grade.wrongTaps >= 0 && grade.wrongTaps <= 500
+        && grade.results is list
+        && grade.results.size() <= 30
+        && (grade.results.size() == 0 || (
+          grade.results[0] is map
+          && grade.results[0].keys().hasOnly([
+            'id',
+            'kind',
+            'label',
+            'status',
+            'timeMs',
+            'explanation',
+            'mistakeConcept'
+          ])
+        ))
+        && isValidStringList(grade.mistakeConcepts, 10, 64)
+        && grade.mistakes is list
+        && grade.mistakes.size() <= 30
+        && (grade.mistakes.size() == 0 || (
+          grade.mistakes[0] is map
+          && grade.mistakes[0].keys().hasOnly(['concept', 'kind', 'label'])
+        ));
+    }
+
+    function isValidQuizRecord(quiz) {
+      return quiz is map
+        && quiz.keys().hasAll(['quizId', 'concept', 'answers'])
+        && quiz.keys().hasOnly(['quizId', 'concept', 'answers'])
+        && isValidShortId(quiz.quizId)
+        && isValidShortId(quiz.concept)
+        && quiz.answers is list
+        && quiz.answers.size() <= 20
+        && (quiz.answers.size() == 0 || (
+          quiz.answers[0] is map
+          && quiz.answers[0].keys().hasAll(['questionId', 'selectedIndex', 'correct'])
+          && quiz.answers[0].keys().hasOnly(['questionId', 'selectedIndex', 'correct'])
+        ));
+    }
+
+    function isValidAttempt(data, userId, attemptId) {
+      return data.keys().hasAll([
+          'id',
+          'userId',
+          'drillId',
+          'concept',
+          'seed',
+          'demoSeed',
+          'timerMode',
+          'startedAt',
+          'finishedAt',
+          'grade',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id',
+          'userId',
+          'drillId',
+          'concept',
+          'seed',
+          'demoSeed',
+          'timerMode',
+          'startedAt',
+          'finishedAt',
+          'grade',
+          'quiz',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidId(data.id)
+        && data.id == attemptId
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && isValidShortId(data.drillId)
+        && isValidShortId(data.concept)
+        && data.seed is int && data.seed >= 0
+        && data.demoSeed is bool
+        && isValidTimerMode(data.timerMode)
+        && data.startedAt is int && data.startedAt > 0
+        && data.finishedAt is int && data.finishedAt >= data.startedAt
+        && isValidGrade(data.grade)
+        && (!('quiz' in data) || isValidQuizRecord(data.quiz))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidEventType(eventType) {
+      return eventType in [
+        'drill_started',
+        'step_action',
+        'red_flag_tapped',
+        'critical_mistake',
+        'drill_completed',
+        'quiz_answered',
+        'library_opened',
+        'library_to_drill_clicked'
+      ];
+    }
+
+    function isValidAnalyticsEvent(data, userId, eventId) {
+      return data.keys().hasAll([
+          'id',
+          'userId',
+          'ts',
+          'type',
+          'drillId',
+          'concept',
+          'timeMs',
+          'seed',
+          'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id',
+          'userId',
+          'ts',
+          'type',
+          'drillId',
+          'concept',
+          'stepId',
+          'correct',
+          'timeMs',
+          'seed',
+          'createdAt'
+        ])
+        && isValidId(data.id)
+        && data.id == eventId
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && data.ts is int && data.ts > 0
+        && isValidEventType(data.type)
+        && isValidShortId(data.drillId)
+        && isValidShortId(data.concept)
+        && (!('stepId' in data) || (data.stepId is string && data.stepId.size() <= 64))
+        && (!('correct' in data) || (data.correct is bool))
+        && data.timeMs is int && data.timeMs >= 0
+        && data.seed is int && data.seed >= 0
+        && data.createdAt is timestamp;
+    }
+
+    // ==================== Collection Rules ====================
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          // Action 1: Update display label / photo
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoUrl', 'updatedAt'])
+          // Action 2: Update drill simulation preferences
+          || incoming().diff(existing()).affectedKeys().hasOnly(['demoSeed', 'timerMode', 'updatedAt'])
+          // Action 3: Update preparedness checklist or library bookmarks
+          || incoming().diff(existing()).affectedKeys().hasOnly(['checklist', 'bookmarks', 'updatedAt'])
+          // Action 4: Reset or sync full learner preferences
+          || (
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'displayName',
+              'photoUrl',
+              'demoSeed',
+              'timerMode',
+              'checklist',
+              'bookmarks',
+              'updatedAt'
+            ])
+          )
+        );
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /attempts/{attemptId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(attemptId);
+        allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(attemptId)
+          && isValidAttempt(incoming(), userId, attemptId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && hasUserParent(userId);
+
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(attemptId)
+          && isValidAttempt(incoming(), userId, attemptId)
+          && !('quiz' in existing())
+          && incoming().id == existing().id
+          && incoming().userId == existing().userId
+          && incoming().drillId == existing().drillId
+          && incoming().concept == existing().concept
+          && incoming().seed == existing().seed
+          && incoming().demoSeed == existing().demoSeed
+          && incoming().timerMode == existing().timerMode
+          && incoming().startedAt == existing().startedAt
+          && incoming().finishedAt == existing().finishedAt
+          && incoming().grade == existing().grade
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly(['quiz', 'updatedAt'])
+          && 'quiz' in incoming()
+          && hasUserParent(userId);
+
+        allow delete: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(attemptId)
+          && hasUserParent(userId);
+      }
+
+      match /events/{eventId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(eventId);
+        allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(eventId)
+          && isValidAnalyticsEvent(incoming(), userId, eventId)
+          && incoming().createdAt == request.time
+          && hasUserParent(userId);
+
+        allow update: if false;
+
+        allow delete: if isOwner(userId)
+          && isValidId(userId)
+          && isValidId(eventId)
+          && hasUserParent(userId);
+      }
+    }
+  }
+}

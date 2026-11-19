@@ -20,7 +20,17 @@ const isStaticExport = process.env.NEXT_STATIC_EXPORT === "true";
 
 const nextConfig: NextConfig = {
   output: isStaticExport ? "export" : "standalone",
-  ...(isStaticExport ? { images: { unoptimized: true } } : {}),
+  images: {
+    ...(isStaticExport ? { unoptimized: true } : {}),
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
   allowedDevOrigins,
 };
 

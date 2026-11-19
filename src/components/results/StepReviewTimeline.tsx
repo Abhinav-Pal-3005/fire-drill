@@ -16,7 +16,7 @@ const icons: Record<StepStatus, LucideIcon> = {
 const dotClass: Record<StepStatus, string> = {
   correct: "bg-st-secondary text-st-on-secondary",
   wrong: "bg-st-error text-st-on-error",
-  out_of_order: "bg-st-tertiary-container text-st-on-tertiary",
+  out_of_order: "bg-st-tertiary-container text-white",
   missed: "bg-st-outline text-white",
   critical: "bg-st-error text-st-on-error ring-4 ring-st-error/25",
 };

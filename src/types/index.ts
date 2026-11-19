@@ -264,27 +264,3 @@ export interface AnalyticsEvent {
 }
 
 export type LogEventInput = Omit<AnalyticsEvent, "id" | "ts">;
-
-/** One anonymised attempt row, from seed data or the current learner. */
-export interface AttemptRecord {
-  learnerId: string;
-  cohort: string;
-  drillId: string;
-  concept: ConceptId;
-  daysAgo: number;
-  score: number;
-  order: number;
-  speed: number;
-  redFlags: number;
-  critical: boolean;
-  completionSec: number;
-  quizPassed: boolean;
-  missedStepIds: string[];
-}
-
-export interface SeedAnalytics {
-  note: string;
-  records: AttemptRecord[];
-}
-
-export type Role = "learner" | "admin";

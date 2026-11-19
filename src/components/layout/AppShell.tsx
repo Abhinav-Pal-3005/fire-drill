@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Flame, Settings, ShieldCheck, User } from "lucide-react";
+import { Flame, LogIn, Settings, ShieldCheck, User } from "lucide-react";
 import { NavTitleContext } from "@/components/glass/GlassNavBar";
 import { ToastHost } from "@/components/glass/GlassToast";
+import { useFirebaseAuth } from "@/providers/FirebaseProvider";
 import { useUserStore } from "@/store/useUserStore";
 import { routeTransition } from "@/theme/tokens";
 import { cn } from "@/utils/cn";
 import { DisclaimerPill, ResourcesSheet } from "./DisclaimerPill";
-import { RoleChip } from "./RoleChip";
 import { sidebarItems, tabItems } from "./navItems";
 
 function SandboxBrand({ compact = false }: { compact?: boolean }) {
@@ -29,7 +30,6 @@ function routeHeaderTitle(pathname: string): string {
   if (pathname.startsWith("/sos")) return "Emergency SOS";
   if (pathname.startsWith("/progress")) return "Readiness";
   if (pathname.startsWith("/profile")) return "Profile";
-  if (pathname.startsWith("/admin")) return "Admin Analytics";
   if (pathname.startsWith("/about")) return "Settings & Info";
   return "Money Fire Drill";
 }
@@ -37,8 +37,9 @@ function routeHeaderTitle(pathname: string): string {
 /** Global shell: Stitch warm-paper & forest-emerald UI everywhere except active sandbox simulation (/play). */
 export function AppShell() {
   const { pathname } = useLocation();
-  const role = useUserStore((s) => s.role);
   const displayName = useUserStore((s) => s.displayName);
+  const photoUrl = useUserStore((s) => s.photoUrl);
+  const { user, authReady, authLoading, signInWithGoogle } = useFirebaseAuth();
   const [title, setTitle] = useState("");
   const [resourcesOpen, setResourcesOpen] = useState(false);
 
@@ -57,7 +58,7 @@ export function AppShell() {
   }, []);
 
   const focusMode = pathname.endsWith("/play");
-  const tabs = useMemo(() => tabItems(role), [role]);
+  const tabs = useMemo(() => tabItems(), []);
   const side = useMemo(() => sidebarItems(), []);
 
   // PracticeOS obsidian studio shell during active /play drills only (Stitch shell elsewhere untouched).
@@ -86,7 +87,6 @@ export function AppShell() {
                 <div className="hidden md:block">
                   <DisclaimerPill sandbox onClick={() => setResourcesOpen(true)} />
                 </div>
-                <RoleChip sandbox />
               </div>
             </div>
           </header>
@@ -193,7 +193,17 @@ export function AppShell() {
               </Link>
 
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-                <RoleChip />
+                {authReady && !user && (
+                  <button
+                    type="button"
+                    disabled={authLoading}
+                    onClick={() => void signInWithGoogle()}
+                    className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-st-primary-container px-3 text-[12px] font-semibold text-st-on-primary shadow-sm transition-transform active:scale-[0.97] disabled:opacity-60"
+                  >
+                    <LogIn size={14} strokeWidth={2} aria-hidden />
+                    <span className="hidden sm:inline">{authLoading ? "Signing in..." : "Sign in"}</span>
+                  </button>
+                )}
                 <Link
                   to="/about"
                   aria-label="Settings"
@@ -208,11 +218,22 @@ export function AppShell() {
                   to="/profile"
                   aria-label="Profile"
                   className={cn(
-                    "grid h-9 w-9 place-items-center rounded-full bg-st-primary-container text-[12px] font-bold text-st-on-primary shadow-sm transition-all hover:ring-2 hover:ring-st-secondary",
+                    "relative grid h-9 w-9 overflow-hidden place-items-center rounded-full bg-st-primary-container text-[12px] font-bold text-st-on-primary shadow-sm transition-all hover:ring-2 hover:ring-st-secondary",
                     pathname.startsWith("/profile") && "ring-2 ring-st-secondary",
                   )}
                 >
-                  {initials || <User size={16} />}
+                  {photoUrl ? (
+                    <Image
+                      src={photoUrl}
+                      alt={displayName}
+                      width={36}
+                      height={36}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    initials || <User size={16} />
+                  )}
                 </Link>
               </div>
             </div>

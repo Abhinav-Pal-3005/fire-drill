@@ -321,25 +321,27 @@ export function PracticeOSPhone({
     }
   }, [drillType]);
 
+  const { emit: runnerEmit, doneKeys: runnerDoneKeys, pinMode: runnerPinMode, cancelPin: runnerCancelPin } = runner;
+
   const navigateTo = useCallback(
     (entry: NavEntry) => {
       setMoreOpen(false);
       if (entry.view === "app" && entry.appId) {
         const appId = entry.appId;
-        if (drillType === "collect_request" && appId === "payeasy" && !runner.doneKeys.has("open_app")) {
-          runner.emit("open_app");
+        if (drillType === "collect_request" && appId === "payeasy" && !runnerDoneKeys.has("open_app")) {
+          runnerEmit("open_app");
         }
-        if (drillType === "sms" && appId === "bank" && !runner.doneKeys.has("open_official_app")) {
-          runner.emit("open_official_app");
+        if (drillType === "sms" && appId === "bank" && !runnerDoneKeys.has("open_official_app")) {
+          runnerEmit("open_official_app");
         }
-        if (drillType === "loan_offer" && appId === "loan" && !runner.doneKeys.has("open_offer")) {
-          runner.emit("open_offer");
+        if (drillType === "loan_offer" && appId === "loan" && !runnerDoneKeys.has("open_offer")) {
+          runnerEmit("open_offer");
         }
         setRecentApps((prev) => [appId, ...prev.filter((x) => x !== appId)]);
       }
       setNavStack((prev) => [...prev, entry]);
     },
-    [drillType, runner],
+    [drillType, runnerDoneKeys, runnerEmit],
   );
 
   const openApp = useCallback(
@@ -378,9 +380,9 @@ export function PracticeOSPhone({
   // Intercept Android hardware back button while inside simulated phone sub-screens/PIN pad
   useEffect(() => {
     const onNativeBack = (e: Event) => {
-      if (runner.pinMode) {
+      if (runnerPinMode) {
         e.preventDefault();
-        runner.cancelPin();
+        runnerCancelPin();
         return;
       }
       if (currentNav.view === "app" || currentNav.view === "recents") {
@@ -390,7 +392,7 @@ export function PracticeOSPhone({
     };
     window.addEventListener("mfd:back-button", onNativeBack);
     return () => window.removeEventListener("mfd:back-button", onNativeBack);
-  }, [currentNav.view, handleBackNav, runner]);
+  }, [currentNav.view, handleBackNav, runnerPinMode, runnerCancelPin]);
 
   const rawNotifications: PhoneNotificationItem[] = useMemo(() => {
     const items: PhoneNotificationItem[] = [];
@@ -1808,8 +1810,10 @@ export function PracticeOSPhone({
       timer={{ remainingMs: runner.remainingMs, totalMs: runner.limitMs, mode: timerMode }}
       timeLabel={vars.time || "9:41"}
       notifications={rawNotifications}
-      onDismissNotification={(id) => setDismissedNotifs((p) => [...p, id])}
-      onClearNotifications={() => setDismissedNotifs(rawNotifications.map((n) => n.id))}
+      onDismissNotification={(id) => setDismissedNotifs((p) => (p.includes(id) ? p : [...p, id]))}
+      onClearNotifications={() =>
+        setDismissedNotifs((p) => Array.from(new Set([...p, ...rawNotifications.map((n) => n.id)])))
+      }
       onBackNav={handleBackNav}
       onHomeNav={handleHomeNav}
       onRecentsNav={handleRecentsNav}
