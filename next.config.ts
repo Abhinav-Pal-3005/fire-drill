@@ -16,8 +16,11 @@ if (process.env.APP_URL) {
   }
 }
 
+const isStaticExport = process.env.NEXT_STATIC_EXPORT === "true";
+
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: isStaticExport ? "export" : "standalone",
+  ...(isStaticExport ? { images: { unoptimized: true } } : {}),
   allowedDevOrigins,
 };
 

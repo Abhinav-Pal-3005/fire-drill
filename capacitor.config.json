@@ -1,0 +1,11 @@
+{
+  "appId": "com.moneyfiredrill.app",
+  "appName": "Money Fire Drill",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

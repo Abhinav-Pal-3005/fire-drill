@@ -76,7 +76,7 @@ export function AppShell() {
         <AmbientMesh />
         <LensFilter />
         <div className="min-h-dvh">
-          <header className="no-print sticky top-0 z-40">
+          <header className="no-print sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
             <GlassNavBar
               title={title}
               collapsed={collapsed}
@@ -173,7 +173,7 @@ export function AppShell() {
 
         {/* Main Column */}
         <div className="min-w-0 lg:pl-[268px]">
-          <header className="no-print sticky top-0 z-40 bg-st-surface-low/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]">
+          <header className="no-print sticky top-0 z-40 bg-st-surface-low/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl shadow-[0_1px_8px_rgba(20,38,30,0.04)]">
             <div className="mx-auto flex h-16 max-w-[960px] items-center justify-between gap-3 px-4 sm:px-6">
               <Link to="/" className="flex min-w-0 items-center gap-2.5 lg:gap-3">
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[12px] bg-st-primary-container text-st-on-primary shadow-sm lg:hidden">
@@ -235,7 +235,7 @@ export function AppShell() {
         {/* Mobile Bottom Tab Bar */}
         <nav
           aria-label="Primary"
-          className="no-print fixed bottom-0 left-0 right-0 z-50 bg-st-surface-low/95 backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.06)] lg:hidden"
+          className="no-print fixed bottom-0 left-0 right-0 z-50 bg-st-surface-low/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl shadow-[0_-2px_16px_rgba(20,38,30,0.06)] lg:hidden"
         >
           <div className="mx-auto flex h-16 max-w-[640px] items-center justify-around px-1">
             {tabs.map((item) => {
