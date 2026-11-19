@@ -235,6 +235,154 @@
         "seed",
         "createdAt"
       ]
+    },
+    "LiveAlertCase": {
+      "title": "LiveAlertCase",
+      "description": "Weekly refreshed real-life fraud case study added to the live scam alerts strip and fraud library.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique alert case identifier matching the document ID.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the learner who synced this weekly alert.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Concise case study headline.",
+          "minLength": 1,
+          "maxLength": 180
+        },
+        "scamType": {
+          "type": "string",
+          "description": "Fraud category identifier.",
+          "enum": [
+            "upi-pin-trap",
+            "wrong-transfer",
+            "lost-phone",
+            "instant-loan",
+            "phishing",
+            "digital-arrest"
+          ]
+        },
+        "concept": {
+          "type": "string",
+          "description": "Primary fraud safety concept.",
+          "enum": [
+            "upi-safety",
+            "fraud-response",
+            "reversals",
+            "interest-credit",
+            "phishing-indicators"
+          ]
+        },
+        "location": {
+          "type": "string",
+          "description": "City or state where the reported incident occurred.",
+          "maxLength": 100
+        },
+        "amountLost": {
+          "type": "string",
+          "description": "Reported financial loss string.",
+          "maxLength": 60
+        },
+        "summary": {
+          "type": "string",
+          "description": "Concise summary of the real-life case study.",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "howItWorks": {
+          "type": "array",
+          "description": "Chronological steps explaining how the scam worked."
+        },
+        "redFlags": {
+          "type": "array",
+          "description": "Warning signs present in the incident."
+        },
+        "howToStop": {
+          "type": "array",
+          "description": "Recommended safety and recovery actions."
+        },
+        "source": {
+          "type": "object",
+          "description": "Cited news or official advisory source metadata."
+        },
+        "linkedDrillId": {
+          "type": "string",
+          "description": "Linked interactive drill ID.",
+          "enum": [
+            "collect-request",
+            "wrong-transfer",
+            "lost-phone",
+            "loan-offer",
+            "phishing-sms",
+            "digital-arrest"
+          ]
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Whether a grounded source URL is attached."
+        },
+        "lastVerifiedOn": {
+          "type": "string",
+          "description": "Date or month string of the source verification.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "weekKey": {
+          "type": "string",
+          "description": "ISO week key for weekly refresh tracking (e.g. 2026-W47).",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "refreshedAt": {
+          "type": "integer",
+          "description": "Client epoch milliseconds when the weekly batch was fetched."
+        },
+        "isLiveAlert": {
+          "type": "boolean",
+          "description": "Marks the library entry as a weekly refreshed live alert case study."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the alert record was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the alert record was last updated."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "title",
+        "scamType",
+        "concept",
+        "summary",
+        "howItWorks",
+        "redFlags",
+        "howToStop",
+        "source",
+        "linkedDrillId",
+        "verified",
+        "lastVerifiedOn",
+        "weekKey",
+        "refreshedAt",
+        "isLiveAlert",
+        "createdAt",
+        "updatedAt"
+      ]
     }
   },
   "firestore": {
@@ -249,6 +397,10 @@
     "/users/{userId}/events/{eventId}": {
       "schema": { "$ref": "#/entities/AnalyticsEventRecord" },
       "description": "Learner drill step/flag interaction events used for Readiness statistics."
+    },
+    "/users/{userId}/alerts/{alertId}": {
+      "schema": { "$ref": "#/entities/LiveAlertCase" },
+      "description": "Weekly refreshed real-life scam case studies synced per learner for alerts and library."
     }
   }
 }

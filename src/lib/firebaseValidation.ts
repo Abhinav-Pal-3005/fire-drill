@@ -1,4 +1,4 @@
-import type { AnalyticsEvent, Attempt, DrillGrade, QuizAnswer, StepResult, TimerMode } from "@/types";
+import type { AnalyticsEvent, Attempt, ConceptId, DrillGrade, LibraryEntry, QuizAnswer, ScamType, StepResult, TimerMode } from "@/types";
 
 /**
  * Shared boundary constraints synchronized verbatim with firebase-blueprint.json & firestore.rules.
@@ -17,6 +17,18 @@ export const SCHEMA_LIMITS = {
   mistakeConceptsMaxItems: 10,
   mistakesMaxItems: 30,
   quizAnswersMaxItems: 20,
+  alertTitleMax: 180,
+  alertLocationMax: 100,
+  alertAmountMax: 60,
+  alertSummaryMax: 500,
+  alertListMaxItems: 12,
+  alertHowItWorksMaxLen: 360,
+  alertFlagStopMaxLen: 260,
+  alertSourceNameMax: 180,
+  alertSourcePublisherMax: 120,
+  alertSourceUrlMax: 600,
+  alertDateMax: 40,
+  alertWeekKeyMax: 20,
 } as const;
 
 const VALID_TIMER_MODES = new Set<TimerMode>(["relaxed", "panicked", "none"]);
@@ -155,5 +167,88 @@ export function sanitizeAnalyticsEventPayload(event: AnalyticsEvent, userId: str
   if (typeof event.correct === "boolean") {
     payload.correct = event.correct;
   }
+  return payload;
+}
+
+const VALID_SCAM_TYPES = new Set<ScamType>([
+  "upi-pin-trap",
+  "wrong-transfer",
+  "lost-phone",
+  "instant-loan",
+  "phishing",
+  "digital-arrest",
+]);
+
+const VALID_CONCEPTS = new Set<ConceptId>([
+  "upi-safety",
+  "fraud-response",
+  "reversals",
+  "interest-credit",
+  "phishing-indicators",
+]);
+
+const VALID_DRILL_IDS = new Set<string>([
+  "collect-request",
+  "wrong-transfer",
+  "lost-phone",
+  "loan-offer",
+  "phishing-sms",
+  "digital-arrest",
+]);
+
+function nonEmptyList(items: string[], maxItems: number, maxLen: number, fallback: string): string[] {
+  const cleaned = sanitizeStringArray(items, maxItems, maxLen);
+  return cleaned.length > 0 ? cleaned : [fallback.slice(0, maxLen)];
+}
+
+export function sanitizeLiveAlertPayload(entry: LibraryEntry, userId: string) {
+  const scamType: ScamType = VALID_SCAM_TYPES.has(entry.scamType) ? entry.scamType : "upi-pin-trap";
+  const concept: ConceptId = VALID_CONCEPTS.has(entry.concept) ? entry.concept : "upi-safety";
+  const linkedDrillId = VALID_DRILL_IDS.has(entry.linkedDrillId) ? entry.linkedDrillId : "collect-request";
+
+  const payload: Record<string, unknown> = {
+    id: sanitizeId(entry.id, SCHEMA_LIMITS.shortIdMax),
+    userId: sanitizeId(userId, SCHEMA_LIMITS.idMax),
+    title: String(entry.title ?? "").trim().slice(0, SCHEMA_LIMITS.alertTitleMax) || "Reported Fraud Case",
+    scamType,
+    concept,
+    summary: String(entry.summary ?? "").trim().slice(0, SCHEMA_LIMITS.alertSummaryMax) || "Reported cyber fraud incident.",
+    howItWorks: nonEmptyList(
+      entry.howItWorks ?? [],
+      SCHEMA_LIMITS.alertListMaxItems,
+      SCHEMA_LIMITS.alertHowItWorksMaxLen,
+      "Fraudsters contacted the victim using social engineering.",
+    ),
+    redFlags: nonEmptyList(
+      entry.redFlags ?? [],
+      SCHEMA_LIMITS.alertListMaxItems,
+      SCHEMA_LIMITS.alertFlagStopMaxLen,
+      "Unsolicited urgency or request for PIN/OTP/payment.",
+    ),
+    howToStop: nonEmptyList(
+      entry.howToStop ?? [],
+      SCHEMA_LIMITS.alertListMaxItems,
+      SCHEMA_LIMITS.alertFlagStopMaxLen,
+      "Disconnect immediately, never share PIN/OTP, and report on 1930 or cybercrime.gov.in.",
+    ),
+    source: {
+      name: String(entry.source?.name ?? "").trim().slice(0, SCHEMA_LIMITS.alertSourceNameMax) || "News Advisory",
+      publisher: String(entry.source?.publisher ?? "").trim().slice(0, SCHEMA_LIMITS.alertSourcePublisherMax) || "Reported Media",
+      url: String(entry.source?.url ?? "").trim().slice(0, SCHEMA_LIMITS.alertSourceUrlMax),
+      date: String(entry.source?.date ?? "").trim().slice(0, SCHEMA_LIMITS.alertDateMax) || "Recent",
+    },
+    linkedDrillId,
+    verified: Boolean(entry.verified && entry.source?.url),
+    lastVerifiedOn: String(entry.lastVerifiedOn ?? entry.source?.date ?? "").trim().slice(0, SCHEMA_LIMITS.alertDateMax) || "Recent",
+    weekKey: String(entry.weekKey ?? "").trim().slice(0, SCHEMA_LIMITS.alertWeekKeyMax) || "weekly",
+    refreshedAt: clampInt(entry.refreshedAt ?? Date.now(), 1, Number.MAX_SAFE_INTEGER),
+    isLiveAlert: true,
+  };
+
+  const loc = String(entry.location ?? "").trim().slice(0, SCHEMA_LIMITS.alertLocationMax);
+  if (loc) payload.location = loc;
+  const amt = String(entry.amountLost ?? "").trim().slice(0, SCHEMA_LIMITS.alertAmountMax);
+  if (amt) payload.amountLost = amt;
+
   return payload;
 }

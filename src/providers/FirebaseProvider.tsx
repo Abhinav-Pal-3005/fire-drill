@@ -19,6 +19,7 @@ import {
   subscribeUserData,
 } from "@/lib/firestoreSync";
 import { setActiveUid } from "@/lib/syncBridge";
+import { useAlertsStore } from "@/store/useAlertsStore";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useDrillStore } from "@/store/useDrillStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -73,6 +74,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
         const userState = useUserStore.getState();
         const drillState = useDrillStore.getState();
         const analyticsState = useAnalyticsStore.getState();
+        const alertsState = useAlertsStore.getState();
 
         const profile = await ensureUserProfile(nextUser, {
           displayName: userState.displayName,
@@ -82,6 +84,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
           bookmarks: userState.bookmarks,
           attempts: drillState.attempts,
           events: analyticsState.events,
+          liveAlerts: alertsState.entries,
         });
 
         if (cancelled) return;
@@ -118,6 +121,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
           },
           onEvents: (events) => {
             useAnalyticsStore.setState({ events });
+          },
+          onLiveAlerts: (alerts) => {
+            useAlertsStore.getState().mergeSyncedAlerts(alerts);
           },
           onQuotaError: () => {
             toast(`Daily Firestore free-tier quota exceeded. Upgrade or retry tomorrow: ${getQuotaUpgradeUrl()}`);

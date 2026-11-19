@@ -1,9 +1,10 @@
 import { useEffect, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Bookmark, ChevronLeft, ExternalLink, Play } from "lucide-react";
+import { Bookmark, ChevronLeft, ExternalLink, Play, Radio } from "lucide-react";
 import { VerificationBadge } from "@/components/library/CaseCard";
 import { logEvent } from "@/features/analytics/analyticsLogger";
-import { getConcept, getDrill, getLibraryEntry } from "@/features/drills/drillLoader";
+import { getConcept, getDrill } from "@/features/drills/drillLoader";
+import { useLibraryEntry } from "@/features/library/useLibrary";
 import { useUserStore } from "@/store/useUserStore";
 import { cn } from "@/utils/cn";
 import NotFound from "./NotFound";
@@ -38,7 +39,7 @@ function ItemList({ items, ordered = false }: { items: string[]; ordered?: boole
 
 export default function CaseDetail() {
   const { id } = useParams();
-  const entry = getLibraryEntry(id);
+  const entry = useLibraryEntry(id);
   const bookmarks = useUserStore((s) => s.bookmarks);
   const toggleBookmark = useUserStore((s) => s.toggleBookmark);
 
@@ -108,6 +109,12 @@ export default function CaseDetail() {
               </span>
             )}
             <VerificationBadge verified={entry.verified} />
+            {entry.isLiveAlert && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-st-secondary px-3 py-1 text-[12px] font-semibold text-st-on-secondary">
+                <Radio size={13} strokeWidth={2.2} aria-hidden />
+                Weekly Live{entry.weekKey ? ` · ${entry.weekKey}` : ""}
+              </span>
+            )}
           </div>
         </div>
 

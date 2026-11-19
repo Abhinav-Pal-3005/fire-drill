@@ -287,6 +287,116 @@ service cloud.firestore {
         && data.createdAt is timestamp;
     }
 
+    function isValidScamType(scamType) {
+      return scamType in [
+        'upi-pin-trap',
+        'wrong-transfer',
+        'lost-phone',
+        'instant-loan',
+        'phishing',
+        'digital-arrest'
+      ];
+    }
+
+    function isValidConceptId(concept) {
+      return concept in [
+        'upi-safety',
+        'fraud-response',
+        'reversals',
+        'interest-credit',
+        'phishing-indicators'
+      ];
+    }
+
+    function isValidLinkedDrillId(drillId) {
+      return drillId in [
+        'collect-request',
+        'wrong-transfer',
+        'lost-phone',
+        'loan-offer',
+        'phishing-sms',
+        'digital-arrest'
+      ];
+    }
+
+    function isValidAlertSource(source) {
+      return source is map
+        && source.keys().hasAll(['name', 'publisher', 'url', 'date'])
+        && source.keys().hasOnly(['name', 'publisher', 'url', 'date'])
+        && source.name is string && source.name.size() >= 1 && source.name.size() <= 180
+        && source.publisher is string && source.publisher.size() >= 1 && source.publisher.size() <= 120
+        && source.url is string && source.url.size() <= 600
+        && source.date is string && source.date.size() >= 1 && source.date.size() <= 40;
+    }
+
+    function isValidLiveAlert(data, userId, alertId) {
+      return data.keys().hasAll([
+          'id',
+          'userId',
+          'title',
+          'scamType',
+          'concept',
+          'summary',
+          'howItWorks',
+          'redFlags',
+          'howToStop',
+          'source',
+          'linkedDrillId',
+          'verified',
+          'lastVerifiedOn',
+          'weekKey',
+          'refreshedAt',
+          'isLiveAlert',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id',
+          'userId',
+          'title',
+          'scamType',
+          'concept',
+          'location',
+          'amountLost',
+          'summary',
+          'howItWorks',
+          'redFlags',
+          'howToStop',
+          'source',
+          'linkedDrillId',
+          'verified',
+          'lastVerifiedOn',
+          'weekKey',
+          'refreshedAt',
+          'isLiveAlert',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidShortId(data.id)
+        && data.id == alertId
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 180
+        && isValidScamType(data.scamType)
+        && isValidConceptId(data.concept)
+        && (!('location' in data) || (data.location is string && data.location.size() <= 100))
+        && (!('amountLost' in data) || (data.amountLost is string && data.amountLost.size() <= 60))
+        && data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 500
+        && isValidStringList(data.howItWorks, 12, 360) && data.howItWorks.size() >= 1
+        && isValidStringList(data.redFlags, 12, 260) && data.redFlags.size() >= 1
+        && isValidStringList(data.howToStop, 12, 260) && data.howToStop.size() >= 1
+        && isValidAlertSource(data.source)
+        && isValidLinkedDrillId(data.linkedDrillId)
+        && data.verified is bool
+        && data.lastVerifiedOn is string && data.lastVerifiedOn.size() >= 1 && data.lastVerifiedOn.size() <= 40
+        && data.weekKey is string && data.weekKey.size() >= 1 && data.weekKey.size() <= 20
+        && data.refreshedAt is int && data.refreshedAt > 0
+        && data.isLiveAlert == true
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
     // ==================== Collection Rules ====================
 
     match /users/{userId} {
@@ -383,6 +493,34 @@ service cloud.firestore {
         allow delete: if isOwner(userId)
           && isValidId(userId)
           && isValidId(eventId)
+          && hasUserParent(userId);
+      }
+
+      match /alerts/{alertId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidShortId(alertId);
+        allow list: if isOwner(userId) && resource.data.userId == request.auth.uid;
+
+        allow create: if isOwner(userId)
+          && isValidId(userId)
+          && isValidShortId(alertId)
+          && isValidLiveAlert(incoming(), userId, alertId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && hasUserParent(userId);
+
+        allow update: if isOwner(userId)
+          && isValidId(userId)
+          && isValidShortId(alertId)
+          && isValidLiveAlert(incoming(), userId, alertId)
+          && incoming().id == existing().id
+          && incoming().userId == existing().userId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && hasUserParent(userId);
+
+        allow delete: if isOwner(userId)
+          && isValidId(userId)
+          && isValidShortId(alertId)
           && hasUserParent(userId);
       }
     }

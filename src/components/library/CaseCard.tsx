@@ -5,6 +5,7 @@ import {
   Bookmark,
   ChevronRight,
   Hourglass,
+  Radio,
 } from "lucide-react";
 import { getConcept } from "@/features/drills/drillLoader";
 import { useUserStore } from "@/store/useUserStore";
@@ -38,7 +39,15 @@ export function CaseCard({ entry }: { entry: LibraryEntry }) {
       <div className="min-w-0 space-y-3">
         {/* Card Header Chips */}
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <VerificationBadge verified={entry.verified} />
+          <div className="flex flex-wrap items-center gap-1.5">
+            <VerificationBadge verified={entry.verified} />
+            {entry.isLiveAlert && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-st-secondary px-2.5 py-1 text-[11px] font-semibold text-st-on-secondary">
+                <Radio size={12} strokeWidth={2.2} aria-hidden />
+                Weekly Live
+              </span>
+            )}
+          </div>
           <span className="inline-flex max-w-full items-center gap-1 rounded-full bg-st-surface-highest px-2.5 py-1 text-[11px] font-semibold text-st-on-surface-variant">
             <ConceptIcon size={12} strokeWidth={2} className="shrink-0" aria-hidden />
             <span className="truncate">{getConcept(entry.concept).title}</span>

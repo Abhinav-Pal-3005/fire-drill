@@ -2,5 +2,5 @@
   "name": "Money Fire Drill",
   "description": "A safe, timed practice app that teaches UPI safety, fraud response and phishing indicators. Education, not personal advice. No real payments.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

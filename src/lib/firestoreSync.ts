@@ -13,7 +13,7 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
-import type { AnalyticsEvent, Attempt, TimerMode } from "@/types";
+import type { AnalyticsEvent, Attempt, LibraryEntry, TimerMode } from "@/types";
 import { db } from "./firebase";
 import { OperationType, handleFirestoreError } from "./firestoreError";
 import {
@@ -22,6 +22,7 @@ import {
   sanitizeAttemptPayload,
   sanitizeDisplayName,
   sanitizeId,
+  sanitizeLiveAlertPayload,
   sanitizeQuizRecord,
   sanitizeStringArray,
   sanitizeTimerMode,
@@ -45,6 +46,7 @@ export interface LocalSeedSnapshot {
   bookmarks: string[];
   attempts: Attempt[];
   events: AnalyticsEvent[];
+  liveAlerts?: LibraryEntry[];
 }
 
 const ensuredUsers = new Set<string>();
@@ -108,8 +110,11 @@ export async function ensureUserProfile(user: User, local: LocalSeedSnapshot): P
 
     ensuredUsers.add(uid);
 
-    // Migrate any pre-sign-in local attempts & events from this device into Firestore
+    // Migrate any pre-sign-in local attempts, events & live alerts from this device into Firestore
     await migrateLocalHistory(uid, local.attempts, local.events);
+    if (local.liveAlerts && local.liveAlerts.length > 0) {
+      await persistLiveAlertsToFirestore(uid, local.liveAlerts);
+    }
 
     return {
       uid,
@@ -168,6 +173,9 @@ export async function ensureUserProfile(user: User, local: LocalSeedSnapshot): P
 
   if (local.attempts.length > 0 || local.events.length > 0) {
     await migrateLocalHistory(uid, local.attempts, local.events);
+  }
+  if (local.liveAlerts && local.liveAlerts.length > 0) {
+    await persistLiveAlertsToFirestore(uid, local.liveAlerts);
   }
 
   return {
@@ -343,6 +351,41 @@ export async function persistEventToFirestore(uid: string, event: AnalyticsEvent
   }
 }
 
+export async function persistLiveAlertsToFirestore(uid: string, alerts: LibraryEntry[]): Promise<void> {
+  if (alerts.length === 0) return;
+  const safeUid = sanitizeId(uid, SCHEMA_LIMITS.idMax);
+  const alertsPath = `users/${safeUid}/alerts`;
+
+  const existingIds = new Set<string>();
+  try {
+    const snap = await getDocs(query(collection(db, "users", safeUid, "alerts"), where("userId", "==", safeUid)));
+    for (const d of snap.docs) existingIds.add(d.id);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, alertsPath);
+  }
+
+  const trimmedAlerts = alerts.slice(0, 18);
+  const newAlerts = trimmedAlerts.filter((a) => !existingIds.has(sanitizeId(a.id, SCHEMA_LIMITS.shortIdMax)));
+  if (newAlerts.length === 0) return;
+
+  for (let i = 0; i < newAlerts.length; i += 400) {
+    const batch = writeBatch(db);
+    for (const alert of newAlerts.slice(i, i + 400)) {
+      const alertId = sanitizeId(alert.id, SCHEMA_LIMITS.shortIdMax);
+      batch.set(doc(db, "users", safeUid, "alerts", alertId), {
+        ...sanitizeLiveAlertPayload(alert, safeUid),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    }
+    try {
+      await batch.commit();
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, alertsPath);
+    }
+  }
+}
+
 export async function clearUserFirestoreData(uid: string): Promise<void> {
   const safeUid = sanitizeId(uid, SCHEMA_LIMITS.idMax);
   const userPath = `users/${safeUid}`;
@@ -406,6 +449,7 @@ export function subscribeUserData(
     onProfile: (profile: SyncedUserProfile) => void;
     onAttempts: (attempts: Attempt[]) => void;
     onEvents: (events: AnalyticsEvent[]) => void;
+    onLiveAlerts?: (alerts: LibraryEntry[]) => void;
     onQuotaError?: () => void;
   },
 ): Unsubscribe {
@@ -413,6 +457,7 @@ export function subscribeUserData(
   const userPath = `users/${safeUid}`;
   const attemptsPath = `users/${safeUid}/attempts`;
   const eventsPath = `users/${safeUid}/events`;
+  const alertsPath = `users/${safeUid}/alerts`;
 
   const unsubProfile = onSnapshot(
     doc(db, "users", safeUid),
@@ -490,9 +535,53 @@ export function subscribeUserData(
     },
   );
 
+  const unsubAlerts = callbacks.onLiveAlerts
+    ? onSnapshot(
+        query(collection(db, "users", safeUid, "alerts"), where("userId", "==", safeUid)),
+        (snap) => {
+          const list: LibraryEntry[] = snap.docs
+            .map((d) => {
+              const data = d.data() as Record<string, unknown>;
+              const src = (data.source ?? {}) as Record<string, unknown>;
+              return {
+                id: String(data.id ?? d.id),
+                title: String(data.title ?? ""),
+                scamType: data.scamType as LibraryEntry["scamType"],
+                concept: data.concept as LibraryEntry["concept"],
+                ...(typeof data.location === "string" ? { location: data.location } : {}),
+                ...(typeof data.amountLost === "string" ? { amountLost: data.amountLost } : {}),
+                summary: String(data.summary ?? ""),
+                howItWorks: Array.isArray(data.howItWorks) ? (data.howItWorks as string[]) : [],
+                redFlags: Array.isArray(data.redFlags) ? (data.redFlags as string[]) : [],
+                howToStop: Array.isArray(data.howToStop) ? (data.howToStop as string[]) : [],
+                source: {
+                  name: String(src.name ?? ""),
+                  publisher: String(src.publisher ?? ""),
+                  url: String(src.url ?? ""),
+                  date: String(src.date ?? ""),
+                },
+                linkedDrillId: String(data.linkedDrillId ?? "collect-request"),
+                verified: Boolean(data.verified),
+                lastVerifiedOn: String(data.lastVerifiedOn ?? ""),
+                isLiveAlert: true,
+                weekKey: typeof data.weekKey === "string" ? data.weekKey : undefined,
+                refreshedAt: typeof data.refreshedAt === "number" ? data.refreshedAt : undefined,
+              };
+            })
+            .sort((a, b) => (b.refreshedAt ?? 0) - (a.refreshedAt ?? 0));
+          callbacks.onLiveAlerts?.(list);
+        },
+        (error) => {
+          if (error.message.includes("Quota exceeded")) callbacks.onQuotaError?.();
+          handleFirestoreError(error, OperationType.LIST, alertsPath);
+        },
+      )
+    : undefined;
+
   return () => {
     unsubProfile();
     unsubAttempts();
     unsubEvents();
+    unsubAlerts?.();
   };
 }

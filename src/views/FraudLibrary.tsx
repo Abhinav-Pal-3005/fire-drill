@@ -4,29 +4,35 @@ import {
   ArrowRight,
   Lightbulb,
   PhoneCall,
+  Radio,
+  RefreshCw,
   Search,
   SearchX,
   ShieldCheck,
   TrendingUp,
   X,
 } from "lucide-react";
+import { toast } from "@/components/glass/GlassToast";
 import { CaseCard } from "@/components/library/CaseCard";
 import { LiveAlertsStrip } from "@/components/library/LiveAlertsStrip";
-import { getLibrary, listConcepts } from "@/features/drills/drillLoader";
+import { listConcepts } from "@/features/drills/drillLoader";
+import { useCombinedLibrary } from "@/features/library/useLibrary";
 import type { ConceptId, ScamType } from "@/types";
 import { cn } from "@/utils/cn";
 
 export default function FraudLibrary() {
-  const library = getLibrary();
+  const { entries, liveEntries, scamTypes, refreshAgeLabel, weekKey, refreshing, refreshAlerts } = useCombinedLibrary();
   const concepts = listConcepts();
   const [query, setQuery] = useState("");
   const [scamType, setScamType] = useState<ScamType | "all">("all");
   const [concept, setConcept] = useState<ConceptId | "all">("all");
+  const [onlyLive, setOnlyLive] = useState(false);
   const [showConceptFilters, setShowConceptFilters] = useState(false);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return library.entries.filter((e) => {
+    return entries.filter((e) => {
+      if (onlyLive && !e.isLiveAlert) return false;
       if (scamType !== "all" && e.scamType !== scamType) return false;
       if (concept !== "all" && e.concept !== concept) return false;
       if (!q) return true;
@@ -40,12 +46,20 @@ export default function FraudLibrary() {
         ...e.howToStop,
       ].some((t) => t.toLowerCase().includes(q));
     });
-  }, [library.entries, query, scamType, concept]);
+  }, [entries, onlyLive, query, scamType, concept]);
 
   const clear = () => {
     setQuery("");
     setScamType("all");
     setConcept("all");
+    setOnlyLive(false);
+  };
+
+  const handleManualRefresh = async () => {
+    const res = await refreshAlerts(true);
+    if (res.ok) {
+      toast(`Added ${res.addedCount} live real-life case ${res.addedCount === 1 ? "study" : "studies"} to the Fraud Library.`);
+    }
   };
 
   return (
@@ -118,7 +132,7 @@ export default function FraudLibrary() {
           >
             All Scams
           </button>
-          {library.scamTypes.map((t) => (
+          {scamTypes.map((t) => (
             <button
               key={t.id}
               type="button"
@@ -133,6 +147,21 @@ export default function FraudLibrary() {
               {t.label}
             </button>
           ))}
+          {liveEntries.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setOnlyLive((v) => !v)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-all sm:px-4 sm:py-2 sm:text-[13px]",
+                onlyLive
+                  ? "bg-st-secondary text-st-on-secondary shadow-sm"
+                  : "bg-st-secondary-container/60 text-st-on-secondary-container hover:bg-st-secondary-container",
+              )}
+            >
+              <Radio size={13} strokeWidth={2} aria-hidden />
+              <span>Weekly Live ({liveEntries.length})</span>
+            </button>
+          )}
         </div>
 
         {(showConceptFilters || concept !== "all") && (
@@ -196,13 +225,25 @@ export default function FraudLibrary() {
       {/* Surge Threat Alert Banner */}
       <div className="min-w-0 overflow-hidden rounded-[24px] bg-st-surface-container p-4 shadow-sm sm:p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-st-tertiary-fixed px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-st-on-tertiary-fixed">
-            <TrendingUp size={13} strokeWidth={2} className="text-st-tertiary-container" aria-hidden />
-            High Scam Surge Alert
-          </span>
-          <span className="min-w-0 text-[12px] font-medium leading-snug text-st-on-surface-variant">
-            {library.updateNote}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-st-tertiary-fixed px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-st-on-tertiary-fixed">
+              <TrendingUp size={13} strokeWidth={2} className="text-st-tertiary-container" aria-hidden />
+              Weekly Scam Surge Alerts
+            </span>
+            <span className="min-w-0 text-[12px] font-medium leading-snug text-st-on-surface-variant">
+              {refreshAgeLabel}
+              {weekKey ? ` (${weekKey})` : ""} · Auto-refreshes weekly
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => void handleManualRefresh()}
+            disabled={refreshing}
+            className="inline-flex min-h-[34px] shrink-0 items-center gap-1.5 rounded-full bg-st-surface-lowest px-3.5 py-1.5 text-[12px] font-semibold text-st-primary shadow-sm transition-colors hover:bg-st-surface-high disabled:opacity-60"
+          >
+            <RefreshCw size={13} strokeWidth={2.2} className={cn(refreshing && "animate-spin")} aria-hidden />
+            <span>{refreshing ? "Refreshing..." : "Refresh weekly"}</span>
+          </button>
         </div>
         <LiveAlertsStrip compact />
       </div>
@@ -215,7 +256,7 @@ export default function FraudLibrary() {
             {results.length} {results.length === 1 ? "Case" : "Cases"}
           </span>
         </div>
-        {(query || scamType !== "all" || concept !== "all") && (
+        {(query || scamType !== "all" || concept !== "all" || onlyLive) && (
           <button
             type="button"
             onClick={clear}

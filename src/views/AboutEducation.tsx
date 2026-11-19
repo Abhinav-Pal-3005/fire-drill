@@ -316,12 +316,12 @@ export default function AboutEducation() {
           <ul className="space-y-2 text-[13px] text-st-on-surface-variant">
             {[
               ["Google Sign-In", "Authenticates your identity securely with Firebase Auth."],
-              ["Cloud Firestore", "Persists your drill attempts, readiness, bookmarks, and checklist."],
-              ["Live advisories", "Scam alerts and case studies come from curated static scenarios."],
+              ["Cloud Firestore", "Persists your drill attempts, readiness, bookmarks, checklist, and live alerts."],
+              ["Live advisories", "Refreshed weekly via grounded search for real Indian cyber-fraud cases and added to your library."],
             ].map(([name, text]) => (
               <li key={name} className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-st-tertiary-fixed px-2 py-0.5 text-[10px] font-bold text-st-on-tertiary-fixed">
-                  {name === "Live advisories" ? "STATIC" : "CLOUD"}
+                  {name === "Live advisories" ? "WEEKLY" : "CLOUD"}
                 </span>
                 <span>
                   <strong className="font-semibold text-st-on-surface">{name}:</strong> {text}

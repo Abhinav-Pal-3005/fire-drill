@@ -216,6 +216,9 @@ export interface LibraryEntry {
   linkedDrillId: string;
   verified: boolean;
   lastVerifiedOn: string;
+  isLiveAlert?: boolean;
+  weekKey?: string;
+  refreshedAt?: number;
 }
 
 export interface LibraryData {
