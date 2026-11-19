@@ -5,39 +5,75 @@
   "questions": [
     {
       "id": "upi-1",
-      "prompt": "When do you need to enter your UPI PIN?",
+      "prompt": "When do you actually need to enter your UPI PIN?",
       "options": [
-        { "text": "Only when you are sending money", "explanationWrong": "" },
-        { "text": "To receive money from a buyer", "explanationWrong": "A UPI PIN is never needed to receive money. Anyone who says it is, is trying to trick you." },
-        { "text": "To read a message from your bank", "explanationWrong": "Reading a message never needs your PIN. Be careful with any message that asks for it." },
-        { "text": "Whenever someone asks politely", "explanationWrong": "Being polite does not make a request safe. Your PIN is private, always." }
+        { "text": "Only when money is leaving your account or checking your own balance", "explanationWrong": "" },
+        { "text": "To receive money from a buyer on a marketplace", "explanationWrong": "A UPI PIN is never needed to receive money. Anyone who says it is, is trying to trick you." },
+        { "text": "To accept a cashback or prize credit", "explanationWrong": "Real cashbacks credit automatically without entering a PIN." },
+        { "text": "Whenever a caller says it is a refund verification", "explanationWrong": "Scammers disguise payment debits as 'refunds'. Never enter a PIN to receive funds." }
       ],
       "correctIndex": 0,
-      "explanationCorrect": "Your UPI PIN is only for sending money. You never need it to receive money."
+      "explanationCorrect": "Your UPI PIN only authorises outgoing payments or balance checks inside your own app—never incoming money."
     },
     {
       "id": "upi-2",
-      "prompt": "A buyer says: 'Enter your PIN to receive the payment.' What should you do?",
+      "prompt": "A marketplace buyer says: 'Tap Approve and enter your PIN to receive the payment.' What should you do?",
       "options": [
-        { "text": "Enter the PIN quickly so the buyer does not leave", "explanationWrong": "Rushing is what the scammer wants. Entering the PIN would send money out." },
-        { "text": "Enter the PIN, but only the first two digits", "explanationWrong": "Any part of your PIN is a secret. Do not enter it at all." },
-        { "text": "Do not enter it. Decline the request and report the sender", "explanationWrong": "" },
-        { "text": "Send the PIN in a chat so the buyer can do it for you", "explanationWrong": "Never share your PIN with anyone, for any reason." }
+        { "text": "Enter the PIN quickly so the buyer does not cancel", "explanationWrong": "Rushing is what the scammer wants. Entering the PIN sends your money out." },
+        { "text": "Try with a ₹1 test transfer first", "explanationWrong": "You should never approve a collect request or scan a QR to receive payment." },
+        { "text": "Decline the collect request, verify your balance, and block/report the UPI ID", "explanationWrong": "" },
+        { "text": "Share the PIN in chat so the buyer can finish it", "explanationWrong": "Never share your PIN with anyone, for any reason." }
       ],
       "correctIndex": 2,
-      "explanationCorrect": "Decline, do not enter your PIN, and block and report the sender. Receiving money never needs your PIN."
+      "explanationCorrect": "Decline the request without entering your PIN, check your account safely, and block and report the sender."
     },
     {
       "id": "upi-3",
-      "prompt": "What happens when you approve a collect request?",
+      "prompt": "What happens when you approve a UPI collect request?",
       "options": [
-        { "text": "You receive money", "explanationWrong": "It is the other way round. A collect request asks you to pay." },
-        { "text": "Money can leave your account", "explanationWrong": "" },
-        { "text": "Nothing, it only confirms your name", "explanationWrong": "Approving is a real action. In real life it can lead to a payment." },
-        { "text": "Your balance is hidden", "explanationWrong": "Approving a request has nothing to do with hiding your balance." }
+        { "text": "Money is credited to your bank account", "explanationWrong": "It is the opposite: a collect request asks YOU to pay." },
+        { "text": "Money leaves your account once you enter your PIN", "explanationWrong": "" },
+        { "text": "It only confirms your registered name to the buyer", "explanationWrong": "Approving a collect request initiates a real debit transaction." },
+        { "text": "It pauses all pending alerts for 24 hours", "explanationWrong": "Approving a collect request is a payment prompt, not a notification setting." }
       ],
       "correctIndex": 1,
-      "explanationCorrect": "A collect request asks you to pay. Approving it, and entering your PIN, sends money out of your account."
+      "explanationCorrect": "A collect request asks you to pay. Approving it and entering your PIN debits money from your account."
+    },
+    {
+      "id": "upi-4",
+      "prompt": "A buyer sends a QR code and tells you to scan it to 'receive' ₹5,000 for your sofa. Why is that a trap?",
+      "options": [
+        { "text": "Scanning a QR code in a UPI app initiates a payment FROM you, not TO you", "explanationWrong": "" },
+        { "text": "QR codes only work for bank transfers above ₹1 lakh", "explanationWrong": "QR codes work for any amount, but scanning one makes you the payer." },
+        { "text": "QR codes expire after 10 seconds", "explanationWrong": "Expiry is not the issue—the direction of payment is." },
+        { "text": "You have to pay a 2% fee when receiving via QR", "explanationWrong": "Receiving UPI money is free and never requires scanning a stranger's QR code." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Scanning someone else's QR code always starts an outgoing payment. To receive money, just share your UPI ID or your own QR."
+    },
+    {
+      "id": "upi-5",
+      "prompt": "Before tapping anything on a payment prompt inside your UPI app, what clue confirms you are about to lose money?",
+      "options": [
+        { "text": "A message saying 'DEBIT' or 'Paying' instead of money credited", "explanationWrong": "" },
+        { "text": "The prompt shows the name of your bank", "explanationWrong": "All genuine UPI screens show your linked bank name." },
+        { "text": "The prompt arrives during business hours", "explanationWrong": "Time of day does not tell you whether a request is safe." },
+        { "text": "The buyer has a regular first name", "explanationWrong": "Scammers use ordinary names and fake business handles." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Read the direction carefully: collect requests warn that money will be debited from your account if approved."
+    },
+    {
+      "id": "upi-6",
+      "prompt": "After declining a fake collect request in your UPI app, what is the best next step?",
+      "options": [
+        { "text": "Call the stranger back to ask why they sent it", "explanationWrong": "Engaging the scammer invites more social engineering." },
+        { "text": "Check your balance to confirm no debit occurred, then block and report the UPI ID", "explanationWrong": "" },
+        { "text": "Uninstall your banking app permanently", "explanationWrong": "Your official app is safe when you decline unknown requests." },
+        { "text": "Send ₹1 to test whether the UPI ID belongs to a business", "explanationWrong": "Never send money to test suspicious accounts." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Confirm your balance is untouched and block/report the requester so they cannot send repeat prompts."
     }
   ]
 }

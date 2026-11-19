@@ -16,6 +16,8 @@ export interface Concept {
 
 export type Difficulty = "easy" | "medium" | "hard";
 
+export type TimerMode = "relaxed" | "panicked" | "none";
+
 export type TriggerType = "sms" | "chat" | "collect_request" | "loan_offer" | "lost_phone" | "balance_alert" | "digital_arrest";
 
 export type VariableSpec = Array<string | number> | { min: number; max: number; step: number };
@@ -230,6 +232,7 @@ export interface Attempt {
   concept: ConceptId;
   seed: number;
   demoSeed: boolean;
+  timerMode?: TimerMode;
   startedAt: number;
   finishedAt: number;
   grade: DrillGrade;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { EntryFlow } from "@/components/entry/EntryFlow";
 import { AppShell } from "@/components/layout/AppShell";
@@ -16,6 +16,65 @@ import Home from "@/views/Home";
 import NotFound from "@/views/NotFound";
 import Profile from "@/views/Profile";
 import ProgressChecklist from "@/views/ProgressChecklist";
+
+interface CapacitorAppPlugin {
+  addListener?: (
+    eventName: "backButton",
+    handler: (data: { canGoBack?: boolean }) => void,
+  ) => Promise<{ remove: () => Promise<void> }> | { remove: () => void };
+  exitApp?: () => Promise<void> | void;
+}
+
+function NativeBackHandler() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cap = (
+      window as { Capacitor?: { isNativePlatform?: () => boolean; Plugins?: { App?: CapacitorAppPlugin } } }
+    ).Capacitor;
+    if (!cap?.isNativePlatform?.()) return;
+    const appPlugin = cap.Plugins?.App;
+    if (!appPlugin?.addListener) return;
+
+    let removed = false;
+    let handle: { remove: () => Promise<void> | void } | undefined;
+
+    const listenerResult = appPlugin.addListener("backButton", ({ canGoBack } = {}) => {
+      const ev = new CustomEvent("mfd:back-button", { cancelable: true });
+      window.dispatchEvent(ev);
+      if (ev.defaultPrevented) return;
+
+      if (pathname !== "/") {
+        const idx = typeof window.history.state?.idx === "number" ? window.history.state.idx : 0;
+        if (idx > 0 || canGoBack) {
+          navigate(-1);
+        } else {
+          navigate("/", { replace: true });
+        }
+        return;
+      }
+
+      void appPlugin.exitApp?.();
+    });
+
+    if (listenerResult && typeof (listenerResult as Promise<unknown>).then === "function") {
+      void (listenerResult as Promise<{ remove: () => Promise<void> }>).then((h) => {
+        if (removed) void h.remove?.();
+        else handle = h;
+      });
+    } else {
+      handle = listenerResult as { remove: () => void };
+    }
+
+    return () => {
+      removed = true;
+      void handle?.remove?.();
+    };
+  }, [pathname, navigate]);
+
+  return null;
+}
 
 export function AppRoutes() {
   const location = useLocation();
@@ -38,31 +97,39 @@ export function AppRoutes() {
   };
 
   if (entryPhase !== null && (location.pathname === "/" || location.pathname === "/welcome")) {
-    return <EntryFlow initialPhase={entryPhase} onStart={handleStart} />;
+    return (
+      <>
+        <NativeBackHandler />
+        <EntryFlow initialPhase={entryPhase} onStart={handleStart} />
+      </>
+    );
   }
 
   return (
-    <Routes>
-      <Route
-        path="welcome"
-        element={<EntryFlow initialPhase="welcome" onStart={handleStart} />}
-      />
-      <Route element={<AppShell />}>
-        <Route index element={<Home />} />
-        <Route path="drills" element={<DrillsCatalog />} />
-        <Route path="drills/:id/brief" element={<DrillBriefing />} />
-        <Route path="drills/:id/play" element={<DrillSandbox />} />
-        <Route path="drills/:id/quiz" element={<DrillQuiz />} />
-        <Route path="drills/:id/results" element={<DrillResults />} />
-        <Route path="library" element={<FraudLibrary />} />
-        <Route path="library/:id" element={<CaseDetail />} />
-        <Route path="sos" element={<EmergencySos />} />
-        <Route path="progress" element={<ProgressChecklist />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="admin" element={<AdminDashboard />} />
-        <Route path="about" element={<AboutEducation />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <>
+      <NativeBackHandler />
+      <Routes>
+        <Route
+          path="welcome"
+          element={<EntryFlow initialPhase="welcome" onStart={handleStart} />}
+        />
+        <Route element={<AppShell />}>
+          <Route index element={<Home />} />
+          <Route path="drills" element={<DrillsCatalog />} />
+          <Route path="drills/:id/brief" element={<DrillBriefing />} />
+          <Route path="drills/:id/play" element={<DrillSandbox />} />
+          <Route path="drills/:id/quiz" element={<DrillQuiz />} />
+          <Route path="drills/:id/results" element={<DrillResults />} />
+          <Route path="library" element={<FraudLibrary />} />
+          <Route path="library/:id" element={<CaseDetail />} />
+          <Route path="sos" element={<EmergencySos />} />
+          <Route path="progress" element={<ProgressChecklist />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="about" element={<AboutEducation />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </>
   );
 }

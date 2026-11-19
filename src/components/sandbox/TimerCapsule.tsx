@@ -5,6 +5,7 @@ import { formatClock } from "@/utils/formatters";
 interface TimerCapsuleProps {
   remainingMs: number;
   totalMs: number;
+  noTimer?: boolean;
   /** Compact pill used as the floating timer on mobile. */
   compact?: boolean;
   /** Hide from assistive tech (used for the duplicate mobile capsule). */
@@ -14,12 +15,19 @@ interface TimerCapsuleProps {
 
 const ANNOUNCE_AT = [60, 30, 20, 10, 5];
 
-/** Circular timer: blue, then orange, then red in the last 20%. */
-export function TimerCapsule({ remainingMs, totalMs, compact = false, decorative = false, className }: TimerCapsuleProps) {
-  const fraction = totalMs === 0 ? 0 : Math.max(0, Math.min(1, remainingMs / totalMs));
-  const color = fraction > 0.35 ? colors.accent : fraction > 0.2 ? colors.warning : colors.danger;
+/** Circular timer: blue, then orange, then red in the last 20% (or calm ring in no-timer mode). */
+export function TimerCapsule({
+  remainingMs,
+  totalMs,
+  noTimer = false,
+  compact = false,
+  decorative = false,
+  className,
+}: TimerCapsuleProps) {
+  const fraction = noTimer ? 1 : totalMs === 0 ? 0 : Math.max(0, Math.min(1, remainingMs / totalMs));
+  const color = noTimer ? colors.success : fraction > 0.35 ? colors.accent : fraction > 0.2 ? colors.warning : colors.danger;
   const secs = Math.ceil(remainingMs / 1000);
-  const announce = ANNOUNCE_AT.includes(secs) ? `${secs} seconds left` : "";
+  const announce = !noTimer && ANNOUNCE_AT.includes(secs) ? `${secs} seconds left` : "";
 
   const size = compact ? 28 : 132;
   const stroke = compact ? 4 : 9;
@@ -51,8 +59,8 @@ export function TimerCapsule({ remainingMs, totalMs, compact = false, decorative
         className={cn("glass-regular glass-lens relative inline-flex items-center gap-2 rounded-full py-1.5 pl-2 pr-4", className)}
       >
         {ring}
-        <span className="t-headline tnum" style={{ color: fraction > 0.2 ? undefined : "var(--danger-text)" }}>
-          {formatClock(remainingMs)}
+        <span className="t-headline tnum" style={{ color: noTimer || fraction > 0.2 ? undefined : "var(--danger-text)" }}>
+          {noTimer ? "No timer" : formatClock(remainingMs)}
         </span>
       </div>
     );
@@ -68,16 +76,19 @@ export function TimerCapsule({ remainingMs, totalMs, compact = false, decorative
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
             role={decorative ? undefined : "timer"}
-            aria-label={decorative ? undefined : "Time remaining"}
-            className="tnum text-[30px] font-bold leading-none tracking-tight"
-            style={{ color: fraction > 0.2 ? "var(--label)" : "var(--danger-text)" }}
+            aria-label={decorative ? undefined : noTimer ? "No time limit" : "Time remaining"}
+            className={cn(
+              "tnum font-bold leading-none tracking-tight",
+              noTimer ? "text-[17px]" : "text-[30px]",
+            )}
+            style={{ color: noTimer ? "var(--success-text)" : fraction > 0.2 ? "var(--label)" : "var(--danger-text)" }}
           >
-            {formatClock(remainingMs)}
+            {noTimer ? "No timer" : formatClock(remainingMs)}
           </span>
-          <span className="t-caption mt-1 text-label-2">left</span>
+          <span className="t-caption mt-1 text-label-2">{noTimer ? "relaxed" : "left"}</span>
         </div>
       </div>
-      {!decorative && (
+      {!decorative && announce && (
         <span aria-live="polite" className="sr-only">
           {announce}
         </span>

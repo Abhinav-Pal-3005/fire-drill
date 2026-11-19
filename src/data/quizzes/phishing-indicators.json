@@ -1,43 +1,79 @@
 {
   "id": "phishing-indicators",
   "concept": "phishing-indicators",
-  "title": "Phishing indicators quiz",
+  "title": "Phishing SMS indicators quiz",
   "questions": [
     {
       "id": "ph-1",
-      "prompt": "Which combination is a classic phishing sign?",
+      "prompt": "Which combination in an SMS is a classic phishing warning sign?",
       "options": [
-        { "text": "Urgent pressure plus a shortened link", "explanationWrong": "" },
-        { "text": "A message that uses your correct first name only", "explanationWrong": "A name alone proves nothing. Scammers can find names easily." },
-        { "text": "A message with no link at all", "explanationWrong": "Scams can also ask you to call or reply, so no link is not proof of safety." },
-        { "text": "A message sent during the day", "explanationWrong": "Scammers send messages at any time." }
+        { "text": "Urgent freeze threat plus a shortened or unfamiliar link", "explanationWrong": "" },
+        { "text": "A reminder without any clickable links or pressure", "explanationWrong": "No link and no panic deadline is far less suspicious, though still verify in your app." },
+        { "text": "A message reminding you to open your official banking app yourself", "explanationWrong": "Directing you to open your official app independently is safe advice." },
+        { "text": "A message received during office hours", "explanationWrong": "Scammers send phishing texts at any hour." }
       ],
       "correctIndex": 0,
-      "explanationCorrect": "Pressure plus a link that hides its destination is a classic warning. Slow down and check."
+      "explanationCorrect": "False urgency ('blocked in 2 hours') combined with a shortened link is the most common smishing formula."
     },
     {
       "id": "ph-2",
-      "prompt": "A message asks for your OTP 'to verify'. What do you do?",
+      "prompt": "An SMS claims your bank KYC expired and asks you to tap a short link to update it. What should you do?",
       "options": [
-        { "text": "Share it, since it is only a few digits", "explanationWrong": "An OTP can approve a payment or login. Never share it." },
-        { "text": "Share it only if the message looks official", "explanationWrong": "Official looks are easy to copy." },
-        { "text": "Never share it, and contact the organisation through its official app or helpline", "explanationWrong": "" },
-        { "text": "Reply asking why they need it", "explanationWrong": "Replying tells the scammer you are active. Do not engage." }
+        { "text": "Tap the link just to see what the page looks like", "explanationWrong": "Fake lookalike pages are built to steal your login, OTP, or install malware." },
+        { "text": "Skip the link completely and open your bank's official app directly", "explanationWrong": "" },
+        { "text": "Reply 'STOP' with your account number", "explanationWrong": "Replying confirms your number is active and never share account info by SMS." },
+        { "text": "Forward the link to family so they can test it", "explanationWrong": "Forwarding suspicious links puts others at risk too." }
       ],
-      "correctIndex": 2,
-      "explanationCorrect": "Never share an OTP. Check with the organisation using its official app or helpline."
+      "correctIndex": 1,
+      "explanationCorrect": "Never tap SMS links for KYC or account alerts. Open your official banking app or website directly to verify."
     },
     {
       "id": "ph-3",
-      "prompt": "A link in an SMS looks odd. What is the best action?",
+      "prompt": "Why do phishing texts use link shorteners or lookalike web addresses?",
       "options": [
-        { "text": "Tap it to see where it goes", "explanationWrong": "Tapping can open a fake page. Avoid it." },
-        { "text": "Forward it to friends", "explanationWrong": "That spreads the risk. Do not forward suspicious links." },
-        { "text": "Open it on a different phone", "explanationWrong": "The link is still unsafe on any device." },
-        { "text": "Do not tap it. Open the official app yourself", "explanationWrong": "" }
+        { "text": "To hide that the website does not belong to your real bank", "explanationWrong": "" },
+        { "text": "Because banks are not allowed to use their own domain names", "explanationWrong": "Real banks always own and use their official domain names." },
+        { "text": "To encrypt your KYC documents faster", "explanationWrong": "Shorteners hide destinations; they do not make a fake site secure." },
+        { "text": "Because official bank apps cannot display KYC status", "explanationWrong": "Official banking apps have built-in KYC and account notice sections." }
       ],
-      "correctIndex": 3,
-      "explanationCorrect": "Skip the link. Open the official app yourself and check there."
+      "correctIndex": 0,
+      "explanationCorrect": "Shortened links and slight misspellings mask fake credential-harvesting domains."
+    },
+    {
+      "id": "ph-4",
+      "prompt": "After tapping no links and checking inside your official bank app that your KYC is active, what should you do with the phishing SMS?",
+      "options": [
+        { "text": "Block the sender and report the phishing SMS/URL", "explanationWrong": "" },
+        { "text": "Call the mobile number inside the SMS to scold them", "explanationWrong": "Calling scam numbers invites voice-phishing follow-ups." },
+        { "text": "Keep the link saved in case you need KYC later", "explanationWrong": "Delete or report it—never use an SMS link for banking." },
+        { "text": "Share your OTP on the helpline listed in the text", "explanationWrong": "Never share an OTP with any SMS sender or helpline." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Blocking the sender stops repeat alerts, and reporting phishing texts helps telecoms and cybercells take fake sites down."
+    },
+    {
+      "id": "ph-5",
+      "prompt": "A message asks you to enter a 6-digit OTP on a 'KYC verification portal' to prevent card suspension. What should you do?",
+      "options": [
+        { "text": "Never share or enter the OTP—an OTP approves logins or debits, not KYC", "explanationWrong": "" },
+        { "text": "Enter it if the page shows your bank's logo", "explanationWrong": "Logos and colours take seconds to copy onto fake sites." },
+        { "text": "Share only the first 3 digits first", "explanationWrong": "Never type any OTP onto an unverified link." },
+        { "text": "Ask the sender why they need an OTP", "explanationWrong": "Do not engage; verify directly inside your official bank app." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "An OTP is a live transaction or login key. Never enter it on links received through SMS or WhatsApp."
+    },
+    {
+      "id": "ph-6",
+      "prompt": "Look closely at a sender ID like 'AX-BNKALRT' or a personal 10-digit mobile number sending bank threats. Why check sender details?",
+      "options": [
+        { "text": "Random 10-digit numbers and strange prefixes often expose fake bank alerts", "explanationWrong": "" },
+        { "text": "Because real banks only send KYC alerts from WhatsApp groups", "explanationWrong": "Banks do not demand urgent KYC updates via random personal numbers or chat groups." },
+        { "text": "Checking the sender automatically blocks the URL", "explanationWrong": "Inspecting the sender helps you spot red flags before you block and report it." },
+        { "text": "Sender IDs expire every 15 minutes", "explanationWrong": "Inspecting sender mismatches is a key clue, alongside checking inside the official app." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Always check the sender, urgent tone, and links together—and verify any alert inside your real banking app."
     }
   ]
 }

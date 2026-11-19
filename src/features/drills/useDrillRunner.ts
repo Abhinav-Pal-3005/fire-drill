@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Drill, DrillGrade, RunState } from "@/types";
+import type { Drill, DrillGrade, RunState, TimerMode } from "@/types";
 import { logEvent } from "@/features/analytics/analyticsLogger";
-import { applyAction, applyFlagTap, applyHint, createRunState, gradeRun } from "./drillEngine";
+import { applyAction, applyFlagTap, applyHint, createRunState, getTimerLimitMs, gradeRun } from "./drillEngine";
 import {
   completedStepIds,
   findDistractor,
@@ -24,18 +24,20 @@ export interface RunnerResult {
 interface Options {
   drill: Drill;
   seed: number;
+  timerMode?: TimerMode;
   onFinish: (result: RunnerResult) => void;
 }
 
 const COUNTDOWN_STEP_MS = 850;
 const FINISH_DELAY_MS = 1100;
 
-/** Runs a drill: 3-2-1 countdown, a no-pause timer, action logging, hints and grading. */
-export function useDrillRunner({ drill, seed, onFinish }: Options) {
+/** Runs a drill: 3-2-1 countdown, configurable timer mode (relaxed/panicked/none), action logging, hints and grading. */
+export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }: Options) {
+  const limitMs = getTimerLimitMs(drill.timeLimitSec, timerMode);
   const [phase, setPhaseState] = useState<RunnerPhase>("countdown");
   const [count, setCount] = useState(3);
   const [run, setRun] = useState<RunState>(createRunState);
-  const [remainingMs, setRemainingMs] = useState(drill.timeLimitSec * 1000);
+  const [remainingMs, setRemainingMs] = useState(limitMs);
   const [pinMode, setPinMode] = useState<"pin" | "otp" | null>(null);
   const [hint, setHint] = useState<{
     stepId: string;
@@ -61,13 +63,12 @@ export function useDrillRunner({ drill, seed, onFinish }: Options) {
     setPhaseState(next);
   }, []);
 
-  const limitMs = drill.timeLimitSec * 1000;
-
   const finalize = useCallback(
     (timedOut: boolean) => {
       if (phaseRef.current === "finished") return;
-      const elapsed = frozenRef.current ?? Math.min(limitMs, Date.now() - startRef.current);
-      const grade = gradeRun(drill, runRef.current, elapsed, timedOut);
+      const rawElapsed = frozenRef.current ?? Date.now() - startRef.current;
+      const elapsed = timerMode === "none" ? rawElapsed : Math.min(limitMs, rawElapsed);
+      const grade = gradeRun(drill, runRef.current, elapsed, timedOut, timerMode);
       setPhase("finished");
       setPinMode(null);
       logEvent({
@@ -80,7 +81,7 @@ export function useDrillRunner({ drill, seed, onFinish }: Options) {
       });
       setResult({ grade, startedAt: startRef.current });
     },
-    [drill, limitMs, seed, setPhase],
+    [drill, limitMs, seed, setPhase, timerMode],
   );
 
   // 3-2-1 countdown
@@ -98,16 +99,16 @@ export function useDrillRunner({ drill, seed, onFinish }: Options) {
     return () => window.clearTimeout(id);
   }, [phase, count, drill, seed, setPhase]);
 
-  // Timer: no pause. Ticks only while running (the critical sheet freezes it).
+  // Timer: no pause in relaxed/panicked modes; unlimited time in no-timer mode.
   useEffect(() => {
-    if (phase !== "running") return;
+    if (phase !== "running" || timerMode === "none") return;
     const id = window.setInterval(() => {
       const remaining = Math.max(0, limitMs - (Date.now() - startRef.current));
       setRemainingMs(remaining);
       if (remaining === 0) finalize(true);
     }, 200);
     return () => window.clearInterval(id);
-  }, [phase, limitMs, finalize]);
+  }, [phase, limitMs, timerMode, finalize]);
 
   // Hand the result to the page after a short "done" moment.
   useEffect(() => {

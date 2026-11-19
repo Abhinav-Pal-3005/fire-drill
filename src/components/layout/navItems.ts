@@ -14,7 +14,7 @@ const DRILLS: StitchNavItem = {
   to: "/drills",
   label: "Drills",
   icon: Flame,
-  match: (p) => p === "/" || p.startsWith("/drills"),
+  match: (p) => p.startsWith("/drills"),
 };
 const LIBRARY: StitchNavItem = {
   to: "/library",

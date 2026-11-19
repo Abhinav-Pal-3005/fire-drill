@@ -36,7 +36,7 @@ export function RoleChip({ sandbox = false }: { sandbox?: boolean }) {
         aria-label={`Role: ${role === "admin" ? "Admin" : "Learner"}. Change role`}
         className={
           sandbox
-            ? "glass-thin relative inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3.5 transition-transform active:scale-[0.97]"
+            ? "glass-regular relative inline-flex min-h-[40px] items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold text-label transition-transform active:scale-[0.97]"
             : "relative inline-flex min-h-[38px] items-center gap-1.5 rounded-full bg-st-surface-container-high px-3 text-[13px] font-semibold text-st-primary transition-colors hover:bg-st-surface-highest active:scale-[0.97]"
         }
       >

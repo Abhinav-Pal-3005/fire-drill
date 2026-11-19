@@ -11,6 +11,7 @@ import quizFraud from "@/data/quizzes/fraud-response.json";
 import quizReversals from "@/data/quizzes/reversals.json";
 import quizInterest from "@/data/quizzes/interest-credit.json";
 import quizPhishing from "@/data/quizzes/phishing-indicators.json";
+import quizDigitalArrest from "@/data/quizzes/digital-arrest.json";
 import { fraudCases, fraudCategories, type FraudCategoryId } from "@/data/fraudCases";
 
 /**
@@ -26,7 +27,14 @@ const DRILLS: Drill[] = [
   digitalArrest,
 ] as unknown as Drill[];
 
-const QUIZZES: Quiz[] = [quizUpi, quizFraud, quizReversals, quizInterest, quizPhishing] as unknown as Quiz[];
+const QUIZZES: Quiz[] = [
+  quizUpi,
+  quizFraud,
+  quizReversals,
+  quizInterest,
+  quizPhishing,
+  quizDigitalArrest,
+] as unknown as Quiz[];
 
 const CONCEPTS = conceptsJson as unknown as Concept[];
 

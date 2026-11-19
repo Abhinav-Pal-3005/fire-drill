@@ -5,7 +5,6 @@ import { VerificationBadge } from "@/components/library/CaseCard";
 import { logEvent } from "@/features/analytics/analyticsLogger";
 import { getConcept, getDrill, getLibraryEntry } from "@/features/drills/drillLoader";
 import { useUserStore } from "@/store/useUserStore";
-import { scamIcons } from "@/theme/icons";
 import { cn } from "@/utils/cn";
 import NotFound from "./NotFound";
 
@@ -57,7 +56,6 @@ export default function CaseDetail() {
   }, [entry]);
 
   if (!entry) return <NotFound />;
-  const Icon = scamIcons[entry.scamType];
   const drill = getDrill(entry.linkedDrillId);
   const bookmarked = bookmarks.includes(entry.id);
 
@@ -87,9 +85,6 @@ export default function CaseDetail() {
         </div>
 
         <div className="space-y-4 rounded-[24px] bg-st-surface-container p-5 shadow-sm sm:rounded-[28px] sm:p-6">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-st-surface text-st-primary-container shadow-sm">
-            <Icon size={28} strokeWidth={1.9} aria-hidden />
-          </span>
           <div className="min-w-0">
             {(entry.location || entry.source.date) && (
               <p className="mb-1 text-[12.5px] font-semibold text-st-secondary">

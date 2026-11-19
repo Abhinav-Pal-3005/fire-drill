@@ -1,12 +1,14 @@
 import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { ChevronLeft, ListOrdered, Play, ShieldCheck, Timer } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { ChevronLeft, Flame, ListOrdered, Play, ShieldCheck, Timer, TimerOff } from "lucide-react";
 import { Skeleton } from "@/components/glass/Skeleton";
+import { getTimerLimitMs } from "@/features/drills/drillEngine";
 import { getConcept, getDrill, getLibraryEntry } from "@/features/drills/drillLoader";
 import { createScenario } from "@/features/randomiser/scenarioRandomiser";
 import { useDrillStore } from "@/store/useDrillStore";
 import { useUserStore } from "@/store/useUserStore";
+import type { TimerMode } from "@/types";
+import { cn } from "@/utils/cn";
 import { formatClock } from "@/utils/formatters";
 import NotFound from "./NotFound";
 
@@ -15,6 +17,8 @@ export default function DrillBriefing() {
   const drill = getDrill(id);
   const demoSeed = useUserStore((s) => s.demoSeed);
   const pending = useDrillStore((s) => (id ? s.pending[id] : undefined));
+  const timerMode = useDrillStore((s) => s.timerMode);
+  const setTimerMode = useDrillStore((s) => s.setTimerMode);
   const ensureSeed = useDrillStore((s) => s.ensureSeed);
 
   useEffect(() => {
@@ -28,16 +32,61 @@ export default function DrillBriefing() {
 
   if (!drill) return <NotFound />;
 
-  const rules = [
+  const relaxedMs = getTimerLimitMs(drill.timeLimitSec, "relaxed");
+  const panickedMs = getTimerLimitMs(drill.timeLimitSec, "panicked");
+
+  const timerModes: Array<{
+    id: TimerMode;
+    label: string;
+    detail: string;
+    desc: string;
+    icon: typeof Timer;
+  }> = [
     {
+      id: "relaxed",
+      label: "Relaxed",
+      detail: formatClock(relaxedMs),
+      desc: "Extra time to inspect clues calmly",
       icon: Timer,
-      title: `${formatClock(drill.timeLimitSec * 1000)} on the clock`,
-      text: "A 3-2-1 countdown, then the timer runs. There is no pause.",
     },
+    {
+      id: "panicked",
+      label: "Panicked",
+      detail: formatClock(panickedMs),
+      desc: "Fast urgent clock under pressure",
+      icon: Flame,
+    },
+    {
+      id: "none",
+      label: "No timer",
+      detail: "Unlimited",
+      desc: "Practice at your own pace",
+      icon: TimerOff,
+    },
+  ];
+
+  const rules = [
+    timerMode === "none"
+      ? {
+          icon: TimerOff,
+          title: "No timer · Unlimited pace",
+          text: "No countdown or timeout. Take as long as you need to verify each clue.",
+        }
+      : timerMode === "panicked"
+        ? {
+            icon: Flame,
+            title: `Panicked mode · ${formatClock(panickedMs)} on the clock`,
+            text: "A 3-2-1 countdown, then a tight high-pressure timer with no pause.",
+          }
+        : {
+            icon: Timer,
+            title: `Relaxed mode · ${formatClock(relaxedMs)} on the clock`,
+            text: "A 3-2-1 countdown, then a generous timer with extra breathing room.",
+          },
     {
       icon: ListOrdered,
       title: "Steps and order are graded",
-      text: "Do the right things in the right order. Red flags and speed count too.",
+      text: "Do the right things in the right order. Red flags and accuracy count too.",
     },
     {
       icon: ShieldCheck,
@@ -98,6 +147,53 @@ export default function DrillBriefing() {
         ) : (
           <Skeleton className="h-7 w-64 rounded-full" />
         )}
+      </section>
+
+      {/* Timer Mode Selector */}
+      <section className="space-y-3 rounded-[24px] bg-st-surface-container p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-[12px] font-bold uppercase tracking-wider text-st-secondary">Choose timer mode</h2>
+          <span className="text-[12px] font-medium text-st-on-surface-variant">Applies to your run</span>
+        </div>
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3" role="radiogroup" aria-label="Drill timer mode">
+          {timerModes.map((mode) => {
+            const Icon = mode.icon;
+            const selected = timerMode === mode.id;
+            return (
+              <button
+                key={mode.id}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => setTimerMode(mode.id)}
+                className={cn(
+                  "flex min-h-[76px] cursor-pointer flex-col justify-between rounded-2xl border p-3.5 text-left transition-all active:scale-[0.98]",
+                  selected
+                    ? "border-st-primary-container bg-st-secondary-container/75 text-st-primary shadow-sm ring-1 ring-st-primary-container"
+                    : "border-st-outline-variant/50 bg-st-surface-lowest text-st-on-surface hover:bg-st-surface-high",
+                )}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 text-[14px] font-bold">
+                    <Icon size={15} strokeWidth={2.1} aria-hidden />
+                    {mode.label}
+                  </span>
+                  <span
+                    className={cn(
+                      "tnum rounded-full px-2 py-0.5 text-[11px] font-bold",
+                      selected
+                        ? "bg-st-primary-container text-st-on-primary"
+                        : "bg-st-surface-container text-st-on-surface-variant",
+                    )}
+                  >
+                    {mode.detail}
+                  </span>
+                </div>
+                <p className="mt-1.5 text-[12px] leading-snug text-st-on-surface-variant">{mode.desc}</p>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       {/* Rules */}

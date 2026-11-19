@@ -1,4 +1,4 @@
-import type { ConceptId, Drill, DrillGrade, LoggedAction, Mistake, RunState, StepResult } from "@/types";
+import type { ConceptId, Drill, DrillGrade, LoggedAction, Mistake, RunState, StepResult, TimerMode } from "@/types";
 import { clamp } from "@/utils/formatters";
 import {
   classifyAction,
@@ -66,7 +66,19 @@ const WRONG_ACTION_PENALTY = 8;
 const WRONG_TAP_PENALTY = 10;
 const CRITICAL_CAP = 20;
 
-export function gradeRun(drill: Drill, run: RunState, elapsedMs: number, timedOut: boolean): DrillGrade {
+export function getTimerLimitMs(baseTimeLimitSec: number, timerMode: TimerMode = "relaxed"): number {
+  if (timerMode === "none") return 0;
+  const multiplier = timerMode === "panicked" ? 0.5 : 1.5;
+  return Math.max(30, Math.round(baseTimeLimitSec * multiplier)) * 1000;
+}
+
+export function gradeRun(
+  drill: Drill,
+  run: RunState,
+  elapsedMs: number,
+  timedOut: boolean,
+  timerMode: TimerMode = "relaxed",
+): DrillGrade {
   const steps = sortedSteps(drill);
   const results: StepResult[] = [];
   const mistakes: Mistake[] = [];
@@ -167,10 +179,12 @@ export function gradeRun(drill: Drill, run: RunState, elapsedMs: number, timedOu
   const redFlagScore =
     goal === 0 ? 100 : clamp((run.flagsFound.length / goal) * 100 - run.wrongTaps * WRONG_TAP_PENALTY, 0, 100);
 
-  const limitMs = drill.timeLimitSec * 1000;
-  const timeFactor = clamp((1 - elapsedMs / limitMs) / 0.5, 0, 1);
+  const limitMs = getTimerLimitMs(drill.timeLimitSec, timerMode);
   const doneFraction = counted === 0 ? 0 : done / counted;
-  const speedScore = clamp(doneFraction * timeFactor * 100, 0, 100);
+  const speedScore =
+    timerMode === "none" || limitMs === 0
+      ? clamp(doneFraction * 100, 0, 100)
+      : clamp(doneFraction * clamp((1 - elapsedMs / limitMs) / 0.5, 0, 1) * 100, 0, 100);
 
   const hintPenalty = run.hintsUsed.length * HINT_PENALTY;
   let total =
@@ -179,6 +193,7 @@ export function gradeRun(drill: Drill, run: RunState, elapsedMs: number, timedOu
   if (run.critical) total = Math.min(total, CRITICAL_CAP);
 
   const mistakeConcepts: ConceptId[] = Array.from(new Set(mistakes.map((m) => m.concept)));
+  const effectiveTimedOut = timerMode === "none" ? false : timedOut;
 
   return {
     total,
@@ -189,7 +204,7 @@ export function gradeRun(drill: Drill, run: RunState, elapsedMs: number, timedOu
     hintsUsed: run.hintsUsed.length,
     hintPenalty,
     critical: run.critical,
-    timedOut,
+    timedOut: effectiveTimedOut,
     completed: mandatoryDone && !run.critical,
     elapsedMs: Math.round(elapsedMs),
     flagsFound: run.flagsFound.length,

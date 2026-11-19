@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Attempt } from "@/types";
+import type { Attempt, TimerMode } from "@/types";
 import { DEMO_SEED, newSeed } from "@/utils/seedRandom";
 
 export interface PendingSeed {
@@ -10,8 +10,11 @@ export interface PendingSeed {
 
 interface DrillState {
   attempts: Attempt[];
+  /** Selected drill timer mode: relaxed, panicked, or none (no timer). */
+  timerMode: TimerMode;
   /** Seed assigned at the briefing so the briefing and the sandbox show the same scenario. */
   pending: Record<string, PendingSeed>;
+  setTimerMode: (mode: TimerMode) => void;
   ensureSeed: (drillId: string, demoAllowed: boolean) => PendingSeed;
   clearPending: (drillId: string) => void;
   addAttempt: (attempt: Attempt) => void;
@@ -25,7 +28,9 @@ export const useDrillStore = create<DrillState>()(
   persist(
     (set, get) => ({
       attempts: [],
+      timerMode: "relaxed",
       pending: {},
+      setTimerMode: (timerMode) => set({ timerMode }),
       ensureSeed: (drillId, demoAllowed) => {
         const existing = get().pending[drillId];
         if (existing) return existing;
@@ -44,7 +49,7 @@ export const useDrillStore = create<DrillState>()(
       addAttempt: (attempt) => set((s) => ({ attempts: [...s.attempts, attempt] })),
       attachQuiz: (attemptId, quiz) =>
         set((s) => ({ attempts: s.attempts.map((a) => (a.id === attemptId ? { ...a, quiz } : a)) })),
-      resetAll: () => set({ attempts: [], pending: {} }),
+      resetAll: () => set({ attempts: [], pending: {}, timerMode: "relaxed" }),
     }),
     { name: "mfd-drills" },
   ),

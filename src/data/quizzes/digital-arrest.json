@@ -1,0 +1,79 @@
+{
+  "id": "digital-arrest",
+  "concept": "fraud-response",
+  "title": "Digital arrest safety quiz",
+  "questions": [
+    {
+      "id": "da-1",
+      "prompt": "A caller on WhatsApp video wears a police uniform and says you are under 'digital arrest'. Is that real?",
+      "options": [
+        { "text": "No. Indian law has no such thing as a 'digital arrest' over a call", "explanationWrong": "" },
+        { "text": "Yes, if they show a badge and agency logo behind them", "explanationWrong": "Uniforms, badges, and logos can be faked easily in a studio or screen backdrop." },
+        { "text": "Yes, unless you pay a verification deposit right away", "explanationWrong": "No real court or police agency asks you to pay money to avoid arrest." },
+        { "text": "Only if they warn you not to hang up or tell your family", "explanationWrong": "Forbidding you from speaking to family is a hallmark scam isolation tactic." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "There is no legal process called 'digital arrest' in India. Real officers never conduct arrests or court hearings on video calls."
+    },
+    {
+      "id": "da-2",
+      "prompt": "The video caller orders you: 'Do not disconnect the call and do not tell anyone.' Why?",
+      "options": [
+        { "text": "Because video calls are faster than legal notices", "explanationWrong": "Real legal notices follow formal written procedures, not secret video calls." },
+        { "text": "To keep you panicked and stop family or friends from spotting the scam", "explanationWrong": "" },
+        { "text": "Because telling someone makes the investigation invalid", "explanationWrong": "Scammers invent secrecy rules to prevent you from getting help." },
+        { "text": "To protect your bank balance automatically", "explanationWrong": "Staying isolated puts your money at higher risk, not lower." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Isolation is the scammer's main tool. The moment you hang up and speak to someone you trust, their pressure loses power."
+    },
+    {
+      "id": "da-3",
+      "prompt": "The fake officer tells you to transfer ₹25,000 to a 'Reserve Bank verification account' to prove your innocence. What should you do?",
+      "options": [
+        { "text": "Send half first so they know you are cooperating", "explanationWrong": "Sending any amount sends your savings straight to mule accounts." },
+        { "text": "Share your bank balance screenshot instead", "explanationWrong": "Never share sensitive financial balances with unknown video callers." },
+        { "text": "Refuse completely, hang up, and block the caller", "explanationWrong": "" },
+        { "text": "Enter your UPI PIN to confirm your identity only", "explanationWrong": "A UPI PIN authorises money transfers—it never verifies innocence." }
+      ],
+      "correctIndex": 2,
+      "explanationCorrect": "Police, CBI, customs, and RBI never ask citizens to transfer money for verification or clearance."
+    },
+    {
+      "id": "da-4",
+      "prompt": "What is the safest immediate move when a stranger threatens you with arrest on a video call?",
+      "options": [
+        { "text": "Keep your camera on while you search their badge number", "explanationWrong": "Staying on the call lets them escalate threats and keep you stressed." },
+        { "text": "Hang up immediately, block the number, and speak to a trusted person", "explanationWrong": "" },
+        { "text": "Show them your Aadhaar card on camera to clear your name", "explanationWrong": "Showing identity documents on video gives scammers data for further misuse." },
+        { "text": "Download the remote-support app they recommend", "explanationWrong": "Remote-access apps let fraudsters watch your screen and steal OTPs." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Disconnect right away, block the caller, and talk to a family member or trusted friend to break the panic."
+    },
+    {
+      "id": "da-5",
+      "prompt": "After hanging up on a fake CBI or cyber-police caller, how can you verify and report safely?",
+      "options": [
+        { "text": "Call back the same WhatsApp number once you calm down", "explanationWrong": "Calling back reconnects you to the scammer." },
+        { "text": "Look up your local police station independently and report on 1930 or cybercrime.gov.in", "explanationWrong": "" },
+        { "text": "Pay a legal agent advertised in a chat group", "explanationWrong": "Random agents online can be secondary scams." },
+        { "text": "Delete your call log and ignore it completely", "explanationWrong": "Keeping screenshots and reporting to 1930 helps trace and block scam accounts." }
+      ],
+      "correctIndex": 1,
+      "explanationCorrect": "Always verify through official directories or your local station, and report impersonation attempts on 1930 or cybercrime.gov.in."
+    },
+    {
+      "id": "da-6",
+      "prompt": "Which claim in an unknown video call is an immediate warning sign of an impersonation scam?",
+      "options": [
+        { "text": "Demanding an immediate UPI or bank transfer to settle a criminal case online", "explanationWrong": "" },
+        { "text": "Advising you to visit your nearest police station with written papers", "explanationWrong": "In-person verification at an official station is normal; secret online transfers are the trap." },
+        { "text": "Telling you that you have the right to speak to family or a lawyer", "explanationWrong": "Scammers forbid calling family; real procedures respect your rights." },
+        { "text": "Refusing to accept any money over the phone", "explanationWrong": "Real officials never demand money over calls." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Any caller demanding instant transfers to 'settle' or 'verify' a legal case over a video call is a scammer."
+    }
+  ]
+}

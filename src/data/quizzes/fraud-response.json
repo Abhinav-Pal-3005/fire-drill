@@ -1,43 +1,79 @@
 {
   "id": "fraud-response",
   "concept": "fraud-response",
-  "title": "Fraud response quiz",
+  "title": "Lost phone safety quiz",
   "questions": [
     {
       "id": "fr-1",
-      "prompt": "Your phone is lost. Which call protects your money first?",
+      "prompt": "Your phone is lost or stolen. Which call protects your money first?",
       "options": [
-        { "text": "Your bank's 24×7 helpline, to block UPI and cards", "explanationWrong": "" },
-        { "text": "A friend, to tell them the news", "explanationWrong": "A friend cannot block your accounts. Call your bank first." },
-        { "text": "The number in a 'found your phone' message", "explanationWrong": "That message is likely a trap. Never rely on contacts from a suspicious message." },
-        { "text": "Nobody, wait and see", "explanationWrong": "Waiting gives a thief more time. Act quickly." }
+        { "text": "Your bank's 24×7 helpline, to freeze UPI, net banking, and cards", "explanationWrong": "" },
+        { "text": "A friend, just to share what happened", "explanationWrong": "A friend cannot freeze your bank accounts or UPI IDs. Call your bank first." },
+        { "text": "The number inside an SMS claiming 'we found your phone'", "explanationWrong": "Scammers send fake 'found phone' texts to extract PINs or login codes." },
+        { "text": "Nobody until the next morning", "explanationWrong": "Waiting gives a thief time to abuse your SIM and OTPs." }
       ],
       "correctIndex": 0,
-      "explanationCorrect": "Banks have 24×7 helplines. Block UPI and cards first, because that is where your money is."
+      "explanationCorrect": "Banks have 24×7 emergency helplines. Freezing UPI and cards stops financial drainage first."
     },
     {
       "id": "fr-2",
-      "prompt": "Which number is the national cybercrime helpline?",
+      "prompt": "Why should you contact your mobile operator right after freezing your bank accounts?",
       "options": [
-        { "text": "1010", "explanationWrong": "That is not the cybercrime helpline." },
-        { "text": "1930", "explanationWrong": "" },
-        { "text": "9090", "explanationWrong": "That is not the cybercrime helpline." },
-        { "text": "1212", "explanationWrong": "That is not the cybercrime helpline." }
+        { "text": "To block the lost SIM card so thieves cannot receive your bank OTPs", "explanationWrong": "" },
+        { "text": "To claim a free replacement phone", "explanationWrong": "Telcos block your SIM/number to stop SMS OTP hijacking; they don't give free phones." },
+        { "text": "To erase your bank statements", "explanationWrong": "Operators cannot edit bank statements." },
+        { "text": "To change your UPI PIN through SMS", "explanationWrong": "Blocking the SIM stops anyone from using your mobile number." }
       ],
-      "correctIndex": 1,
-      "explanationCorrect": "The national cybercrime helpline is 1930. Save it in your phone and your family's phones."
+      "correctIndex": 0,
+      "explanationCorrect": "Even if a lost phone is locked, a thief could move an unlocked SIM into another phone to intercept OTPs unless you block the SIM."
     },
     {
       "id": "fr-3",
-      "prompt": "Where can you report cyber fraud online?",
+      "prompt": "After freezing your bank and SIM, why must you sign out and change passwords on your email and cloud accounts?",
       "options": [
-        { "text": "A website from a search advert that looks official", "explanationWrong": "Adverts can be fake. Type the official address yourself." },
-        { "text": "Only on social media", "explanationWrong": "Social media is not an official reporting route." },
-        { "text": "cybercrime.gov.in", "explanationWrong": "" },
-        { "text": "Nowhere, reports never help", "explanationWrong": "Reports create a record and can help you and others." }
+        { "text": "Saved passwords, password-reset emails, and backup photos live in those accounts", "explanationWrong": "" },
+        { "text": "Because blocking a SIM automatically locks your email too", "explanationWrong": "Email and cloud sessions stay logged in over Wi-Fi even after a SIM block." },
+        { "text": "Only to free up cloud storage space", "explanationWrong": "This is about locking out active sessions on the stolen phone." },
+        { "text": "So your old phone rings louder", "explanationWrong": "Changing passwords & signing out cuts off remote access on the lost device." }
       ],
-      "correctIndex": 2,
-      "explanationCorrect": "The national portal is cybercrime.gov.in. You can also call 1930."
+      "correctIndex": 0,
+      "explanationCorrect": "Email and cloud accounts can still run on Wi-Fi on a lost phone and hold password resets and documents—change passwords and sign out everywhere."
+    },
+    {
+      "id": "fr-4",
+      "prompt": "An SMS arrives on your spare phone: 'Your lost device was located—log in with your screen lock & bank PIN to claim it.' What do you do?",
+      "options": [
+        { "text": "Ignore the link—never enter PINs or passcodes on unsolicited recovery links", "explanationWrong": "" },
+        { "text": "Enter only your screen passcode so they can unlock the phone", "explanationWrong": "Giving away your screen lock hands a thief full access to your banking apps." },
+        { "text": "Reply with your last 4 card digits", "explanationWrong": "Never send card or identity details to unknown numbers." },
+        { "text": "Call the random mobile number back immediately", "explanationWrong": "Calling scam numbers exposes you to social engineering." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Thieves often send fake 'device found' phishing links to steal screen passcodes or cloud passwords. Never tap them."
+    },
+    {
+      "id": "fr-5",
+      "prompt": "Which official number and portal handle cyber fraud & device misuse reports in India?",
+      "options": [
+        { "text": "Helpline 1930 and cybercrime.gov.in (plus CEIR to block the lost IMEI)", "explanationWrong": "" },
+        { "text": "Any phone repair shop in the neighbourhood", "explanationWrong": "Local shops cannot block bank accounts or log police cybercrime tickets." },
+        { "text": "A sponsored search ad promising instant phone tracking", "explanationWrong": "Ads can be fake phishing traps—type official government portals directly." },
+        { "text": "Social media direct messages", "explanationWrong": "Social media DMs are not official reporting routes." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Report financial risk or fraud on 1930 / cybercrime.gov.in, and file a lost-phone police/CEIR report to block the handset IMEI."
+    },
+    {
+      "id": "fr-6",
+      "prompt": "What is the safest order of actions when you realise your phone is missing?",
+      "options": [
+        { "text": "1. Freeze bank & UPI → 2. Block SIM → 3. Secure email/cloud passwords → 4. Report officially", "explanationWrong": "" },
+        { "text": "1. Post on social media → 2. Wait a day → 3. Call your bank", "explanationWrong": "Every minute of delay increases OTP and app risk; freeze bank and SIM immediately." },
+        { "text": "1. Buy a new phone case → 2. Ignore SIM block → 3. Change wallpaper", "explanationWrong": "Immediate financial and SIM lockdown is critical." },
+        { "text": "1. Call the thief's 'found phone' link → 2. Share passcode", "explanationWrong": "Never share passcodes or reply to suspicious recovery texts." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Bank first, SIM second, account sign-outs third, then official reporting stops both money theft and identity takeover."
     }
   ]
 }

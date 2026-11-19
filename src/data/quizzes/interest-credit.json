@@ -1,43 +1,79 @@
 {
   "id": "interest-credit",
   "concept": "interest-credit",
-  "title": "Interest and credit quiz",
+  "title": "Loan app & credit safety quiz",
   "questions": [
     {
       "id": "ic-1",
-      "prompt": "A lender promises 'no documents, instant money'. What is the best reaction?",
+      "prompt": "A loan app promises 'no documents, instant cash in 2 minutes'. What does that usually signal?",
       "options": [
-        { "text": "Great, accept quickly", "explanationWrong": "Speed and no checks are warning signs, not benefits." },
-        { "text": "Treat it as a red flag and check the lender first", "explanationWrong": "" },
-        { "text": "Share your ID to speed things up", "explanationWrong": "Never share ID with a lender you have not verified." },
-        { "text": "Allow contact access to prove you are real", "explanationWrong": "Contact access can be misused. A loan does not need it." }
+        { "text": "A serious red flag—check if the lender is officially registered first", "explanationWrong": "" },
+        { "text": "A reliable bank offering faster customer service", "explanationWrong": "Regulated banks and NBFCs must follow RBI KYC checks; skipping them is a warning sign." },
+        { "text": "Lower interest rates than normal banks", "explanationWrong": "Predatory instant loan apps hide extreme fees and short repayment traps." },
+        { "text": "Zero repayment risk", "explanationWrong": "Unregulated loan apps often charge exorbitant costs and harass borrowers." }
       ],
-      "correctIndex": 1,
-      "explanationCorrect": "Real lenders check who you are. 'No documents' is a red flag, so check the lender before anything else."
+      "correctIndex": 0,
+      "explanationCorrect": "Legitimate lenders perform proper KYC and disclose full terms. 'No documents' is a major red flag."
     },
     {
       "id": "ic-2",
-      "prompt": "Why use an interest calculator before borrowing?",
+      "prompt": "Why should you calculate total repayment before accepting any loan offer?",
       "options": [
-        { "text": "To see only the monthly payment", "explanationWrong": "The monthly payment can hide the total cost." },
-        { "text": "To see the total you will repay", "explanationWrong": "" },
-        { "text": "To make the loan cheaper", "explanationWrong": "A calculator does not change the loan. It shows the cost clearly." },
-        { "text": "It is not useful", "explanationWrong": "It is one of the best ways to understand a loan." }
+        { "text": "Small weekly or monthly figures can hide massive total interest and fees", "explanationWrong": "" },
+        { "text": "Calculators automatically negotiate a lower interest rate", "explanationWrong": "Calculators reveal the real cost so you can avoid traps." },
+        { "text": "Only to check your credit card PIN", "explanationWrong": "Loan calculators have nothing to do with PINs." },
+        { "text": "To bypass RBI lender verification", "explanationWrong": "You should always do both: check total cost AND verify lender registration." }
       ],
-      "correctIndex": 1,
-      "explanationCorrect": "The total repayment is the number that matters. A calculator makes the real cost visible."
+      "correctIndex": 0,
+      "explanationCorrect": "Looking only at small per-month numbers hides the full cost. Always check total repayment."
     },
     {
       "id": "ic-3",
-      "prompt": "Who regulates lenders and NBFCs?",
+      "prompt": "Who regulates legitimate banks, lenders, and NBFCs in India?",
       "options": [
-        { "text": "The lender itself", "explanationWrong": "A lender cannot regulate itself." },
-        { "text": "A popular app store", "explanationWrong": "App stores are not financial regulators." },
-        { "text": "RBI", "explanationWrong": "" },
-        { "text": "Anyone who sends an SMS", "explanationWrong": "A message tells you nothing about who is regulated." }
+        { "text": "RBI (Reserve Bank of India)", "explanationWrong": "" },
+        { "text": "Any app store listing or five-star review", "explanationWrong": "App store listings and fake reviews do not verify legal lending status." },
+        { "text": "The loan app's own customer support chat", "explanationWrong": "A lender cannot certify itself." },
+        { "text": "Whoever sent the promotional SMS", "explanationWrong": "Promotional texts prove nothing about regulation." }
       ],
-      "correctIndex": 2,
-      "explanationCorrect": "RBI regulates lenders and NBFCs. Check a lender through official channels."
+      "correctIndex": 0,
+      "explanationCorrect": "Verify whether a lender or partner NBFC is authorised on RBI's official lists before sharing any documents."
+    },
+    {
+      "id": "ic-4",
+      "prompt": "An instant loan app asks for access to your phone Contacts and Photo Gallery. Why is this dangerous?",
+      "options": [
+        { "text": "Rogue loan apps steal contacts and photos to threaten or blackmail borrowers", "explanationWrong": "" },
+        { "text": "Banks need your family photos to calculate interest", "explanationWrong": "Legitimate lenders never need your personal gallery or contact list." },
+        { "text": "Granting contacts makes your loan interest-free", "explanationWrong": "App permissions have no effect on legal interest rates." },
+        { "text": "It backs up your gallery to RBI servers", "explanationWrong": "RBI does not collect personal phone galleries or contacts." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Predatory apps harvest contacts and photos for harassment. Decline the offer and revoke those permissions immediately."
+    },
+    {
+      "id": "ic-5",
+      "prompt": "You spot an unverified lender in an SMS loan link. What is the safest response?",
+      "options": [
+        { "text": "Decline the offer, revoke any app permissions, and never share OTP or KYC IDs", "explanationWrong": "" },
+        { "text": "Upload your Aadhaar and PAN just to check your eligibility limit", "explanationWrong": "Uploading IDs to rogue apps exposes you to identity theft." },
+        { "text": "Pay a ₹999 'processing fee' upfront before receiving the loan", "explanationWrong": "Upfront processing fees on random links are classic advance-fee scams." },
+        { "text": "Borrow a smaller amount to test the app", "explanationWrong": "Even a tiny loan gives rogue apps leverage to charge fees and harass contacts." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "If a lender is not verified or asks for invasive permissions, decline cleanly and revoke access."
+    },
+    {
+      "id": "ic-6",
+      "prompt": "What should a transparent, regulated loan offer show you clearly before you accept?",
+      "options": [
+        { "text": "Principal, annual interest rate, all fees, tenure, and exact total repayment", "explanationWrong": "" },
+        { "text": "Only 'Get cash now!' with no repayment schedule", "explanationWrong": "Hiding fees and repayment dates is a hallmark of predatory apps." },
+        { "text": "A demand for your UPI PIN upfront", "explanationWrong": "No lender needs your UPI PIN to issue a loan." },
+        { "text": "Mandatory access to all your SMS messages and social media", "explanationWrong": "Excessive data scraping is unsafe and unnecessary." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Regulated lenders provide a clear Key Fact Statement showing fees, annualised cost, and exact repayment totals."
     }
   ]
 }

@@ -2,12 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, Settings, ShieldCheck, User } from "lucide-react";
-import { GlassNavBar, NavTitleContext } from "@/components/glass/GlassNavBar";
+import { NavTitleContext } from "@/components/glass/GlassNavBar";
 import { ToastHost } from "@/components/glass/GlassToast";
 import { useUserStore } from "@/store/useUserStore";
 import { routeTransition } from "@/theme/tokens";
 import { cn } from "@/utils/cn";
-import { AmbientMesh, LensFilter } from "./AmbientMesh";
 import { DisclaimerPill, ResourcesSheet } from "./DisclaimerPill";
 import { RoleChip } from "./RoleChip";
 import { sidebarItems, tabItems } from "./navItems";
@@ -41,15 +40,7 @@ export function AppShell() {
   const role = useUserStore((s) => s.role);
   const displayName = useUserStore((s) => s.displayName);
   const [title, setTitle] = useState("");
-  const [collapsed, setCollapsed] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setCollapsed(window.scrollY > 48);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -69,26 +60,38 @@ export function AppShell() {
   const tabs = useMemo(() => tabItems(role), [role]);
   const side = useMemo(() => sidebarItems(), []);
 
-  // Preserve the sandbox simulation shell untouched during active /play drills.
+  // PracticeOS obsidian studio shell during active /play drills only (Stitch shell elsewhere untouched).
   if (focusMode) {
     return (
       <NavTitleContext.Provider value={setTitle}>
-        <AmbientMesh />
-        <LensFilter />
-        <div className="min-h-dvh">
-          <header className="no-print sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
-            <GlassNavBar
-              title={title}
-              collapsed={collapsed}
-              leading={<SandboxBrand compact />}
-              trailing={<RoleChip sandbox />}
-            />
-            <div className="flex justify-center px-[var(--gutter)] pb-1 pt-2">
-              <DisclaimerPill sandbox onClick={() => setResourcesOpen(true)} />
+        <div className="relative min-h-dvh overflow-x-clip bg-neutral-950 text-zinc-100">
+          <div
+            aria-hidden
+            className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(37,99,235,0.16),transparent_65%)]"
+          />
+          <header className="no-print sticky top-0 z-40 border-b border-white/10 bg-zinc-950/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+            <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-3 px-[var(--gutter)]">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <SandboxBrand compact />
+                <div className="min-w-0">
+                  <span className="block truncate text-[14px] font-bold leading-tight text-white">
+                    {title || "PracticeOS Drill"}
+                  </span>
+                  <span className="block text-[10px] font-semibold uppercase tracking-wider text-sky-300/90">
+                    PracticeOS · Safe Sandbox
+                  </span>
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <div className="hidden md:block">
+                  <DisclaimerPill sandbox onClick={() => setResourcesOpen(true)} />
+                </div>
+                <RoleChip sandbox />
+              </div>
             </div>
           </header>
 
-          <main className="mx-auto w-full max-w-[1120px] px-[var(--gutter)] pb-16 pt-4">
+          <main className="relative z-10 mx-auto w-full max-w-[1120px] px-[var(--gutter)] pb-16 pt-4">
             <motion.div
               key={pathname}
               initial={{ opacity: 0, y: 8 }}

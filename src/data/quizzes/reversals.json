@@ -1,43 +1,79 @@
 {
   "id": "reversals",
   "concept": "reversals",
-  "title": "Reversals quiz",
+  "title": "Wrong transfer & reversal quiz",
   "questions": [
     {
       "id": "rv-1",
-      "prompt": "You paid the wrong person. What is a safe first move?",
+      "prompt": "You accidentally sent UPI money to the wrong person. What is your safest first step?",
       "options": [
-        { "text": "Send the stranger angry messages", "explanationWrong": "Contacting unknown people does not help and can lead to more pressure." },
-        { "text": "Note the transaction ID and take a screenshot", "explanationWrong": "" },
-        { "text": "Pay again to 'unlock' a refund", "explanationWrong": "Paying more is a classic trick. You would lose more money." },
-        { "text": "Delete the payment alert", "explanationWrong": "Keep your proof. A complaint needs the transaction details." }
+        { "text": "Beg or argue with the stranger in chat", "explanationWrong": "Pleading or arguing with strangers often triggers release-fee scams." },
+        { "text": "Save the transaction ID and take a screenshot as proof", "explanationWrong": "" },
+        { "text": "Send another ₹100 to 'unlock' an automatic refund", "explanationWrong": "Paying extra to unlock a refund is a classic follow-up scam." },
+        { "text": "Delete the receipt so it does not confuse your bank", "explanationWrong": "You need the transaction reference number to raise any official dispute." }
       ],
       "correctIndex": 1,
-      "explanationCorrect": "Save proof first: the transaction ID and a screenshot. You will need them for every complaint."
+      "explanationCorrect": "Save your proof first—every official complaint with your payment app, bank, or NPCI requires the transaction ID."
     },
     {
       "id": "rv-2",
-      "prompt": "Where should you raise your first complaint?",
+      "prompt": "Where should you file the first official dispute for a wrong UPI transfer?",
       "options": [
-        { "text": "In the payment app you used, then contact your bank", "explanationWrong": "" },
-        { "text": "In a public post on social media", "explanationWrong": "That is not an official route and can expose your details." },
-        { "text": "Only to the person who got the money", "explanationWrong": "A stranger has no duty to help. Use the official routes." },
-        { "text": "Nowhere, wait for it to come back", "explanationWrong": "Waiting does not start any process. Act as soon as possible." }
+        { "text": "Inside the payment app you used, and with your bank", "explanationWrong": "" },
+        { "text": "By commenting on a social media thread", "explanationWrong": "Public posts cannot reverse payments and can attract fake 'recovery agents'." },
+        { "text": "Wait 30 days silently to see if it auto-reverses", "explanationWrong": "Delaying reduces recovery chances; report as soon as possible." },
+        { "text": "Call a number sent by the recipient claiming to be a 'refund desk'", "explanationWrong": "Never trust numbers sent by the stranger who received the funds." }
       ],
       "correctIndex": 0,
-      "explanationCorrect": "Start with the complaint option in your payment app and contact your bank, as soon as possible."
+      "explanationCorrect": "Log the wrong-transfer complaint directly inside your payment app and contact your bank's official 24×7 helpline."
     },
     {
       "id": "rv-3",
-      "prompt": "The app and bank have not solved it. What next?",
+      "prompt": "Your payment app and bank have not resolved your wrong transfer complaint. Where can you escalate officially?",
       "options": [
-        { "text": "Give up", "explanationWrong": "There is another official route you can try." },
-        { "text": "Escalate through the NPCI dispute redressal process", "explanationWrong": "" },
-        { "text": "Pay a 'recovery agent' you found online", "explanationWrong": "Recovery agents found online are often scams." },
-        { "text": "Share your PIN with a helper", "explanationWrong": "Never share your PIN with anyone." }
+        { "text": "Pay a 'cyber recovery expert' you found on Telegram", "explanationWrong": "Self-proclaimed recovery agents asking upfront fees are almost always scams." },
+        { "text": "Escalate through the NPCI UPI dispute redressal process", "explanationWrong": "" },
+        { "text": "Share your UPI PIN with a third-party website to pull the money back", "explanationWrong": "No website can pull money back using your PIN—they will drain your account instead." },
+        { "text": "Send a collect request with a warning note", "explanationWrong": "Strangers do not have to approve collect requests; use official banking channels." }
       ],
       "correctIndex": 1,
-      "explanationCorrect": "NPCI has a dispute redressal process. Check the current steps on official channels."
+      "explanationCorrect": "If your PSP app and bank do not resolve the ticket, escalate through NPCI's official dispute redressal portal and Banking Ombudsman."
+    },
+    {
+      "id": "rv-4",
+      "prompt": "The stranger who got your wrong transfer says: 'Send ₹500 release fee and I will refund the full amount.' What is this?",
+      "options": [
+        { "text": "A secondary scam—never pay extra money to get a refund", "explanationWrong": "" },
+        { "text": "Standard bank clearing charge for UPI reversals", "explanationWrong": "Banks and UPI apps never ask customers to pay strangers a 'release fee'." },
+        { "text": "A mandatory NPCI escrow step", "explanationWrong": "NPCI never charges a fee through a stranger's UPI handle." },
+        { "text": "Safe if they promise in writing", "explanationWrong": "Scammers gladly send fake written receipts to steal more." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Never pay a 'release fee' or 'tax' to recover lost money. That is a common follow-up trick to double your loss."
+    },
+    {
+      "id": "rv-5",
+      "prompt": "Why does raising a wrong-credit complaint quickly with your bank matter?",
+      "options": [
+        { "text": "Your bank can formally notify the recipient's bank while funds may still be traceable", "explanationWrong": "" },
+        { "text": "Your bank can reverse any transaction without contacting the other bank", "explanationWrong": "Reversals require coordination through the receiving bank and official dispute workflow." },
+        { "text": "Because UPI transactions automatically expire after 2 hours", "explanationWrong": "Settled UPI payments are instant and do not auto-expire." },
+        { "text": "It lowers your monthly account fees", "explanationWrong": "Quick reporting is about fund recovery, not fee discounts." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Banks coordinate between remitter and beneficiary banks using your transaction ID—acting fast preserves a better chance of recovery."
+    },
+    {
+      "id": "rv-6",
+      "prompt": "How can you reduce the risk of wrong UPI transfers in the first place?",
+      "options": [
+        { "text": "Verify the recipient's registered bank name on the confirmation screen before entering your PIN", "explanationWrong": "" },
+        { "text": "Save only the first four digits of phone numbers", "explanationWrong": "Partial numbers raise the risk of picking the wrong contact." },
+        { "text": "Disable transaction alerts so the app runs faster", "explanationWrong": "Keep alerts enabled so you catch errors immediately." },
+        { "text": "Use the same PIN for every banking app", "explanationWrong": "Checking the payee name before PIN entry prevents wrong-person sends." }
+      ],
+      "correctIndex": 0,
+      "explanationCorrect": "Always check the verified banking name shown above the Pay button before typing your UPI PIN."
     }
   ]
 }
