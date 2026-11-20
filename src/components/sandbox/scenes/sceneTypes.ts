@@ -1,6 +1,19 @@
-import type { Drill } from "@/types";
+import type { ComposableDrillStep, Drill, SemanticIntent } from "@/types";
 
-/** Everything a sandbox scene needs. Scenes only render and call `emit`; the runner grades. */
+export type WidgetActionHandler = (intent: SemanticIntent, payload?: Record<string, unknown>) => void;
+
+export interface WidgetRenderProps {
+  step: ComposableDrillStep;
+  drill: Drill;
+  vars: Record<string, string>;
+  onAction: WidgetActionHandler;
+  tapFlag: (flagId: string | null) => void;
+  flagsFound: string[];
+  doneKeys: ReadonlySet<string>;
+  onBack?: () => void;
+}
+
+/** Everything a sandbox scene needs. Scenes only render and call `emit` / `onAction`; the runner grades. */
 export interface SceneProps {
   /** Rendered drill (all {{placeholders}} substituted). */
   drill: Drill;
@@ -10,4 +23,6 @@ export interface SceneProps {
   tapFlag: (flagId: string | null) => void;
   flagsFound: string[];
   doneKeys: ReadonlySet<string>;
+  stepProps?: Record<string, unknown>;
+  onAction?: WidgetActionHandler;
 }

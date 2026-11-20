@@ -1,0 +1,170 @@
+{
+  "id": "voice-clone-emergency",
+  "title": "AI Voice Clone Emergency",
+  "tagline": "An unknown number plays a panicked voice sounding like a relative asking for urgent UPI cash.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["upi-safety", "reversals"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["arrest-03", "upi-02"],
+  "intro": "An unfamiliar number ({{maskedPhone}}) plays a panicked voice sounding like {{relativeRole}} begging for ₹{{amount}} via {{scammerVpa}} right now. Stay calm and verify through their real saved number.",
+  "variables": {
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "amount": { "min": 3000, "max": 25000, "step": 500 },
+    "balance": { "min": 18000, "max": 60000, "step": 500 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "sender": "Unknown · {{maskedPhone}}",
+      "time": "{{time}}",
+      "channel": "Voice Call",
+      "body": "Please hurry, my phone broke and I met with a minor accident! Send ₹{{amount}} right now to {{scammerVpa}}—don't call my old number, it's switched off!"
+    }
+  },
+  "steps": [
+    {
+      "id": "verify-emergency-call",
+      "label": "Hang up and verify on {{relativeRole}}'s saved number",
+      "actionKey": "HANG_UP_CALL",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Hang up or verify out-of-band on {{relativeRole}}'s real saved contact instead of sending money to a stranger's UPI.",
+      "explanation": "AI voice cloning only needs seconds of public audio. Calling the saved contact directly exposes the impersonation immediately.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "confirm-balance-safe",
+      "label": "Confirm your {{bankName}} balance remained untouched",
+      "actionKey": "CHECK_BALANCE",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "After confirming {{relativeRole}} is safe on their real number, double-check your balance.",
+      "explanation": "Verifying your balance reassures you that zero funds were transferred before checking out-of-band.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "report-voice-scam",
+      "label": "Block {{maskedPhone}} and report to 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Submit the caller number and {{scammerVpa}} so telecom and bank teams can block them.",
+      "explanation": "Reporting emergency impersonation numbers and mule VPAs prevents others in your family from being targeted.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "verify-emergency-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Phone · Unknown",
+        "title": "Urgent call claiming to be {{relativeRole}}",
+        "body": "Calling from {{maskedPhone}} asking for ₹{{amount}} urgently.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Incoming Emergency Call",
+        "callerName": "Sounds like {{relativeRole}}",
+        "maskedPhone": "{{maskedPhone}}",
+        "agency": "Unverified Number",
+        "channel": "Voice Call",
+        "isVideo": false,
+        "transcript": "Please hurry, my phone broke and I met with a minor accident! Send ₹{{amount}} right now to {{scammerVpa}}—don't call my old number, it's switched off!",
+        "extraActions": [
+          { "intent": "VERIFY_LENDER", "label": "Hang up & call {{relativeRole}}'s real saved number" },
+          { "intent": "ACCEPT_COLLECT", "label": "Rush ₹{{amount}} UPI transfer to {{scammerVpa}}" }
+        ]
+      },
+      "redFlagPhrases": ["Send ₹{{amount}} right now to {{scammerVpa}}", "don't call my old number", "my phone broke"],
+      "validIntents": ["HANG_UP_CALL", "VERIFY_LENDER"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on the unknown line lets the scammer keep up emotional panic so you don't call {{relativeRole}}'s saved number.",
+        "ACCEPT_COLLECT": "Sending ₹{{amount}} to an unverified VPA ({{scammerVpa}}) during an emotional rush is irreversible once settled."
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "confirm-balance-safe",
+        "VERIFY_LENDER": "confirm-balance-safe"
+      }
+    },
+    {
+      "stepId": "confirm-balance-safe",
+      "screenType": "BALANCE_VIEW",
+      "props": {
+        "balance": "{{balance}}",
+        "note": "{{relativeRole}} confirmed safe on their real saved number. Your ₹{{balance}} balance is untouched.",
+        "actions": [
+          { "intent": "CHECK_BALANCE", "label": "Confirm balance safe & block caller" },
+          { "intent": "ACCEPT_COLLECT", "label": "Transfer ₹{{amount}} to {{scammerVpa}} anyway" }
+        ]
+      },
+      "validIntents": ["CHECK_BALANCE"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "You already confirmed {{relativeRole}} is safe—never send money to {{scammerVpa}}."
+      },
+      "nextStepMap": {
+        "CHECK_BALANCE": "report-voice-scam"
+      }
+    },
+    {
+      "stepId": "report-voice-scam",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Voice Clone Scam",
+        "intro": "Block {{maskedPhone}} and report the impersonation handle {{scammerVpa}} to 1930.",
+        "details": [
+          { "label": "Caller number", "value": "{{maskedPhone}}" },
+          { "label": "Target VPA", "value": "{{scammerVpa}}" },
+          { "label": "Impersonated", "value": "{{relativeRole}}" }
+        ],
+        "reasons": ["Relative voice impersonation scam", "Emergency UPI fraud", "Suspicious caller"],
+        "submitLabel": "Block caller & report to 1930",
+        "successText": "Caller blocked and reported to 1930 (sandbox)."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ACCEPT_COLLECT", "ENTER_UPI_PIN"],
+  "critical": {
+    "title": "You rushed a UPI transfer to an unverified emergency caller",
+    "explanation": "Voice-clone scams mimic a panicked loved one from a strange number and beg you NOT to call their old phone while pushing a third-party VPA ({{scammerVpa}}). Always hang up and call their saved contact first.",
+    "reason": "You rushed an emergency transfer without out-of-band verification last time, so practise verifying saved numbers next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "rf-vpa-third",
+      "textFragment": "Send ₹{{amount}} right now to {{scammerVpa}}",
+      "label": "Third-party VPA under urgency",
+      "explanation": "Scammers demand instant transfers to unrelated third-party UPI handles."
+    },
+    {
+      "id": "rf-no-callback",
+      "textFragment": "don't call my old number",
+      "label": "Blocking verification callback",
+      "explanation": "Telling you not to call their real saved number stops you from discovering the clone."
+    },
+    {
+      "id": "rf-broke",
+      "textFragment": "my phone broke",
+      "label": "Excuse for unknown number",
+      "explanation": "A classic pretext explaining why the voice comes from an unrecognised number."
+    }
+  ],
+  "hints": {
+    "verify-emergency-call": "Hang up or tap 'Hang up & call {{relativeRole}}'s real saved number' to verify out-of-band.",
+    "confirm-balance-safe": "Review your balance to verify nothing was sent, then continue to report.",
+    "report-voice-scam": "Select an impersonation reason and submit the report to block {{maskedPhone}}."
+  },
+  "quizId": "fraud-response"
+}

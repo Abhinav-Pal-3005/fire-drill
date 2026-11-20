@@ -1,4 +1,13 @@
-import type { Concept, ConceptId, Drill, LibraryData, LibraryEntry, Quiz, ScamType } from "@/types";
+import type {
+  Concept,
+  ConceptId,
+  Drill,
+  LibraryData,
+  LibraryEntry,
+  Quiz,
+  ScamType,
+  Scenario,
+} from "@/types";
 import conceptsJson from "@/data/concepts.json";
 import collectRequest from "@/data/drills/collect-request.json";
 import lostPhone from "@/data/drills/lost-phone.json";
@@ -6,6 +15,10 @@ import wrongTransfer from "@/data/drills/wrong-transfer.json";
 import loanOffer from "@/data/drills/loan-offer.json";
 import phishingSms from "@/data/drills/phishing-sms.json";
 import digitalArrest from "@/data/drills/digital-arrest.json";
+import qrMarketplaceRefund from "@/data/drills/qr-marketplace-refund.json";
+import electricityBillApk from "@/data/drills/electricity-bill-apk.json";
+import fedexCustomsParcel from "@/data/drills/fedex-customs-parcel.json";
+import voiceCloneEmergency from "@/data/drills/voice-clone-emergency.json";
 import quizUpi from "@/data/quizzes/upi-safety.json";
 import quizFraud from "@/data/quizzes/fraud-response.json";
 import quizReversals from "@/data/quizzes/reversals.json";
@@ -13,19 +26,89 @@ import quizInterest from "@/data/quizzes/interest-credit.json";
 import quizPhishing from "@/data/quizzes/phishing-indicators.json";
 import quizDigitalArrest from "@/data/quizzes/digital-arrest.json";
 import { fraudCases, fraudCategories, type FraudCategoryId } from "@/data/fraudCases";
+import { createScenario } from "@/features/randomiser/scenarioRandomiser";
+import { DEMO_SEED } from "@/utils/seedRandom";
+
+const CUSTOM_DRILLS_KEY = "mfd_custom_drills";
+const SHORT_ID_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
 
 /**
  * DRILL REGISTRY.
  * To add a drill: drop a new JSON file in src/data/drills, import it above and add it to this list.
  */
-const DRILLS: Drill[] = [
+const BUILTIN_DRILLS: Drill[] = [
   collectRequest,
   wrongTransfer,
   lostPhone,
   loanOffer,
   phishingSms,
   digitalArrest,
+  qrMarketplaceRefund,
+  electricityBillApk,
+  fedexCustomsParcel,
+  voiceCloneEmergency,
 ] as unknown as Drill[];
+
+let customDrillsCache: Drill[] | null = null;
+
+function readCustomDrillsFromStorage(): Drill[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(CUSTOM_DRILLS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (d): d is Drill =>
+        Boolean(
+          d &&
+            typeof d === "object" &&
+            typeof (d as Drill).id === "string" &&
+            SHORT_ID_PATTERN.test((d as Drill).id),
+        ),
+    );
+  } catch {
+    return [];
+  }
+}
+
+function writeCustomDrillsToStorage(drills: Drill[]) {
+  customDrillsCache = drills;
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CUSTOM_DRILLS_KEY, JSON.stringify(drills));
+  } catch {
+    // Ignore storage quota errors in restricted WebViews
+  }
+}
+
+export function listCustomDrills(): Drill[] {
+  if (typeof window === "undefined") return customDrillsCache ?? [];
+  const fresh = readCustomDrillsFromStorage();
+  customDrillsCache = fresh;
+  return fresh;
+}
+
+export function registerCustomDrill(drill: Drill): Drill[] {
+  if (!SHORT_ID_PATTERN.test(drill.id)) {
+    throw new Error(`Invalid custom drill ID: ${drill.id}`);
+  }
+  const normalized: Drill = {
+    ...drill,
+    isCustom: true,
+    createdAt: drill.createdAt ?? Date.now(),
+  };
+  const current = listCustomDrills().filter((d) => d.id !== normalized.id);
+  const next = [normalized, ...current];
+  writeCustomDrillsToStorage(next);
+  return next;
+}
+
+export function removeCustomDrill(id: string): Drill[] {
+  const next = listCustomDrills().filter((d) => d.id !== id);
+  writeCustomDrillsToStorage(next);
+  return next;
+}
 
 const QUIZZES: Quiz[] = [
   quizUpi,
@@ -89,12 +172,27 @@ const LIBRARY_DATA: LibraryData = {
   }),
 };
 
+export function listBuiltinDrills(): Drill[] {
+  return BUILTIN_DRILLS;
+}
+
 export function listDrills(): Drill[] {
-  return DRILLS;
+  return [...listCustomDrills(), ...BUILTIN_DRILLS];
 }
 
 export function getDrill(id: string | undefined): Drill | undefined {
-  return DRILLS.find((d) => d.id === id);
+  if (!id) return undefined;
+  return BUILTIN_DRILLS.find((d) => d.id === id) ?? listCustomDrills().find((d) => d.id === id);
+}
+
+export function loadInterpolatedDrill(
+  id: string | undefined,
+  seed = DEMO_SEED,
+  opts: { demo?: boolean } = {},
+): Scenario | undefined {
+  const drill = getDrill(id);
+  if (!drill) return undefined;
+  return createScenario(drill, seed, opts);
 }
 
 export function listConcepts(): Concept[] {
@@ -113,7 +211,7 @@ export function getQuiz(id: string | null | undefined): Quiz | undefined {
 
 /** Drills that practise a concept, as primary or related concept. */
 export function drillsForConcept(concept: ConceptId): Drill[] {
-  return DRILLS.filter((d) => d.concept === concept || d.relatedConcepts.includes(concept));
+  return listDrills().filter((d) => d.concept === concept || d.relatedConcepts.includes(concept));
 }
 
 export function getLibrary(): LibraryData {

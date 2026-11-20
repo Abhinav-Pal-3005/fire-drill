@@ -3,7 +3,7 @@ import { Building2, CheckCircle2, Flag, MessageSquare, ShieldCheck, type LucideI
 import { cn } from "@/utils/cn";
 import { MockComplaintForm } from "../MockComplaintForm";
 import { MockInbox } from "../MockInbox";
-import { DistractorRows, PhoneBody, PhoneButton, PhoneHeader, PhoneRow, useSnack } from "../phoneUi";
+import { DistractorRows, PhoneBody, PhoneButton, PhoneHeader, useSnack } from "../phoneUi";
 import type { SceneProps } from "./sceneTypes";
 
 type Tab = "messages" | "bank" | "report";
@@ -14,11 +14,31 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
 /** Drill: fake bank KYC SMS phishing link vs opening official bank app directly. */
-export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function PhishingSmsScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [tab, setTab] = useState<Tab>("messages");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const bankName = str(stepProps?.bankName, vars.bank || vars.bankName || "Your Bank");
+  const msgSender = str(stepProps?.sender, payload.sender || "Unknown sender");
+  const msgTime = str(stepProps?.time, payload.time || vars.time || "Just now");
+  const msgChannel = str(stepProps?.channel, payload.channel || "SMS Inbox");
+  const msgBody = str(stepProps?.body, payload.body || "");
+  const suspiciousLink = str(stepProps?.link, payload.link || vars.phishingLink || "suspicious-link");
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -27,11 +47,12 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
 
   const openBankTab = () => {
     emit("open_official_app");
+    onAction?.("OPEN_UPI_APP", { bankName });
     setTab("bank");
   };
 
-  const kycChecked = doneKeys.has("check_kyc_status");
-  const reported = doneKeys.has("block_report_sms");
+  const kycChecked = doneKeys.has("check_kyc_status") || doneKeys.has("CHECK_BALANCE");
+  const reported = doneKeys.has("block_report_sms") || doneKeys.has("BLOCK_SENDER");
 
   return (
     <>
@@ -41,10 +62,10 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
           messages={[
             {
               id: "m1",
-              sender: payload.sender,
-              time: payload.time,
-              channel: payload.channel,
-              body: payload.body,
+              sender: msgSender,
+              time: msgTime,
+              channel: msgChannel,
+              body: msgBody,
             },
           ]}
           redFlags={drill.redFlags}
@@ -59,7 +80,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
       {tab === "bank" && (
         <>
           <div className="absolute inset-x-0 top-0 z-10">
-            <PhoneHeader title={`${vars.bank} Official`} subtitle="Opened directly" />
+            <PhoneHeader title={`${bankName} Official`} subtitle="Opened directly" />
           </div>
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#e3eaf6]">
@@ -69,7 +90,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
                 </span>
                 <div>
                   <p className="text-[14px] font-bold text-[#0b1b3a]">Account &amp; KYC Centre</p>
-                  <p className="text-[12px] text-[#4f5f7a]">Official {vars.bank} status</p>
+                  <p className="text-[12px] text-[#4f5f7a]">Official {bankName} status</p>
                 </div>
               </div>
               <p className="mt-3 text-[13.5px] leading-snug text-[#33415c]">
@@ -83,11 +104,18 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
                   <CheckCircle2 size={18} strokeWidth={2} aria-hidden /> KYC verified &amp; active
                 </p>
                 <p className="text-[12.5px] leading-snug">
-                  Your {vars.bank} account is active with no pending KYC blocks. That SMS link was a phishing trap.
+                  Your {bankName} account is active with no pending KYC blocks. That SMS link was a phishing trap.
                 </p>
               </div>
             ) : (
-              <PhoneButton onClick={() => emit("check_kyc_status")}>Check KYC &amp; account status</PhoneButton>
+              <PhoneButton
+                onClick={() => {
+                  emit("check_kyc_status");
+                  onAction?.("CHECK_BALANCE", { bankName });
+                }}
+              >
+                Check KYC &amp; account status
+              </PhoneButton>
             )}
           </PhoneBody>
         </>
@@ -98,13 +126,16 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
           title="Block & report phishing SMS"
           intro="Blocking stops repeat phishing texts. Reporting the URL helps take fake bank sites down."
           details={[
-            { label: "SMS Sender", value: payload.sender },
-            { label: "Suspicious link", value: "bit.ly/kyc-9x2" },
+            { label: "SMS Sender", value: msgSender },
+            { label: "Suspicious link", value: suspiciousLink },
           ]}
           reasons={["Fake KYC / Phishing link", "Impersonating my bank", "Spam"]}
           submitLabel={reported ? "Reported" : "Block sender & report phishing"}
           successText="Sender blocked and phishing SMS reported (sandbox)."
-          onSubmit={() => emit("block_report_sms")}
+          onSubmit={() => {
+            emit("block_report_sms");
+            onAction?.("BLOCK_SENDER", { sender: msgSender, link: suspiciousLink });
+          }}
           onBack={() => setTab("messages")}
         />
       )}
@@ -125,7 +156,7 @@ export function PhishingSmsScene({ drill, vars, emit, tapFlag, flagsFound, doneK
               )}
             >
               <Icon size={20} strokeWidth={1.75} aria-hidden />
-              {t.id === "bank" ? vars.bank : t.label}
+              {t.id === "bank" ? bankName : t.label}
             </button>
           );
         })}

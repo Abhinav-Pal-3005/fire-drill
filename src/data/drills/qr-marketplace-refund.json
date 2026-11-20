@@ -1,0 +1,224 @@
+{
+  "id": "qr-marketplace-refund",
+  "title": "QR Marketplace Refund Trap",
+  "tagline": "A buyer sends a QR and collect request promising an instant refund once you scan and enter your PIN.",
+  "concept": "upi-safety",
+  "relatedConcepts": ["reversals", "fraud-response"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["upi-01", "upi-02"],
+  "intro": "{{scammerName}} from {{merchantName}} claims your order refund of ₹{{amount}} failed and asks you to scan a QR / approve a collect request on {{app}}. Remember: receiving money never requires your UPI PIN.",
+  "variables": {
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "amount": { "min": 1500, "max": 18000, "step": 500 },
+    "balance": { "min": 15000, "max": 55000, "step": 500 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "sender": "{{scammerName}} ({{merchantName}})",
+      "time": "{{time}}",
+      "channel": "Marketplace Chat",
+      "senderId": "{{scammerVpa}}",
+      "body": "Hi, your ₹{{amount}} refund from {{merchantName}} is queued at {{scammerVpa}}. Scan this QR to receive ₹{{amount}} and enter your UPI PIN right away!"
+    }
+  },
+  "steps": [
+    {
+      "id": "inspect-qr-msg",
+      "label": "Open {{app}} directly without tapping the QR link",
+      "actionKey": "OPEN_UPI_APP",
+      "order": 1,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Inspect the chat message for PIN/QR red flags, then open {{app}} directly.",
+      "explanation": "Scammers send QR codes or short links that actually initiate outgoing collect requests rather than incoming refunds.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "inspect-collect-sheet",
+      "label": "Decline the incoming ₹{{amount}} collect request",
+      "actionKey": "DECLINE_REQUEST",
+      "order": 2,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Read the direction of money on the collect sheet carefully before tapping any button.",
+      "explanation": "A collect request always pulls money OUT of your bank account. Declining stops the transfer without touching your PIN.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "verify-balance",
+      "label": "Verify your {{bankName}} balance is unchanged",
+      "actionKey": "CHECK_BALANCE",
+      "order": 3,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Check your balance and recent history to confirm no money left your account.",
+      "explanation": "Checking balance inside your official app confirms the request was blocked safely.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "report-scammer",
+      "label": "Block {{scammerVpa}} and file a 1930 report",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Report the VPA and chat details to stop repeat refund traps.",
+      "explanation": "Blocking the handle and logging an incident on 1930 / cybercrime.gov.in helps banks flag mule VPAs.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "inspect-qr-msg",
+      "screenType": "SMS_INBOX",
+      "notification": {
+        "app": "Messages · {{merchantName}}",
+        "title": "Refund QR from {{scammerName}}",
+        "body": "Scan QR to receive ₹{{amount}} in {{app}}.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Marketplace Chat",
+        "subtitle": "Spot suspicious phrases, then decide safely",
+        "sender": "{{scammerName}} · {{merchantName}}",
+        "time": "{{time}}",
+        "channel": "Chat",
+        "body": "Hi, your ₹{{amount}} refund from {{merchantName}} is queued at {{scammerVpa}}. Scan this QR to receive ₹{{amount}} and enter your UPI PIN right away!",
+        "actions": [
+          { "intent": "OPEN_UPI_APP", "label": "Open {{app}} directly to inspect" },
+          { "intent": "CLICK_EXTERNAL_LINK", "label": "Open QR refund link from chat" },
+          { "intent": "IGNORE_MESSAGE", "label": "Ignore chat & open {{app}} safely" }
+        ]
+      },
+      "redFlagPhrases": ["Scan this QR to receive ₹{{amount}}", "enter your UPI PIN", "{{scammerVpa}}"],
+      "validIntents": ["OPEN_UPI_APP", "IGNORE_MESSAGE"],
+      "trapIntents": {
+        "CLICK_EXTERNAL_LINK": "That QR refund link opens an unverified collect mandate designed to debit ₹{{amount}} from your account."
+      },
+      "nextStepMap": {
+        "OPEN_UPI_APP": "inspect-collect-sheet",
+        "IGNORE_MESSAGE": "inspect-collect-sheet"
+      }
+    },
+    {
+      "stepId": "inspect-collect-sheet",
+      "screenType": "COLLECT_SHEET",
+      "notification": {
+        "app": "{{app}}",
+        "title": "{{scammerName}} sent a collect request",
+        "body": "Pay ₹{{amount}} to {{scammerVpa}}?",
+        "urgent": true
+      },
+      "props": {
+        "appName": "{{app}}",
+        "requesterName": "{{scammerName}}",
+        "upiId": "{{scammerVpa}}",
+        "amount": "{{amount}}",
+        "note": "QR Marketplace Refund ₹{{amount}}",
+        "directionLabel": "Collect request · Debits your account",
+        "warningText": "Approving a collect request sends money OUT. Refunds never need a collect request or PIN.",
+        "approveLabel": "Pay ₹{{amount}}",
+        "declineLabel": "Decline request"
+      },
+      "redFlagPhrases": ["{{scammerVpa}}", "QR Marketplace Refund ₹{{amount}}"],
+      "validIntents": ["DECLINE_REQUEST"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "Approving this collect request sends ₹{{amount}} to {{scammerVpa}} instead of receiving a refund."
+      },
+      "nextStepMap": {
+        "ACCEPT_COLLECT": "pin-trap-branch",
+        "DECLINE_REQUEST": "verify-balance"
+      }
+    },
+    {
+      "stepId": "pin-trap-branch",
+      "screenType": "PIN_PAD",
+      "props": {
+        "isTrapBranch": true,
+        "pinMode": "pin"
+      },
+      "validIntents": ["DECLINE_REQUEST"],
+      "trapIntents": {
+        "ENTER_UPI_PIN": "Entering your UPI PIN on a QR/collect prompt immediately debits ₹{{amount}} to {{scammerVpa}}. Receiving money never uses a PIN."
+      },
+      "nextStepMap": {
+        "DECLINE_REQUEST": "verify-balance"
+      }
+    },
+    {
+      "stepId": "verify-balance",
+      "screenType": "BALANCE_VIEW",
+      "props": {
+        "balance": "{{balance}}",
+        "note": "No debit was made for ₹{{amount}}. Your {{bankName}} balance is safe.",
+        "actions": [
+          { "intent": "CHECK_BALANCE", "label": "Confirm balance safe & continue to report" }
+        ]
+      },
+      "validIntents": ["CHECK_BALANCE"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "CHECK_BALANCE": "report-scammer"
+      }
+    },
+    {
+      "stepId": "report-scammer",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Block VPA & Report to 1930",
+        "intro": "Report {{scammerVpa}} and block future collect requests.",
+        "details": [
+          { "label": "Scammer VPA", "value": "{{scammerVpa}}" },
+          { "label": "Disputed amount", "value": "₹{{amount}}" },
+          { "label": "Merchant context", "value": "{{merchantName}}" }
+        ],
+        "reasons": ["QR / Collect refund scam", "Impersonating marketplace buyer", "Spam request"],
+        "submitLabel": "Block VPA & file 1930 report",
+        "successText": "VPA blocked and incident logged on 1930 (sandbox)."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ENTER_UPI_PIN"],
+  "critical": {
+    "title": "You entered your UPI PIN for a 'refund'",
+    "explanation": "Scammers flip the payment flow: they send a QR code or collect request so your UPI PIN sends ₹{{amount}} to {{scammerVpa}} instead of receiving money. Never enter your PIN to accept a refund.",
+    "reason": "You entered a UPI PIN during a QR refund trap last time, so practise declining collect sheets next.",
+    "concept": "upi-safety"
+  },
+  "redFlags": [
+    {
+      "id": "rf-qr-pin",
+      "textFragment": "Scan this QR to receive ₹{{amount}}",
+      "label": "QR to receive trap",
+      "explanation": "QR codes only pay out money; you never scan a buyer's QR to get paid or refunded."
+    },
+    {
+      "id": "rf-enter-pin",
+      "textFragment": "enter your UPI PIN",
+      "label": "PIN demand for incoming funds",
+      "explanation": "UPI PIN is strictly an outbound debit authorisation—never required for refunds."
+    },
+    {
+      "id": "rf-vpa",
+      "textFragment": "{{scammerVpa}}",
+      "label": "Unverified refund VPA",
+      "explanation": "Real {{merchantName}} refunds return automatically to your original payment source without an external VPA."
+    }
+  ],
+  "hints": {
+    "inspect-qr-msg": "Ignore the QR link in chat and open {{app}} directly to verify what actually arrived.",
+    "inspect-collect-sheet": "Check the collect sheet wording—money is leaving your account. Tap Decline request.",
+    "verify-balance": "Review your {{bankName}} balance to confirm ₹{{amount}} never left, then proceed to report.",
+    "report-scammer": "Pick a fraud reason and submit the complaint to block {{scammerVpa}} and log it on 1930."
+  },
+  "quizId": "upi-safety"
+}

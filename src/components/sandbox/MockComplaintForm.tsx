@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/utils/cn";
@@ -14,6 +15,7 @@ interface MockComplaintFormProps {
   onSubmit: () => void;
   onBack: () => void;
   embedded?: boolean;
+  children?: ReactNode;
 }
 
 /** Generic complaint / report form. Submit stays disabled until a reason is chosen. */
@@ -27,6 +29,7 @@ export function MockComplaintForm({
   onSubmit,
   onBack,
   embedded = false,
+  children,
 }: MockComplaintFormProps) {
   const [reason, setReason] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -83,6 +86,7 @@ export function MockComplaintForm({
           {submitLabel}
         </PhoneButton>
       )}
+      {children}
     </>
   );
 

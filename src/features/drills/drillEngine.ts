@@ -1,4 +1,15 @@
-import type { ConceptId, Drill, DrillGrade, LoggedAction, Mistake, RunState, StepResult, TimerMode } from "@/types";
+import type {
+  ConceptId,
+  Drill,
+  DrillGrade,
+  LoggedAction,
+  Mistake,
+  RunState,
+  StepResult,
+  TimerMode,
+  TrapIntent,
+  TrapMistake,
+} from "@/types";
 import { clamp } from "@/utils/formatters";
 import {
   classifyAction,
@@ -8,10 +19,20 @@ import {
   sortedSteps,
 } from "./stepValidator";
 
+const TRAP_INTENT_LABELS: Record<TrapIntent, string> = {
+  ACCEPT_COLLECT: "Approved UPI collect request",
+  ENTER_UPI_PIN: "Entered UPI PIN on unsafe prompt",
+  ANSWER_CALL: "Stayed on suspicious scam call",
+  CLICK_EXTERNAL_LINK: "Opened suspicious external link",
+  SHARE_OTP: "Shared OTP with unverified caller/page",
+  INSTALL_APK: "Installed unverified APK file",
+  APPROVE_LOAN: "Approved unverified loan offer",
+};
+
 /* ----------------------------- Runner state ----------------------------- */
 
 export function createRunState(): RunState {
-  return { actions: [], flagsFound: [], wrongTaps: 0, hintsUsed: [], critical: false };
+  return { actions: [], flagsFound: [], wrongTaps: 0, hintsUsed: [], critical: false, trapMistakes: [] };
 }
 
 export interface ActionOutcome {
@@ -26,11 +47,23 @@ export function applyAction(
   actionKey: string,
   label: string | undefined,
   tMs: number,
+  stepIdOverride?: string,
+  kindOverride?: LoggedAction["kind"],
+  explanation?: string,
 ): { state: RunState; outcome: ActionOutcome } {
-  const outcome = classifyAction(drill, state.actions, actionKey);
+  const outcome = kindOverride
+    ? { kind: kindOverride, stepId: stepIdOverride }
+    : classifyAction(drill, state.actions, actionKey);
   const resolvedLabel =
     label ?? findStep(drill, actionKey)?.label ?? findDistractor(drill, actionKey)?.label ?? actionKey;
-  const logged: LoggedAction = { actionKey, label: resolvedLabel, tMs, kind: outcome.kind, stepId: outcome.stepId };
+  const logged: LoggedAction = {
+    actionKey,
+    label: resolvedLabel,
+    tMs,
+    kind: outcome.kind,
+    stepId: stepIdOverride ?? outcome.stepId,
+    explanation,
+  };
   return {
     state: {
       ...state,
@@ -38,6 +71,26 @@ export function applyAction(
       critical: state.critical || outcome.kind === "critical",
     },
     outcome,
+  };
+}
+
+/** Records a trap mistake emitted by a composable OS widget. Pure: returns a new state. */
+export function applyTrapMistake(state: RunState, mistake: TrapMistake): RunState {
+  const existing = state.trapMistakes ?? [];
+  const label = TRAP_INTENT_LABELS[mistake.intent] ?? mistake.intent;
+  const logged: LoggedAction = {
+    actionKey: mistake.intent,
+    label,
+    tMs: mistake.tMs,
+    kind: mistake.isCritical ? "critical" : "distractor",
+    stepId: mistake.stepId,
+    explanation: mistake.explanation,
+  };
+  return {
+    ...state,
+    actions: [...state.actions, logged],
+    trapMistakes: [...existing, mistake],
+    critical: state.critical || mistake.isCritical,
   };
 }
 
@@ -138,13 +191,13 @@ export function gradeRun(
     });
   }
 
-  // Extra (wrong) actions: distinct distractors, plus the critical mistake if any.
+  // Extra (wrong) actions: distinct distractors, composable trap mistakes, plus the critical mistake if any.
   const seen = new Set<string>();
   for (const action of run.actions) {
     if (action.kind === "distractor" && !seen.has(action.actionKey)) {
-      seen.add(action.actionKey);
       const d = findDistractor(drill, action.actionKey);
       if (!d) continue;
+      seen.add(action.actionKey);
       results.push({
         id: `extra-${d.id}`,
         label: d.label,
@@ -157,21 +210,51 @@ export function gradeRun(
       mistakes.push({ concept: d.mistakeConcept, kind: "wrong", label: d.label });
     }
   }
+
+  const seenTraps = new Set<string>();
+  let nonCriticalTrapCount = 0;
+  let criticalTrapLogged: TrapMistake | undefined;
+  for (const tm of run.trapMistakes ?? []) {
+    const key = `${tm.stepId}:${tm.intent}`;
+    if (seenTraps.has(key)) continue;
+    seenTraps.add(key);
+
+    if (tm.isCritical) {
+      if (!criticalTrapLogged) criticalTrapLogged = tm;
+      continue;
+    }
+
+    nonCriticalTrapCount += 1;
+    const label = TRAP_INTENT_LABELS[tm.intent] ?? tm.intent;
+    results.push({
+      id: `trap-${tm.stepId}-${tm.intent}`,
+      label,
+      status: "wrong",
+      timeMs: tm.tMs,
+      explanation: tm.explanation,
+      kind: "extra",
+      mistakeConcept: drill.concept,
+    });
+    mistakes.push({ concept: drill.concept, kind: "wrong", label });
+  }
+
   if (run.critical) {
     const crit = run.actions.find((a) => a.kind === "critical");
     results.push({
       id: "extra-critical",
-      label: drill.critical.title,
+      label: criticalTrapLogged
+        ? TRAP_INTENT_LABELS[criticalTrapLogged.intent] ?? drill.critical.title
+        : drill.critical.title,
       status: "critical",
-      timeMs: crit ? timeFor(crit) : null,
-      explanation: drill.critical.explanation,
+      timeMs: criticalTrapLogged ? criticalTrapLogged.tMs : crit ? timeFor(crit) : null,
+      explanation: criticalTrapLogged?.explanation ?? crit?.explanation ?? drill.critical.explanation,
       kind: "extra",
       mistakeConcept: drill.critical.concept,
     });
     mistakes.push({ concept: drill.critical.concept, kind: "critical", label: drill.critical.title });
   }
 
-  const wrongActions = seen.size;
+  const wrongActions = seen.size + nonCriticalTrapCount;
   const stepScore = weightTotal === 0 ? 0 : clamp((credit / weightTotal) * 100 - wrongActions * WRONG_ACTION_PENALTY, 0, 100);
   const orderScore = weightTotal === 0 ? 0 : clamp((orderCredit / weightTotal) * 100, 0, 100);
 

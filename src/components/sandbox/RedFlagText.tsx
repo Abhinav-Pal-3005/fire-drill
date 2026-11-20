@@ -10,24 +10,72 @@ interface RedFlagTextProps {
   onFlag: (flagId: string) => void;
   /** Called when plain (non-suspicious) text is tapped. */
   onMiss: () => void;
+  phrases?: string[];
+  highlightHints?: boolean;
   className?: string;
 }
 
 type Segment =
   | { kind: "plain"; text: string }
-  | { kind: "flag"; text: string; flag: RedFlag };
+  | { kind: "flag"; text: string; flag: RedFlag; isSynthetic?: boolean };
 
-function buildSegments(text: string, flags: RedFlag[]): Segment[] {
-  const hits = flags
-    .map((flag) => ({ flag, index: text.indexOf(flag.textFragment) }))
-    .filter((h) => h.index >= 0)
-    .sort((a, b) => a.index - b.index);
+function mergeFlagsAndPhrases(
+  text: string,
+  flags: RedFlag[],
+  phrases?: string[],
+): Array<{ flag: RedFlag; index: number; isSynthetic: boolean }> {
+  const hits: Array<{ flag: RedFlag; index: number; isSynthetic: boolean }> = [];
+  const lowerText = text.toLowerCase();
+
+  for (const flag of flags) {
+    if (!flag.textFragment) continue;
+    let index = text.indexOf(flag.textFragment);
+    if (index < 0) index = lowerText.indexOf(flag.textFragment.toLowerCase());
+    if (index >= 0) {
+      hits.push({ flag, index, isSynthetic: false });
+    }
+  }
+
+  if (phrases && phrases.length > 0) {
+    phrases.forEach((phrase, idx) => {
+      const clean = phrase.trim();
+      if (!clean) return;
+      let index = text.indexOf(clean);
+      if (index < 0) index = lowerText.indexOf(clean.toLowerCase());
+      if (index < 0) return;
+
+      const end = index + clean.length;
+      const overlaps = hits.some(
+        (h) => index < h.index + h.flag.textFragment.length && end > h.index,
+      );
+      if (overlaps) return;
+
+      const matchedText = text.slice(index, end);
+      hits.push({
+        index,
+        isSynthetic: true,
+        flag: {
+          id: `phrase-${idx}-${clean.slice(0, 16).replace(/\W+/g, "-").toLowerCase()}`,
+          textFragment: matchedText,
+          label: "Suspicious detail",
+          explanation: `Watch out for "${matchedText}" — urgency, requests for PIN/OTP, unknown links, or unverified IDs are classic scam signals.`,
+        },
+      });
+    });
+  }
+
+  return hits.sort((a, b) => a.index - b.index);
+}
+
+function buildSegments(text: string, flags: RedFlag[], phrases?: string[]): Segment[] {
+  const hits = mergeFlagsAndPhrases(text, flags, phrases);
   const segments: Segment[] = [];
   let cursor = 0;
   for (const hit of hits) {
     if (hit.index < cursor) continue; // skip overlaps
     if (hit.index > cursor) segments.push({ kind: "plain", text: text.slice(cursor, hit.index) });
-    segments.push({ kind: "flag", text: hit.flag.textFragment, flag: hit.flag });
+    const slice = text.slice(hit.index, hit.index + hit.flag.textFragment.length);
+    segments.push({ kind: "flag", text: slice, flag: hit.flag, isSynthetic: hit.isSynthetic });
     cursor = hit.index + hit.flag.textFragment.length;
   }
   if (cursor < text.length) segments.push({ kind: "plain", text: text.slice(cursor) });
@@ -38,8 +86,17 @@ function buildSegments(text: string, flags: RedFlag[]): Segment[] {
  * Message text whose suspicious fragments are tappable (keyboard accessible).
  * Correct flags pulse green and show a short explanation; plain-text taps shake softly red.
  */
-export function RedFlagText({ text, flags, found, onFlag, onMiss, className }: RedFlagTextProps) {
-  const segments = useMemo(() => buildSegments(text, flags), [text, flags]);
+export function RedFlagText({
+  text,
+  flags,
+  found,
+  onFlag,
+  onMiss,
+  phrases,
+  highlightHints = false,
+  className,
+}: RedFlagTextProps) {
+  const segments = useMemo(() => buildSegments(text, flags, phrases), [text, flags, phrases]);
   const [bad, setBad] = useState<string | null>(null);
   const timer = useRef<number | null>(null);
 
@@ -75,7 +132,9 @@ export function RedFlagText({ text, flags, found, onFlag, onMiss, className }: R
                   "-mx-0.5 inline rounded px-0.5 text-left align-baseline decoration-2 underline-offset-4 transition-colors hover:underline focus-visible:underline",
                   isFound
                     ? "flag-pulse-ok bg-success/20 underline decoration-success"
-                    : "decoration-dotted hover:bg-accent-tint",
+                    : highlightHints
+                      ? "bg-amber-100/75 underline decoration-amber-500 decoration-dotted hover:bg-amber-200/80"
+                      : "decoration-dotted hover:bg-accent-tint",
                 )}
               >
                 {seg.text}

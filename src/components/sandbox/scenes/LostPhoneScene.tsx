@@ -15,14 +15,34 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
-const ACCOUNTS = ["Email account", "Cloud backup and photos", "Social media accounts"];
+const DEFAULT_ACCOUNTS = ["Email account", "Cloud backup and photos", "Social media accounts"];
+
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
 
 /** Drill 2: you are on a friend's phone after losing yours. */
-export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function LostPhoneScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [tab, setTab] = useState<Tab>("messages");
   const [selected, setSelected] = useState<string[]>([]);
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const telcoName = str(stepProps?.telcoName, vars.telco || "Mobile Operator");
+  const bankName = str(stepProps?.bankName, vars.bank || vars.bankName || "Your Bank");
+  const msgSender = str(stepProps?.sender, payload.sender || "Unknown");
+  const msgTime = str(stepProps?.time, payload.time || vars.time || "Just now");
+  const msgBody = str(stepProps?.body, payload.body || "");
+  const accounts = Array.isArray(stepProps?.accounts) ? (stepProps.accounts as string[]) : DEFAULT_ACCOUNTS;
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -35,7 +55,7 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
   const contacts: DialerContact[] = [
     {
       id: "telco",
-      name: `${vars.telco} customer care`,
+      name: `${telcoName} customer care`,
       subtitle: "Mobile operator",
       onCall: () => emit("block_sim"),
     },
@@ -43,27 +63,30 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
       .filter((d) => d.screen === "calls")
       .map((d) => ({
         id: d.id,
-        name: "Number from the “found your phone” message",
-        subtitle: "Unknown number",
+        name: str(stepProps?.distractorContactName, d.label || msgSender),
+        subtitle: str(stepProps?.distractorSubtitle, msgSender),
         onCall: () => emit(d.actionKey, d.label),
       })),
     {
       id: "bank",
-      name: `${vars.bank} 24×7 helpline`,
+      name: `${bankName} 24×7 helpline`,
       subtitle: "Bank helpline",
-      onCall: () => emit("call_bank_helpline"),
+      onCall: () => {
+        emit("call_bank_helpline");
+        onAction?.("FREEZE_UPI", { bankName });
+      },
     },
   ];
 
   const secured = doneKeys.has("secure_accounts");
-  const reported = doneKeys.has("report_cybercrime");
+  const reported = doneKeys.has("report_cybercrime") || doneKeys.has("FILE_1930_REPORT");
 
   return (
     <>
       {tab === "messages" && (
         <MockInbox
           title="Messages"
-          messages={[{ id: "m1", sender: payload.sender, time: payload.time, body: payload.body }]}
+          messages={[{ id: "m1", sender: msgSender, time: msgTime, body: msgBody }]}
           redFlags={drill.redFlags}
           found={flagsFound}
           onFlag={tapFlag}
@@ -83,7 +106,7 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <fieldset className="space-y-2">
               <legend className="px-1 pb-1 text-[12px] font-bold uppercase tracking-wide text-[#4f5f7a]">Accounts to secure</legend>
-              {ACCOUNTS.map((name) => (
+              {accounts.map((name) => (
                 <label
                   key={name}
                   className={cn(
@@ -124,8 +147,24 @@ export function LostPhoneScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
             <PhoneHeader title="Report cyber fraud" subtitle="Practice only" />
           </div>
           <PhoneBody className="space-y-2 px-3 pb-24 pt-[68px]">
-            <PhoneRow icon={Phone} title="Call 1930" subtitle="National cybercrime helpline" onClick={() => emit("report_cybercrime")} />
-            <PhoneRow icon={Flag} title="Open cybercrime.gov.in" subtitle="National reporting portal" onClick={() => emit("report_cybercrime")} />
+            <PhoneRow
+              icon={Phone}
+              title="Call 1930"
+              subtitle="National cybercrime helpline"
+              onClick={() => {
+                emit("report_cybercrime");
+                onAction?.("FILE_1930_REPORT");
+              }}
+            />
+            <PhoneRow
+              icon={Flag}
+              title="Open cybercrime.gov.in"
+              subtitle="National reporting portal"
+              onClick={() => {
+                emit("report_cybercrime");
+                onAction?.("FILE_1930_REPORT");
+              }}
+            />
             {reported && (
               <p role="status" className="flex items-center gap-2 rounded-2xl bg-[#e5f8ea] p-3 text-[13.5px] font-medium text-[#1e7b34]">
                 <CheckCircle2 size={18} strokeWidth={2} aria-hidden /> Report started (sandbox).

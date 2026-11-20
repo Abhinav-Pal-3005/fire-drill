@@ -1,13 +1,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
+  listCustomDrills,
+  registerCustomDrill,
+  removeCustomDrill,
+} from "@/features/drills/drillLoader";
+import {
   clearUserFirestoreData,
   persistAttemptToFirestore,
   persistQuizToFirestore,
   syncUserProfileFields,
 } from "@/lib/firestoreSync";
 import { getActiveUid } from "@/lib/syncBridge";
-import type { Attempt, TimerMode } from "@/types";
+import type { Attempt, Drill, TimerMode } from "@/types";
 import { DEMO_SEED, newSeed } from "@/utils/seedRandom";
 
 export interface PendingSeed {
@@ -21,6 +26,11 @@ interface DrillState {
   timerMode: TimerMode;
   /** Seed assigned at the briefing so the briefing and the sandbox show the same scenario. */
   pending: Record<string, PendingSeed>;
+  /** Custom scenarios persisted via localStorage key `mfd_custom_drills`. */
+  customDrills: Drill[];
+  refreshCustomDrills: () => void;
+  addCustomDrill: (drill: Drill) => void;
+  deleteCustomDrill: (id: string) => void;
   setTimerMode: (mode: TimerMode) => void;
   ensureSeed: (drillId: string, demoAllowed: boolean) => PendingSeed;
   clearPending: (drillId: string) => void;
@@ -37,6 +47,22 @@ export const useDrillStore = create<DrillState>()(
       attempts: [],
       timerMode: "relaxed",
       pending: {},
+      customDrills: [],
+      refreshCustomDrills: () => {
+        set({ customDrills: listCustomDrills() });
+      },
+      addCustomDrill: (drill) => {
+        const next = registerCustomDrill(drill);
+        set({ customDrills: next });
+      },
+      deleteCustomDrill: (id) => {
+        const next = removeCustomDrill(id);
+        set((s) => {
+          const restPending = { ...s.pending };
+          delete restPending[id];
+          return { customDrills: next, pending: restPending };
+        });
+      },
       setTimerMode: (timerMode) => {
         set({ timerMode });
         const uid = getActiveUid();
@@ -81,6 +107,13 @@ export const useDrillStore = create<DrillState>()(
         }
       },
     }),
-    { name: "mfd-drills" },
+    {
+      name: "mfd-drills",
+      partialize: (state) => ({
+        attempts: state.attempts,
+        timerMode: state.timerMode,
+        pending: state.pending,
+      }),
+    },
   ),
 );
