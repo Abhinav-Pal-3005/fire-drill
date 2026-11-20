@@ -12,19 +12,44 @@ import type { SceneProps } from "./sceneTypes";
 
 type Screen = "inbox" | "home" | "request" | "balance" | "report";
 
-const HISTORY: MockTransaction[] = [
+const DEFAULT_HISTORY: MockTransaction[] = [
   { id: "t1", title: "Campus canteen", subtitle: "Yesterday", amount: "120", direction: "debit" },
   { id: "t2", title: "Metro card top-up", subtitle: "2 days ago", amount: "300", direction: "debit" },
   { id: "t3", title: "Cashback", subtitle: "3 days ago", amount: "15", direction: "credit" },
 ];
 
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
 /** Drill 1: a marketplace buyer sends a "receive money" collect request. */
-export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function CollectRequestScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [screen, setScreen] = useState<Screen>("inbox");
   const [banner, setBanner] = useState(false);
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
-  const declined = doneKeys.has("decline_request");
+  const declined = doneKeys.has("decline_request") || doneKeys.has("DECLINE_REQUEST");
+
+  const appName = str(stepProps?.appName, vars.app || "PayWave");
+  const requesterName = str(stepProps?.requesterName, vars.name || payload.sender || "Unknown sender");
+  const amount = str(stepProps?.amount, vars.amount || "0");
+  const balance = str(stepProps?.balance, vars.balance || "0");
+  const upiId = str(stepProps?.upiId, payload.senderId || vars.scammerVpa || "unknown@upi");
+  const note = str(stepProps?.note, payload.note || "Collect request");
+  const msgSender = str(stepProps?.sender, payload.sender || requesterName);
+  const msgTime = str(stepProps?.time, payload.time || vars.time || "Just now");
+  const msgBody = str(stepProps?.body, payload.body || "");
+  const msgChannel = str(stepProps?.channel, payload.channel || "Chat");
+  const history = Array.isArray(stepProps?.history) ? (stepProps.history as MockTransaction[]) : DEFAULT_HISTORY;
 
   useEffect(() => {
     const id = window.setTimeout(() => setBanner(true), 1400);
@@ -33,6 +58,7 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
 
   const openApp = () => {
     emit("open_app");
+    onAction?.("OPEN_UPI_APP", { appName });
     setBanner(false);
     setScreen("home");
   };
@@ -44,9 +70,10 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
 
   const home = (
     <MockUPIHome
-      appName={vars.app}
+      appName={appName}
       onCheckBalance={() => {
         emit("check_balance");
+        onAction?.("CHECK_BALANCE");
         setScreen("balance");
       }}
       tiles={[
@@ -62,8 +89,8 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
         <PhoneRow
           icon={Banknote}
           tone="alert"
-          title={`Collect request: ₹${vars.amount}`}
-          subtitle={`${vars.name} · tap to review`}
+          title={`Collect request: ₹${amount}`}
+          subtitle={`${requesterName} · tap to review`}
           onClick={() => {
             emit("view_request");
             setScreen("request");
@@ -80,7 +107,7 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
           <MockInbox
             title="Messages"
             messages={[
-              { id: "m1", sender: payload.sender, time: payload.time, body: payload.body, channel: payload.channel },
+              { id: "m1", sender: msgSender, time: msgTime, body: msgBody, channel: msgChannel },
             ]}
             redFlags={drill.redFlags}
             found={flagsFound}
@@ -94,19 +121,19 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
             <button
               type="button"
               onClick={openApp}
-              aria-label={`Open ${vars.app}`}
+              aria-label={`Open ${appName}`}
               className="flex min-h-[48px] items-center gap-2 rounded-2xl bg-[#eaf3ff] px-3 text-[14px] font-semibold text-accent-text hover:bg-[#dbe9ff]"
             >
               <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-accent text-white">
                 <Banknote size={17} strokeWidth={1.75} />
               </span>
-              {vars.app}
+              {appName}
             </button>
           </div>
           <MockNotificationBanner
             visible={banner}
-            appName={vars.app}
-            title={`${vars.name} requested ₹${vars.amount}`}
+            appName={appName}
+            title={`${requesterName} requested ₹${amount}`}
             body="Tap to open and review the request."
             onTap={openApp}
           />
@@ -117,14 +144,18 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
 
       {screen === "request" && (
         <MockCollectRequestSheet
-          name={vars.name}
-          upiId={payload.senderId}
-          amount={vars.amount}
-          note={payload.note}
+          name={requesterName}
+          upiId={upiId}
+          amount={amount}
+          note={note}
           onClose={() => setScreen("home")}
-          onApprove={() => emit("approve_request")}
+          onApprove={() => {
+            emit("approve_request");
+            onAction?.("ACCEPT_COLLECT", { name: requesterName, upiId, amount });
+          }}
           onDecline={() => {
             emit("decline_request");
+            onAction?.("DECLINE_REQUEST", { name: requesterName, upiId, amount });
             setScreen("home");
           }}
         />
@@ -132,11 +163,11 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
 
       {screen === "balance" && (
         <MockBalance
-          balance={vars.balance}
-          note={declined ? `No debit found for the ₹${vars.amount} request. Your balance is unchanged.` : undefined}
+          balance={balance}
+          note={declined ? `No debit found for the ₹${amount} request. Your balance is unchanged.` : undefined}
           onBack={() => setScreen("home")}
         >
-          <MockTransactionHistory items={HISTORY} />
+          <MockTransactionHistory items={history} />
         </MockBalance>
       )}
 
@@ -145,13 +176,16 @@ export function CollectRequestScene({ drill, vars, emit, tapFlag, flagsFound, do
           title="Block and report"
           intro="Blocking stops further requests from this UPI ID. Reporting helps protect other people."
           details={[
-            { label: "UPI ID", value: payload.senderId },
-            { label: "Name shown", value: vars.name },
+            { label: "UPI ID", value: upiId },
+            { label: "Name shown", value: requesterName },
           ]}
           reasons={["Scam or fraud attempt", "Spam or unwanted requests", "Other"]}
           submitLabel="Block and report"
           successText="Blocked and reported (sandbox)."
-          onSubmit={() => emit("block_report")}
+          onSubmit={() => {
+            emit("block_report");
+            onAction?.("BLOCK_SENDER", { upiId });
+          }}
           onBack={() => setScreen("home")}
         />
       )}

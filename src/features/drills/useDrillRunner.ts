@@ -1,13 +1,32 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Drill, DrillGrade, RunState, TimerMode } from "@/types";
+import type {
+  Drill,
+  DrillGrade,
+  RunState,
+  SemanticIntent,
+  TimerMode,
+  TrapIntent,
+  TrapMistake,
+} from "@/types";
 import { logEvent } from "@/features/analytics/analyticsLogger";
-import { applyAction, applyFlagTap, applyHint, createRunState, getTimerLimitMs, gradeRun } from "./drillEngine";
+import {
+  applyAction,
+  applyFlagTap,
+  applyHint,
+  applyTrapMistake,
+  createRunState,
+  getTimerLimitMs,
+  gradeRun,
+} from "./drillEngine";
 import {
   completedStepIds,
+  evaluateComposableIntent,
   findDistractor,
   findStep,
+  getComposableSteps,
+  isComposableDrill,
   isMandatoryComplete,
   nextIncompleteStep,
   redFlagGoal,
@@ -34,11 +53,18 @@ const FINISH_DELAY_MS = 1100;
 /** Runs a drill: 3-2-1 countdown, configurable timer mode (relaxed/panicked/none), action logging, hints and grading. */
 export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }: Options) {
   const limitMs = getTimerLimitMs(drill.timeLimitSec, timerMode);
+  const isComposable = useMemo(() => isComposableDrill(drill), [drill]);
+  const composableSteps = useMemo(() => getComposableSteps(drill), [drill]);
+
   const [phase, setPhaseState] = useState<RunnerPhase>("countdown");
   const [count, setCount] = useState(3);
   const [run, setRun] = useState<RunState>(createRunState);
   const [remainingMs, setRemainingMs] = useState(limitMs);
   const [pinMode, setPinMode] = useState<"pin" | "otp" | null>(null);
+  const [composableStepId, setComposableStepId] = useState<string | null>(
+    () => composableSteps[0]?.stepId ?? null,
+  );
+  const [trapFeedback, setTrapFeedback] = useState<TrapMistake | null>(null);
   const [hint, setHint] = useState<{
     stepId: string;
     stepNumber: number;
@@ -62,6 +88,18 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
     phaseRef.current = next;
     setPhaseState(next);
   }, []);
+
+  const activeComposableStepIndex = useMemo(() => {
+    if (!isComposable || composableSteps.length === 0) return -1;
+    if (!composableStepId) return 0;
+    const idx = composableSteps.findIndex((s) => s.stepId === composableStepId);
+    return idx >= 0 ? idx : 0;
+  }, [isComposable, composableSteps, composableStepId]);
+
+  const activeComposableStep = useMemo(() => {
+    if (!isComposable || activeComposableStepIndex < 0) return null;
+    return composableSteps[activeComposableStepIndex] ?? null;
+  }, [isComposable, composableSteps, activeComposableStepIndex]);
 
   const finalize = useCallback(
     (timedOut: boolean) => {
@@ -146,6 +184,97 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
     [drill, finalize, seed],
   );
 
+  const goToComposableStep = useCallback(
+    (stepId: string) => {
+      if (composableSteps.some((s) => s.stepId === stepId)) {
+        setComposableStepId(stepId);
+      }
+    },
+    [composableSteps],
+  );
+
+  const dismissTrapFeedback = useCallback(() => setTrapFeedback(null), []);
+
+  const emitIntent = useCallback(
+    (intent: SemanticIntent, payload?: Record<string, unknown>) => {
+      if (phaseRef.current !== "running" || !activeComposableStep) return;
+      const tMs = Date.now() - startRef.current;
+      const evaluation = evaluateComposableIntent(drill, activeComposableStep, intent);
+
+      if (evaluation.isTrap) {
+        const mistake: TrapMistake = {
+          stepId: activeComposableStep.stepId,
+          intent: intent as TrapIntent,
+          explanation: evaluation.explanation ?? drill.critical.explanation,
+          tMs,
+          isCritical: evaluation.isCritical,
+        };
+        const nextState = applyTrapMistake(runRef.current, mistake);
+        runRef.current = nextState;
+        setRun(nextState);
+        setTrapFeedback(mistake);
+
+        logEvent({
+          type: evaluation.isCritical ? "critical_mistake" : "step_action",
+          drillId: drill.id,
+          concept: evaluation.isCritical ? drill.critical.concept : drill.concept,
+          stepId: activeComposableStep.stepId,
+          correct: false,
+          timeMs: tMs,
+          seed,
+        });
+
+        if (evaluation.isCritical) {
+          frozenRef.current = tMs;
+          setPhase("critical");
+        } else if (evaluation.nextStepId) {
+          setComposableStepId(evaluation.nextStepId);
+        }
+        return;
+      }
+
+      if (evaluation.valid) {
+        setTrapFeedback(null);
+        const matchedStep =
+          drill.steps.find((s) => s.id === activeComposableStep.stepId) ??
+          drill.steps.find((s) => s.actionKey === intent);
+        const alreadyDone =
+          matchedStep !== undefined && completedStepIds(runRef.current.actions).includes(matchedStep.id);
+        const resolvedLabel =
+          matchedStep?.label ?? (typeof payload?.label === "string" ? payload.label : intent);
+        const { state } = applyAction(
+          drill,
+          runRef.current,
+          intent,
+          resolvedLabel,
+          tMs,
+          matchedStep?.id ?? activeComposableStep.stepId,
+          alreadyDone ? "duplicate" : "step",
+        );
+        runRef.current = state;
+        setRun(state);
+
+        logEvent({
+          type: "step_action",
+          drillId: drill.id,
+          concept: drill.concept,
+          stepId: matchedStep?.id ?? activeComposableStep.stepId,
+          correct: true,
+          timeMs: tMs,
+          seed,
+        });
+
+        if (evaluation.finish || isMandatoryComplete(drill, state.actions)) {
+          frozenRef.current = tMs;
+          finalize(false);
+        } else if (evaluation.nextStepId) {
+          setComposableStepId(evaluation.nextStepId);
+        }
+      }
+    },
+    [activeComposableStep, drill, finalize, seed, setPhase],
+  );
+
   /** Called when the fake PIN/OTP pad fills up. The digits themselves are never kept. */
   const completePin = useCallback(() => {
     if (phaseRef.current !== "running") return;
@@ -191,7 +320,12 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
 
   const requestHint = useCallback(() => {
     if (phaseRef.current !== "running") return;
-    const step = nextIncompleteStep(drill, runRef.current.actions);
+    const done = completedStepIds(runRef.current.actions);
+    const activeStepMatch =
+      isComposable && activeComposableStep
+        ? drill.steps.find((s) => s.id === activeComposableStep.stepId && !done.includes(s.id))
+        : undefined;
+    const step = activeStepMatch ?? nextIncompleteStep(drill, runRef.current.actions);
     if (!step) return;
     const stepIndex = sortedSteps(drill).findIndex((s) => s.id === step.id);
     const stepNumber = stepIndex >= 0 ? stepIndex + 1 : step.order;
@@ -206,7 +340,7 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
       text: drill.hints[step.id] ?? "Think about what keeps your money and secrets safe.",
       alreadyUnlocked,
     });
-  }, [drill]);
+  }, [activeComposableStep, drill, isComposable]);
 
   const dismissHint = useCallback(() => setHint(null), []);
 
@@ -214,14 +348,18 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
   const doneKeys = useMemo(() => new Set(run.actions.map((a) => a.actionKey)), [run.actions]);
   const flagStepActive = Boolean(findStep(drill, "spot_red_flags"));
   const nextStepMeta = useMemo(() => {
-    const step = nextIncompleteStep(drill, run.actions);
+    const activeStepMatch =
+      isComposable && activeComposableStep
+        ? drill.steps.find((s) => s.id === activeComposableStep.stepId && !doneStepIds.includes(s.id))
+        : undefined;
+    const step = activeStepMatch ?? nextIncompleteStep(drill, run.actions);
     if (!step) return null;
     const idx = sortedSteps(drill).findIndex((s) => s.id === step.id);
     return {
       stepNumber: idx >= 0 ? idx + 1 : step.order,
       alreadyUnlocked: run.hintsUsed.includes(step.id),
     };
-  }, [drill, run.actions, run.hintsUsed]);
+  }, [activeComposableStep, drill, doneStepIds, isComposable, run.actions, run.hintsUsed]);
 
   // Auto-dismiss stale hint as soon as the learner completes that step.
   const activeHint = hint && !doneStepIds.includes(hint.stepId) ? hint : null;
@@ -238,7 +376,14 @@ export function useDrillRunner({ drill, seed, timerMode = "relaxed", onFinish }:
     doneStepIds,
     doneKeys,
     flagStepActive,
+    isComposable,
+    activeComposableStep,
+    activeComposableStepIndex,
+    trapFeedback,
     emit,
+    emitIntent,
+    goToComposableStep,
+    dismissTrapFeedback,
     completePin,
     cancelPin,
     endAfterCritical,

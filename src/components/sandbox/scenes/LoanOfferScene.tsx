@@ -9,15 +9,35 @@ import type { SceneProps } from "./sceneTypes";
 
 type Screen = "sms" | "offer" | "lender";
 
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
 /** Drill 4: an instant-loan SMS with red flags, a calculator and a lender check. */
-export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function LoanOfferScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [screen, setScreen] = useState<Screen>("sms");
   const [contacts, setContacts] = useState(true);
   const [gallery, setGallery] = useState(true);
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
-  const principal = Number(vars.amount.replace(/,/g, "")) || 10000;
-  const declined = doneKeys.has("decline_revoke");
+
+  const lenderName = str(stepProps?.lender, vars.lender || payload.sender || "Instant Loan App");
+  const amount = str(stepProps?.amount, vars.amount || "10,000");
+  const msgSender = str(stepProps?.sender, payload.sender || lenderName);
+  const msgTime = str(stepProps?.time, payload.time || vars.time || "Just now");
+  const msgBody = str(stepProps?.body, payload.body || "");
+
+  const principal = Number(amount.replace(/,/g, "")) || 10000;
+  const declined = doneKeys.has("decline_revoke") || doneKeys.has("DECLINE_REQUEST");
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -26,14 +46,21 @@ export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
 
   if (screen === "lender") {
     return (
-      <MockLenderCheck lender={vars.lender} onChecked={() => emit("check_lender")} onBack={() => setScreen("offer")} />
+      <MockLenderCheck
+        lender={lenderName}
+        onChecked={() => {
+          emit("check_lender");
+          onAction?.("VERIFY_LENDER", { lender: lenderName });
+        }}
+        onBack={() => setScreen("offer")}
+      />
     );
   }
 
   if (screen === "offer") {
     return (
       <>
-        <MockLoanOffer lender={vars.lender} amount={vars.amount} onBack={() => setScreen("sms")}>
+        <MockLoanOffer lender={lenderName} amount={amount} onBack={() => setScreen("sms")}>
           <MockInterestCalculator principal={principal} onCalculate={() => emit("use_calculator")} />
 
           <PhoneSection title="Before you decide">
@@ -73,6 +100,7 @@ export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
                 setContacts(false);
                 setGallery(false);
                 emit("decline_revoke");
+                onAction?.("DECLINE_REQUEST", { lender: lenderName });
               }}
             >
               Decline offer and revoke permissions
@@ -87,7 +115,7 @@ export function LoanOfferScene({ drill, vars, emit, tapFlag, flagsFound, doneKey
   return (
     <MockInbox
       title="Messages"
-      messages={[{ id: "m1", sender: payload.sender, time: payload.time, body: payload.body }]}
+      messages={[{ id: "m1", sender: msgSender, time: msgTime, body: msgBody }]}
       redFlags={drill.redFlags}
       found={flagsFound}
       onFlag={tapFlag}

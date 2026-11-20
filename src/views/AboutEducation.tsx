@@ -7,14 +7,11 @@ import {
   CheckCircle2,
   ChevronRight,
   ExternalLink,
-  Hash,
   Lock,
   PhoneCall,
   RotateCcw,
   Scale,
   ShieldCheck,
-  Shuffle,
-  SlidersHorizontal,
   UserCheck,
   Wrench,
 } from "lucide-react";
@@ -24,11 +21,8 @@ import { useFirebaseAuth } from "@/providers/FirebaseProvider";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useDrillStore } from "@/store/useDrillStore";
 import { useUserStore } from "@/store/useUserStore";
-import { cn } from "@/utils/cn";
 
 export default function AboutEducation() {
-  const demoSeed = useUserStore((s) => s.demoSeed);
-  const setDemoSeed = useUserStore((s) => s.setDemoSeed);
   const displayName = useUserStore((s) => s.displayName);
   const photoUrl = useUserStore((s) => s.photoUrl);
   const attempts = useDrillStore((s) => s.attempts);
@@ -37,7 +31,6 @@ export default function AboutEducation() {
   const { user } = useFirebaseAuth();
 
   const [confirm, setConfirm] = useState(false);
-  const [showUssdGuide, setShowUssdGuide] = useState(false);
 
   const readiness = useMemo(() => getReadiness(attempts), [attempts]);
   const initials =
@@ -106,68 +99,7 @@ export default function AboutEducation() {
         </Link>
       </div>
 
-      {/* SECTION 1: SIMULATION & DRILL ENGINE */}
-      <section className="space-y-1.5">
-        <h2 className="px-2 text-[11px] font-bold uppercase tracking-wider text-st-on-surface-variant">
-          Simulation &amp; Drill Engine
-        </h2>
-        <div className="divide-y divide-st-outline-variant/40 overflow-hidden rounded-[24px] bg-st-surface-low shadow-sm">
-          <div className="flex items-center justify-between gap-4 p-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-st-primary-container text-st-on-primary shadow-sm">
-                <SlidersHorizontal size={18} strokeWidth={2} aria-hidden />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[15px] font-bold text-st-on-surface">Demo seed for first collect run</p>
-                <p className="text-[13px] text-st-on-surface-variant">
-                  Uses fixed ₹4,500 on your first collect-request drill for predictable demos; later runs randomise.
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={demoSeed}
-              aria-label="Use demo seed for first collect-request run"
-              onClick={() => {
-                setDemoSeed(!demoSeed);
-                toast(!demoSeed ? "Demo seed enabled" : "Demo seed disabled");
-              }}
-              className={cn(
-                "relative h-7 w-12 shrink-0 rounded-full p-0.5 transition-colors",
-                demoSeed ? "bg-st-primary-container" : "bg-st-surface-dim",
-              )}
-            >
-              <span
-                className={cn(
-                  "block h-6 w-6 rounded-full bg-st-surface-lowest shadow-md transition-transform",
-                  demoSeed ? "translate-x-5" : "translate-x-0",
-                )}
-              />
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between gap-4 p-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-st-surface-highest text-st-primary-container">
-                <Shuffle size={18} strokeWidth={2} aria-hidden />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[15px] font-bold text-st-on-surface">Dynamic Deception Seed</p>
-                <p className="text-[13px] text-st-on-surface-variant">
-                  Names &amp; amounts randomise on replay; grading stays deterministic (40% steps, 25% order, 20% flags,
-                  15% speed).
-                </p>
-              </div>
-            </div>
-            <span className="shrink-0 rounded-full bg-st-secondary-container px-2.5 py-0.5 text-[11px] font-semibold text-st-on-secondary-container">
-              Active
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2: EMERGENCY SOS & OFFICIAL RESOURCES */}
+      {/* SECTION 1: EMERGENCY SOS & OFFICIAL RESOURCES */}
       <section className="space-y-1.5">
         <div className="flex items-center justify-between px-2">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-st-tertiary-container">
@@ -239,38 +171,6 @@ export default function AboutEducation() {
               </div>
             </div>
             <CheckCircle2 size={20} className="shrink-0 text-st-secondary" aria-hidden />
-          </div>
-
-          <div className="p-4">
-            <button
-              type="button"
-              onClick={() => setShowUssdGuide((v) => !v)}
-              className="flex w-full items-center justify-between gap-3 text-left"
-            >
-              <div className="flex min-w-0 items-center gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-st-surface-highest text-st-primary-container">
-                  <Hash size={18} strokeWidth={2} aria-hidden />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[15px] font-bold text-st-on-surface">Offline USSD Guide (*99#)</p>
-                  <p className="text-[13px] text-st-on-surface-variant">
-                    Emergency bank/UPI steps even when mobile data is unavailable
-                  </p>
-                </div>
-              </div>
-              <ChevronRight
-                size={18}
-                className={cn("shrink-0 text-st-on-surface-variant transition-transform", showUssdGuide && "rotate-90")}
-                aria-hidden
-              />
-            </button>
-            {showUssdGuide && (
-              <div className="mt-3 rounded-2xl bg-st-surface p-3.5 text-[13px] leading-relaxed text-st-on-surface-variant">
-                Dial <strong>*99#</strong> from your bank-registered SIM without internet to check UPI status or
-                deregister UPI, or call <strong>1930</strong> / your bank&apos;s 24×7 toll-free helpline printed on the
-                back of your debit card.
-              </div>
-            )}
           </div>
 
           <button

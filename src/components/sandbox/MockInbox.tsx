@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { MessageCircle } from "lucide-react";
-import type { RedFlag } from "@/types";
-import { PhoneBody, PhoneHeader } from "./phoneUi";
+import type { RedFlag, SemanticIntent } from "@/types";
+import { PhoneBody, PhoneButton, PhoneHeader } from "./phoneUi";
 import { RedFlagText } from "./RedFlagText";
+import type { WidgetActionHandler } from "./scenes/sceneTypes";
 
 export interface InboxMessage {
   id: string;
@@ -12,23 +13,49 @@ export interface InboxMessage {
   channel?: string;
 }
 
+export interface InboxActionItem {
+  label: string;
+  intent: SemanticIntent;
+  variant?: "primary" | "secondary" | "danger";
+}
+
 interface MockInboxProps {
   title: string;
+  subtitle?: string;
   messages: InboxMessage[];
   redFlags: RedFlag[];
+  redFlagPhrases?: string[];
+  highlightHints?: boolean;
   found: string[];
   onFlag: (flagId: string) => void;
   onMiss: () => void;
+  onBack?: () => void;
+  actions?: InboxActionItem[];
+  onAction?: WidgetActionHandler;
   /** Extra controls rendered under the messages (quick replies, actions). */
   children?: ReactNode;
 }
 
 /** Messages screen. Suspicious fragments inside sender lines and bodies are tappable. */
-export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, children }: MockInboxProps) {
+export function MockInbox({
+  title,
+  subtitle = "Tap anything that looks suspicious",
+  messages,
+  redFlags,
+  redFlagPhrases,
+  highlightHints = false,
+  found,
+  onFlag,
+  onMiss,
+  onBack,
+  actions,
+  onAction,
+  children,
+}: MockInboxProps) {
   return (
     <>
       <div className="absolute inset-x-0 top-0 z-10">
-        <PhoneHeader title={title} subtitle="Tap anything that looks suspicious" />
+        <PhoneHeader title={title} subtitle={subtitle} onBack={onBack} />
       </div>
       <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
         {messages.map((m) => (
@@ -41,6 +68,8 @@ export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, ch
                 <RedFlagText
                   text={m.sender}
                   flags={redFlags}
+                  phrases={redFlagPhrases}
+                  highlightHints={highlightHints}
                   found={found}
                   onFlag={onFlag}
                   onMiss={onMiss}
@@ -52,9 +81,30 @@ export function MockInbox({ title, messages, redFlags, found, onFlag, onMiss, ch
                 </p>
               </div>
             </header>
-            <RedFlagText text={m.body} flags={redFlags} found={found} onFlag={onFlag} onMiss={onMiss} />
+            <RedFlagText
+              text={m.body}
+              flags={redFlags}
+              phrases={redFlagPhrases}
+              highlightHints={highlightHints}
+              found={found}
+              onFlag={onFlag}
+              onMiss={onMiss}
+            />
           </article>
         ))}
+        {actions && actions.length > 0 && onAction && (
+          <div className="space-y-2 pt-1">
+            {actions.map((action, idx) => (
+              <PhoneButton
+                key={`${action.intent}-${idx}`}
+                variant={action.variant ?? "secondary"}
+                onClick={() => onAction(action.intent, { label: action.label })}
+              >
+                {action.label}
+              </PhoneButton>
+            ))}
+          </div>
+        )}
         {children}
       </PhoneBody>
     </>

@@ -18,6 +18,7 @@
       "sender": "AX-BNKALRT · Unknown",
       "time": "{{time}}",
       "channel": "SMS Inbox",
+      "link": "bit.ly/kyc-9x2",
       "body": "URGENT: Your {{bank}} account will be BLOCKED today! Complete PAN/KYC update at bit.ly/kyc-9x2 or call +91-98XXX-0142 immediately. Enter OTP to avoid suspension."
     }
   },

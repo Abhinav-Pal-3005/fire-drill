@@ -17,11 +17,34 @@ interface ActionRow {
   doneKey?: string;
 }
 
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
 /** Drill 3: money went to a stranger who now pressures you. */
-export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function WrongTransferScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [screen, setScreen] = useState<Screen>("receipt");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const appName = str(stepProps?.appName, vars.app || "PayWave");
+  const bankName = str(stepProps?.bankName, vars.bank || vars.bankName || "Your Bank");
+  const amount = str(stepProps?.amount, vars.amount || "0");
+  const txnId = str(stepProps?.txnId, payload.txnId || vars.utrNumber || "UTR000000");
+  const recipientId = str(stepProps?.senderId, payload.senderId || vars.scammerVpa || "unknown@upi");
+  const msgSender = str(stepProps?.sender, payload.sender || "Recipient");
+  const msgTime = str(stepProps?.time, payload.time || vars.time || "Just now");
+  const msgBody = str(stepProps?.body, payload.body || "");
+  const alertTitle = str(stepProps?.alert, payload.alert || `₹${amount} sent to wrong recipient`);
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
@@ -46,12 +69,15 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
       id: "note",
       title: "Save the transaction ID and a screenshot",
       icon: Copy,
-      onClick: () => emit("note_txn_id"),
+      onClick: () => {
+        emit("note_txn_id");
+        onAction?.("CHECK_HISTORY", { txnId });
+      },
       doneKey: "note_txn_id",
     },
     {
       id: "complaint",
-      title: `Raise a complaint in ${vars.app}`,
+      title: `Raise a complaint in ${appName}`,
       icon: FileWarning,
       onClick: () => setScreen("complaint"),
     },
@@ -59,10 +85,13 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
       id: "skip",
       title: "Not now. Do not contact them.",
       icon: MessageCircleOff,
-      onClick: () => emit("skip_pleading"),
+      onClick: () => {
+        emit("skip_pleading");
+        onAction?.("IGNORE_MESSAGE");
+      },
       doneKey: "skip_pleading",
     },
-    { id: "bank", title: `Contact ${vars.bank}`, icon: Landmark, onClick: () => setScreen("bank") },
+    { id: "bank", title: `Contact ${bankName}`, icon: Landmark, onClick: () => setScreen("bank") },
     distractor("pay_release_fee"),
     { id: "dispute", title: "Dispute help", icon: Scale, onClick: () => setScreen("dispute") },
     distractor("delete_chat"),
@@ -72,17 +101,20 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
     return (
       <>
         <MockComplaintForm
-          title={`Complaint in ${vars.app}`}
+          title={`Complaint in ${appName}`}
           intro="Tell the app what went wrong. Keep your transaction ID handy."
           details={[
-            { label: "Transaction ID", value: payload.txnId },
-            { label: "Amount", value: `₹${vars.amount}` },
-            { label: "Sent to", value: payload.senderId },
+            { label: "Transaction ID", value: txnId },
+            { label: "Amount", value: `₹${amount}` },
+            { label: "Sent to", value: recipientId },
           ]}
           reasons={["Sent to the wrong person", "Money debited but not received", "Possible fraud"]}
           submitLabel="Submit complaint"
           successText="Complaint submitted (sandbox)."
-          onSubmit={() => emit("raise_complaint")}
+          onSubmit={() => {
+            emit("raise_complaint");
+            onAction?.("FILE_1930_REPORT", { txnId });
+          }}
           onBack={() => setScreen("receipt")}
         />
         {snack}
@@ -98,7 +130,7 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
         contacts={[
           {
             id: "bank-line",
-            name: `${vars.bank} 24×7 helpline`,
+            name: `${bankName} 24×7 helpline`,
             subtitle: "Official bank helpline",
             onCall: () => emit("contact_bank"),
           },
@@ -134,26 +166,26 @@ export function WrongTransferScene({ drill, vars, emit, tapFlag, flagsFound, don
   return (
     <>
       <div className="absolute inset-x-0 top-0 z-10">
-        <PhoneHeader title="Payment sent" subtitle={vars.app} />
+        <PhoneHeader title="Payment sent" subtitle={appName} />
       </div>
       <PhoneBody className="space-y-4 px-3 pb-24 pt-[68px]">
         <div className="rounded-[20px] bg-white p-4 text-center ring-1 ring-[#e3eaf6]">
-          <p className="tnum text-[30px] font-bold tracking-tight text-[#0b1b3a]">₹{vars.amount}</p>
-          <p className="mt-0.5 text-[13px] text-[#4f5f7a]">sent to {payload.senderId}</p>
-          <p className="tnum mt-2 text-[12px] text-[#4f5f7a]">Transaction ID {payload.txnId}</p>
+          <p className="tnum text-[30px] font-bold tracking-tight text-[#0b1b3a]">₹{amount}</p>
+          <p className="mt-0.5 text-[13px] text-[#4f5f7a]">sent to {recipientId}</p>
+          <p className="tnum mt-2 text-[12px] text-[#4f5f7a]">Transaction ID {txnId}</p>
         </div>
 
         <p className="flex items-start gap-2 rounded-2xl bg-[#fff4e0] p-3 text-[13px] font-medium text-[#8f4b00]">
           <TriangleAlert size={16} strokeWidth={2} className="mt-0.5 shrink-0" aria-hidden />
-          {payload.alert}. This is not the person you meant to pay.
+          {alertTitle}. This is not the person you meant to pay.
         </p>
 
         <article className="rounded-[20px] bg-white p-3.5 text-[14px] text-[#0b1b3a] ring-1 ring-[#e3eaf6]">
           <p className="mb-1.5 text-[12px] font-semibold text-[#4f5f7a]">
-            {payload.sender} · {payload.time}
+            {msgSender} · {msgTime}
           </p>
           <RedFlagText
-            text={payload.body}
+            text={msgBody}
             flags={drill.redFlags}
             found={flagsFound}
             onFlag={tapFlag}

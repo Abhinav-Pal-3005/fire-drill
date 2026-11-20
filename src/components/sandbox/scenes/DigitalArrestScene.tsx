@@ -13,33 +13,51 @@ const TABS: Array<{ id: Tab; label: string; icon: LucideIcon }> = [
   { id: "report", label: "Report", icon: Flag },
 ];
 
+function str(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
 /** Drill: fake authority / digital arrest video call intimidation. */
-export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, doneKeys }: SceneProps) {
+export function DigitalArrestScene({
+  drill,
+  vars,
+  emit,
+  tapFlag,
+  flagsFound,
+  doneKeys,
+  stepProps,
+  onAction,
+}: SceneProps) {
   const [tab, setTab] = useState<Tab>("call");
   const { snack, show } = useSnack();
   const payload = drill.trigger.payloadTemplate;
+
+  const callerSender = str(stepProps?.callerName, payload.sender || vars.callerAgency || "Unknown caller");
+  const channelLabel = str(stepProps?.channel, payload.channel || "Video Call");
+  const statementBody = str(stepProps?.transcript, payload.body || "");
+  const amount = str(stepProps?.amount, vars.amount || "0");
 
   const wrongTap = (key: string, label: string) => {
     emit(key, label);
     if (key !== "pay_verification_fee") show("Done in the sandbox. Nothing real happened.");
   };
 
-  const callEnded = doneKeys.has("end_fake_call");
-  const verified = doneKeys.has("talk_trusted_verify");
-  const reported = doneKeys.has("report_digital_arrest");
+  const callEnded = doneKeys.has("end_fake_call") || doneKeys.has("HANG_UP_CALL");
+  const verified = doneKeys.has("talk_trusted_verify") || doneKeys.has("VERIFY_LENDER");
+  const reported = doneKeys.has("report_digital_arrest") || doneKeys.has("FILE_1930_REPORT");
 
   return (
     <>
       {tab === "call" && (
         <>
           <div className="absolute inset-x-0 top-0 z-10">
-            <PhoneHeader title={callEnded ? "Call ended" : "Incoming video call"} subtitle={payload.channel} />
+            <PhoneHeader title={callEnded ? "Call ended" : "Incoming video call"} subtitle={channelLabel} />
           </div>
           <PhoneBody className="space-y-3 px-3 pb-24 pt-[68px]">
             <div className="rounded-[20px] bg-[#0b1b3a] p-4 text-white">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-[14px] font-bold">{payload.sender}</p>
+                  <p className="truncate text-[14px] font-bold">{callerSender}</p>
                   <p className="text-[11.5px] text-white/75">{callEnded ? "Disconnected" : "Live call · Fake uniform backdrop"}</p>
                 </div>
                 <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-semibold", callEnded ? "bg-white/15" : "bg-[#ff3b30]")}>
@@ -53,7 +71,7 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                 Caller statement · tap suspicious words
               </p>
               <RedFlagText
-                text={payload.body}
+                text={statementBody}
                 flags={drill.redFlags}
                 found={flagsFound}
                 onFlag={tapFlag}
@@ -66,7 +84,13 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                 <CheckCircle2 size={18} strokeWidth={2} aria-hidden /> Call ended and caller blocked.
               </p>
             ) : (
-              <PhoneButton variant="danger" onClick={() => emit("end_fake_call")}>
+              <PhoneButton
+                variant="danger"
+                onClick={() => {
+                  emit("end_fake_call");
+                  onAction?.("HANG_UP_CALL", { callerName: callerSender });
+                }}
+              >
                 <span className="inline-flex items-center gap-2">
                   <PhoneOff size={17} strokeWidth={2} aria-hidden />
                   Hang up and block caller
@@ -93,7 +117,7 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                 No &ldquo;digital arrest&rdquo; exists in India
               </p>
               <p className="mt-1.5">
-                Real police and agencies never ask you to stay isolated on a video call or transfer ₹{vars.amount} for verification.
+                Real police and agencies never ask you to stay isolated on a video call or transfer ₹{amount} for verification.
               </p>
             </div>
             {verified ? (
@@ -106,13 +130,19 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
                   icon={Users}
                   title="Call a family member or trusted friend"
                   subtitle="Share what happened immediately"
-                  onClick={() => emit("talk_trusted_verify")}
+                  onClick={() => {
+                    emit("talk_trusted_verify");
+                    onAction?.("VERIFY_LENDER");
+                  }}
                 />
                 <PhoneRow
                   icon={Phone}
                   title="Check official agency directory"
                   subtitle="Verify independently via official website"
-                  onClick={() => emit("talk_trusted_verify")}
+                  onClick={() => {
+                    emit("talk_trusted_verify");
+                    onAction?.("VERIFY_LENDER");
+                  }}
                 />
               </>
             )}
@@ -130,13 +160,19 @@ export function DigitalArrestScene({ drill, vars, emit, tapFlag, flagsFound, don
               icon={Phone}
               title="Call 1930"
               subtitle="National cybercrime helpline"
-              onClick={() => emit("report_digital_arrest")}
+              onClick={() => {
+                emit("report_digital_arrest");
+                onAction?.("FILE_1930_REPORT");
+              }}
             />
             <PhoneRow
               icon={Flag}
               title="Report on cybercrime.gov.in"
               subtitle="Submit caller number & screenshot"
-              onClick={() => emit("report_digital_arrest")}
+              onClick={() => {
+                emit("report_digital_arrest");
+                onAction?.("FILE_1930_REPORT");
+              }}
             />
             {reported && (
               <p role="status" className="flex items-center gap-2 rounded-2xl bg-[#e5f8ea] p-3 text-[13.5px] font-medium text-[#1e7b34]">

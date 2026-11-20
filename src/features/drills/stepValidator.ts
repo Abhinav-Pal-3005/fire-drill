@@ -1,9 +1,119 @@
-import type { Action, ActionKind, Drill, Step } from "@/types";
+import type {
+  Action,
+  ActionKind,
+  ComposableDrillStep,
+  DefensiveIntent,
+  Drill,
+  SemanticIntent,
+  Step,
+  TrapIntent,
+} from "@/types";
 
 export interface ActionHistoryItem {
   actionKey: string;
   kind: ActionKind;
   stepId?: string;
+}
+
+export function isComposableDrill(drill: Drill): boolean {
+  return Array.isArray(drill.composableSteps) && drill.composableSteps.length > 0;
+}
+
+export function getComposableSteps(drill: Drill): ComposableDrillStep[] {
+  return drill.composableSteps ?? [];
+}
+
+export function findComposableStep(drill: Drill, stepId: string): ComposableDrillStep | undefined {
+  return getComposableSteps(drill).find((s) => s.stepId === stepId);
+}
+
+export interface ComposableIntentEvaluation {
+  valid: boolean;
+  isTrap: boolean;
+  isCritical: boolean;
+  explanation?: string;
+  finish: boolean;
+  nextStepId: string | null;
+}
+
+function collectTrapOnlyStepIds(steps: ComposableDrillStep[]): Set<string> {
+  const validTargets = new Set<string>();
+  const trapTargets = new Set<string>();
+
+  for (const step of steps) {
+    if (step.props?.isTrapBranch === true) {
+      trapTargets.add(step.stepId);
+    }
+    if (!step.nextStepMap) continue;
+    for (const [intent, targetId] of Object.entries(step.nextStepMap)) {
+      if (!targetId || targetId === "__FINISH__") continue;
+      if (step.validIntents.includes(intent as DefensiveIntent)) {
+        validTargets.add(targetId);
+      } else if (intent in step.trapIntents) {
+        trapTargets.add(targetId);
+      }
+    }
+  }
+
+  const trapOnly = new Set<string>();
+  for (const id of trapTargets) {
+    if (!validTargets.has(id)) trapOnly.add(id);
+  }
+  return trapOnly;
+}
+
+/**
+ * Pure schema-driven evaluator for composable drill steps.
+ * Contains zero drill-ID branches; progression and traps come strictly from step definitions.
+ */
+export function evaluateComposableIntent(
+  drill: Drill,
+  currentStep: ComposableDrillStep,
+  intent: SemanticIntent,
+): ComposableIntentEvaluation {
+  const steps = getComposableSteps(drill);
+
+  if (currentStep.validIntents.includes(intent as DefensiveIntent)) {
+    const mapped = currentStep.nextStepMap?.[intent];
+    if (mapped === "__FINISH__") {
+      return { valid: true, isTrap: false, isCritical: false, finish: true, nextStepId: null };
+    }
+    if (mapped && findComposableStep(drill, mapped)) {
+      return { valid: true, isTrap: false, isCritical: false, finish: false, nextStepId: mapped };
+    }
+
+    const trapOnlyIds = collectTrapOnlyStepIds(steps);
+    const idx = steps.findIndex((s) => s.stepId === currentStep.stepId);
+    const nextMandatory = steps.slice(idx + 1).find((s) => !trapOnlyIds.has(s.stepId));
+    if (nextMandatory) {
+      return {
+        valid: true,
+        isTrap: false,
+        isCritical: false,
+        finish: false,
+        nextStepId: nextMandatory.stepId,
+      };
+    }
+
+    return { valid: true, isTrap: false, isCritical: false, finish: true, nextStepId: null };
+  }
+
+  const trapExplanation = currentStep.trapIntents[intent as TrapIntent];
+  if (typeof trapExplanation === "string") {
+    const isCritical = drill.criticalActions.includes(intent);
+    const mapped = currentStep.nextStepMap?.[intent];
+    const nextStepId = mapped && mapped !== "__FINISH__" && findComposableStep(drill, mapped) ? mapped : null;
+    return {
+      valid: false,
+      isTrap: true,
+      isCritical,
+      explanation: trapExplanation,
+      finish: false,
+      nextStepId,
+    };
+  }
+
+  return { valid: false, isTrap: false, isCritical: false, finish: false, nextStepId: null };
 }
 
 export function sortedSteps(drill: Drill): Step[] {
@@ -74,12 +184,31 @@ export function nextIncompleteStep(drill: Drill, history: ReadonlyArray<ActionHi
 /** Developer-time sanity check for drill JSON. Returns a list of problems (empty = fine). */
 export function validateDrillDefinition(drill: Drill): string[] {
   const issues: string[] = [];
+  if (!drill.id) issues.push("missing drill id");
+  if (!drill.title) issues.push(`${drill.id}: missing title`);
+  if (!drill.quizId) issues.push(`${drill.id}: missing quizId`);
   const orders = drill.steps.map((s) => s.order);
   if (new Set(orders).size !== orders.length) issues.push(`${drill.id}: duplicate step order values`);
   for (const step of drill.steps) {
     if (!drill.hints[step.id]) issues.push(`${drill.id}: missing hint for step ${step.id}`);
   }
   if (drill.criticalActions.length === 0) issues.push(`${drill.id}: no critical actions`);
-  if (!drill.distractors.some((d) => d.opensPin)) issues.push(`${drill.id}: no distractor opens the PIN pad`);
+  if (isComposableDrill(drill)) {
+    const cSteps = getComposableSteps(drill);
+    const stepIds = new Set(cSteps.map((s) => s.stepId));
+    if (stepIds.size !== cSteps.length) issues.push(`${drill.id}: duplicate composable stepId`);
+    for (const cs of cSteps) {
+      if (cs.validIntents.length === 0) issues.push(`${drill.id}: composable step ${cs.stepId} has no validIntents`);
+      if (cs.nextStepMap) {
+        for (const target of Object.values(cs.nextStepMap)) {
+          if (target && target !== "__FINISH__" && !stepIds.has(target)) {
+            issues.push(`${drill.id}: nextStepMap references unknown step ${target}`);
+          }
+        }
+      }
+    }
+  } else {
+    if (!drill.distractors.some((d) => d.opensPin)) issues.push(`${drill.id}: no distractor opens the PIN pad`);
+  }
   return issues;
 }

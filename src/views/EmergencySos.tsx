@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowRight,
   ArrowUpRight,
   BadgeCheck,
   ChevronDown,
@@ -16,7 +14,6 @@ import {
   Share2,
   Shield,
   Siren,
-  Smartphone,
   Users,
   X,
 } from "lucide-react";
@@ -24,8 +21,6 @@ import { toast } from "@/components/glass/GlassToast";
 
 export default function EmergencySos() {
   const navigate = useNavigate();
-  const [savedUtr, setSavedUtr] = useState(true);
-  const [notedVpa, setNotedVpa] = useState(false);
 
   const copy1930 = async () => {
     try {
@@ -211,45 +206,6 @@ export default function EmergencySos() {
                 2
               </span>
               <div className="min-w-0 flex-1">
-                <h3 className="text-[16px] font-semibold text-st-on-surface">Save Proof &amp; 12-Digit UTR</h3>
-                <p className="mt-1 text-[13px] text-st-on-surface-variant">
-                  Crucial transaction artifacts required to trace and freeze recipient wallets.
-                </p>
-                <div className="mt-3 flex flex-col gap-2">
-                  <label className="flex cursor-pointer items-center gap-3 rounded-xl bg-st-surface p-3">
-                    <input
-                      type="checkbox"
-                      checked={savedUtr}
-                      onChange={(e) => setSavedUtr(e.target.checked)}
-                      className="h-5 w-5 accent-st-secondary"
-                    />
-                    <span className="text-[13px] font-semibold text-st-on-surface">
-                      Screenshot transaction &amp; 12-digit UTR No.
-                    </span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-3 rounded-xl bg-st-surface p-3">
-                    <input
-                      type="checkbox"
-                      checked={notedVpa}
-                      onChange={(e) => setNotedVpa(e.target.checked)}
-                      className="h-5 w-5 accent-st-secondary"
-                    />
-                    <span className="text-[13px] font-semibold text-st-on-surface">
-                      Note fraudster UPI ID / phone / suspicious link
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="rounded-[24px] bg-st-surface-container p-5 shadow-sm">
-            <div className="flex items-start gap-3.5">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-st-primary-container text-[13px] font-bold text-st-on-primary">
-                3
-              </span>
-              <div className="min-w-0 flex-1">
                 <h3 className="text-[16px] font-semibold text-st-on-surface">File at cybercrime.gov.in</h3>
                 <p className="mt-1 text-[13px] text-st-on-surface-variant">
                   Official government portal complaint creates a legal acknowledgement number.
@@ -282,37 +238,6 @@ export default function EmergencySos() {
             </div>
           </div>
 
-          {/* Step 4 */}
-          <div className="rounded-[24px] bg-st-surface-container p-5 shadow-sm">
-            <div className="flex items-start gap-3.5">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-st-primary-container text-[13px] font-bold text-st-on-primary">
-                4
-              </span>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-[16px] font-semibold text-st-on-surface">De-link UPI &amp; Secure SIM / Device</h3>
-                <p className="mt-1 text-[13px] text-st-on-surface-variant">
-                  Revoke device binding and sign out active sessions if your phone or OTPs may be exposed.
-                </p>
-                <div className="mt-3 flex flex-col gap-2">
-                  <a
-                    href="tel:*99%23"
-                    className="flex items-center justify-between rounded-2xl bg-st-surface p-3 transition-colors hover:bg-st-surface-lowest"
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-st-secondary-container text-st-on-secondary-container">
-                        <Smartphone size={16} strokeWidth={2} aria-hidden />
-                      </span>
-                      <span>
-                        <span className="block text-[13px] font-semibold text-st-on-surface">Offline USSD (*99#)</span>
-                        <span className="block text-[12px] text-st-on-surface-variant">Manage or deregister UPI without internet</span>
-                      </span>
-                    </span>
-                    <ArrowRight size={16} className="text-st-on-surface-variant" aria-hidden />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 

@@ -1,0 +1,207 @@
+{
+  "id": "fedex-customs-parcel",
+  "title": "FedEx Customs Parcel Scare",
+  "tagline": "A caller claims a parcel in your name has illegal items and demands an immediate UPI verification transfer.",
+  "concept": "fraud-response",
+  "relatedConcepts": ["upi-safety", "phishing-indicators"],
+  "difficulty": "hard",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["arrest-01", "arrest-02"],
+  "intro": "A caller claiming to be from {{callerAgency}} says a suspicious courier parcel in your name was seized and demands ₹{{amount}} for 'account verification' on {{app}}.",
+  "variables": {
+    "app": ["PayWave", "UPIGo", "QuickPay", "FlashUPI"],
+    "amount": { "min": 12000, "max": 48000, "step": 1000 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "sender": "{{callerAgency}} · {{maskedPhone}}",
+      "time": "{{time}}",
+      "channel": "Video / VoIP Call",
+      "body": "A parcel booked with your Aadhaar was seized by customs. Do not disconnect or tell family—verify your bank account by transferring ₹{{amount}} to {{scammerVpa}} immediately!"
+    }
+  },
+  "steps": [
+    {
+      "id": "reject-customs-call",
+      "label": "Spot the intimidation flags and hang up immediately",
+      "actionKey": "HANG_UP_CALL",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Break isolation—customs and police never conduct arrests or verification on video calls.",
+      "explanation": "Disconnecting cuts off the scammer's intimidation script so you can verify calmly.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "check-upi-home",
+      "label": "Open {{app}} directly to verify no unauthorised mandate exists",
+      "actionKey": "OPEN_UPI_APP",
+      "order": 2,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Ignore any verification fee request and check your official UPI app directly.",
+      "explanation": "Law enforcement and banks never ask you to transfer money to prove your innocence.",
+      "mistakeConcept": "upi-safety"
+    },
+    {
+      "id": "verify-utr-history",
+      "label": "Verify recent UTR ledger {{utrNumber}} is clean",
+      "actionKey": "CHECK_HISTORY",
+      "order": 3,
+      "weight": 1,
+      "mandatory": true,
+      "cue": "Check your recent transaction history and UTR records to confirm your funds are untouched.",
+      "explanation": "Inspecting your actual ledger confirms no outgoing transfer was triggered during the call.",
+      "mistakeConcept": "fraud-response"
+    },
+    {
+      "id": "report-parcel-scam",
+      "label": "Report the impersonation call on 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 4,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Log the caller number and VPA {{scammerVpa}} on 1930 / cybercrime.gov.in.",
+      "explanation": "Filing a 1930 report even after avoiding the scam helps shut down fake agency numbers and mule handles.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "reject-customs-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Video Call · {{callerAgency}}",
+        "title": "Urgent Parcel Seizure Notice",
+        "body": "Caller {{scammerName}} from {{maskedPhone}} claims a parcel was seized.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Incoming Video Call",
+        "callerName": "{{scammerName}}",
+        "maskedPhone": "{{maskedPhone}}",
+        "agency": "{{callerAgency}}",
+        "channel": "WhatsApp Video Call",
+        "isVideo": true,
+        "transcript": "A parcel booked with your Aadhaar was seized by customs. Do not disconnect or tell family—verify your bank account by transferring ₹{{amount}} to {{scammerVpa}} immediately!",
+        "extraActions": [
+          { "intent": "SHARE_OTP", "label": "Read Aadhaar & bank OTP to clear case" }
+        ]
+      },
+      "redFlagPhrases": ["Do not disconnect or tell family", "transferring ₹{{amount}} to {{scammerVpa}}", "seized by customs"],
+      "validIntents": ["HANG_UP_CALL"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on the fake customs video call gives scammers time to isolate you and escalate threats.",
+        "SHARE_OTP": "Officials never ask for Aadhaar or bank OTPs over a video call."
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "check-upi-home"
+      }
+    },
+    {
+      "stepId": "check-upi-home",
+      "screenType": "UPI_HOME",
+      "notification": {
+        "app": "{{app}}",
+        "title": "Check your UPI status",
+        "body": "Verify your account inside {{app}}—do not pay any escrow fee."
+      },
+      "props": {
+        "appName": "{{app}}",
+        "requesterName": "{{callerAgency}}",
+        "amount": "{{amount}}",
+        "infoBanner": "Call disconnected safely. Verify your official {{app}} ledger before reporting.",
+        "actions": [
+          { "intent": "CHECK_HISTORY", "label": "Inspect recent transactions & UTR ledger" },
+          { "intent": "ACCEPT_COLLECT", "label": "Send ₹{{amount}} verification deposit to {{scammerVpa}}" }
+        ]
+      },
+      "validIntents": ["CHECK_HISTORY", "OPEN_UPI_APP"],
+      "trapIntents": {
+        "ACCEPT_COLLECT": "Paying a 'verification' or 'escrow' transfer to {{scammerVpa}} is the entire goal of the courier scam."
+      },
+      "nextStepMap": {
+        "CHECK_HISTORY": "verify-utr-history",
+        "OPEN_UPI_APP": "verify-utr-history"
+      }
+    },
+    {
+      "stepId": "verify-utr-history",
+      "screenType": "TX_HISTORY",
+      "props": {
+        "title": "UPI Transaction Ledger",
+        "subtitle": "{{app}} · Reference UTR {{utrNumber}}",
+        "summaryBanner": "Latest settled UTR {{utrNumber}} verified. Zero debits to {{scammerVpa}}.",
+        "transactions": [
+          { "id": "tx-u1", "title": "Campus Canteen", "subtitle": "UTR {{utrNumber}} · Today", "amount": "140", "direction": "debit" },
+          { "id": "tx-u2", "title": "Metro Pass Top-Up", "subtitle": "Yesterday", "amount": "350", "direction": "debit" }
+        ],
+        "actions": [
+          { "intent": "CHECK_HISTORY", "label": "Confirm ledger is clean & report impersonation" }
+        ]
+      },
+      "validIntents": ["CHECK_HISTORY"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "CHECK_HISTORY": "report-parcel-scam"
+      }
+    },
+    {
+      "stepId": "report-parcel-scam",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Agency Impersonation",
+        "intro": "Submit the fake courier / customs caller details to 1930.",
+        "details": [
+          { "label": "Impersonated agency", "value": "{{callerAgency}}" },
+          { "label": "Caller number", "value": "{{maskedPhone}}" },
+          { "label": "Demanded VPA", "value": "{{scammerVpa}}" }
+        ],
+        "reasons": ["Fake courier / customs arrest threat", "Demand for verification transfer", "Impersonation"],
+        "submitLabel": "File 1930 impersonation report",
+        "successText": "Agency impersonation logged on 1930 (sandbox)."
+      },
+      "validIntents": ["FILE_1930_REPORT"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["ACCEPT_COLLECT", "SHARE_OTP"],
+  "critical": {
+    "title": "You sent money or OTP to a fake customs caller",
+    "explanation": "No real police, customs, or courier officer will demand a 'verification deposit' via UPI ({{scammerVpa}}) or threaten arrest on a video call. Call 1930 and report immediately on cybercrime.gov.in.",
+    "reason": "You complied with a fake parcel/customs threat last time, so practise hanging up on intimidation calls next.",
+    "concept": "fraud-response"
+  },
+  "redFlags": [
+    {
+      "id": "rf-isolate",
+      "textFragment": "Do not disconnect or tell family",
+      "label": "Forced isolation",
+      "explanation": "Scammers forbid you from calling family because a second person immediately exposes the hoax."
+    },
+    {
+      "id": "rf-fee",
+      "textFragment": "transferring ₹{{amount}} to {{scammerVpa}}",
+      "label": "Verification payment demand",
+      "explanation": "Authorities never test or clear bank accounts through UPI transfers."
+    },
+    {
+      "id": "rf-seized",
+      "textFragment": "seized by customs",
+      "label": "False parcel seizure",
+      "explanation": "Unsolicited courier seizure calls tied to Aadhaar are a common 'digital arrest' script."
+    }
+  ],
+  "hints": {
+    "reject-customs-call": "Tap red flags in the transcript, then tap Hang up immediately—never pay or share OTPs.",
+    "check-upi-home": "Check your transaction history in {{app}} instead of sending any verification deposit.",
+    "verify-utr-history": "Review the settled UTR entries to confirm no money left, then continue to report.",
+    "report-parcel-scam": "Select an impersonation reason and submit the report to 1930."
+  },
+  "quizId": "digital-arrest"
+}

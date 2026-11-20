@@ -1,0 +1,181 @@
+{
+  "id": "electricity-bill-apk",
+  "title": "Electricity Cutoff APK Scam",
+  "tagline": "An urgent SMS threatens power disconnection tonight unless you install a fake support APK.",
+  "concept": "phishing-indicators",
+  "relatedConcepts": ["upi-safety", "fraud-response"],
+  "difficulty": "medium",
+  "timeLimitSec": 120,
+  "linkedLibraryIds": ["phish-01", "phish-03"],
+  "intro": "An SMS claims your home electricity will be disconnected at 9:30 PM unless you install {{fakeApkName}} or call {{maskedPhone}} to update your previous bill.",
+  "variables": {
+    "bank": ["Astra Bank", "Apex Trust Bank", "NeoCommerce Bank"],
+    "amount": { "min": 2000, "max": 9500, "step": 500 }
+  },
+  "trigger": {
+    "type": "composable",
+    "payloadTemplate": {
+      "sender": "{{maskedPhone}} · Unknown",
+      "time": "{{time}}",
+      "channel": "SMS Inbox",
+      "body": "ALERT: Power supply will be DISCONNECTED tonight at 9:30 PM due to unpaid ₹{{amount}} bill. Download {{fakeApkName}} or call {{maskedPhone}} immediately."
+    }
+  },
+  "steps": [
+    {
+      "id": "inspect-power-sms",
+      "label": "Spot the APK red flags and block the SMS sender",
+      "actionKey": "BLOCK_SENDER",
+      "order": 1,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "Never download .apk files from SMS or WhatsApp alerts threatening same-night disconnection.",
+      "explanation": "Real electricity boards send billing notices through official portals and never ask consumers to sideload .apk files.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "reject-helpline-call",
+      "label": "Hang up on the fake electricity support caller",
+      "actionKey": "HANG_UP_CALL",
+      "order": 2,
+      "weight": 3,
+      "mandatory": true,
+      "cue": "End the follow-up pressure call immediately instead of sharing OTPs or remote screen access.",
+      "explanation": "Scammers call seconds after the SMS to pressure victims into installing screen-sharing or OTP-stealing APKs.",
+      "mistakeConcept": "phishing-indicators"
+    },
+    {
+      "id": "file-1930-apk",
+      "label": "Report the phishing number & APK to 1930",
+      "actionKey": "FILE_1930_REPORT",
+      "order": 3,
+      "weight": 2,
+      "mandatory": true,
+      "cue": "Submit the suspicious mobile number and APK name on 1930 / Chakshu / cybercrime.gov.in.",
+      "explanation": "Reporting the scam number and APK filename helps telecom & cybercrime teams block the fraud campaign.",
+      "mistakeConcept": "fraud-response"
+    }
+  ],
+  "composableSteps": [
+    {
+      "stepId": "inspect-power-sms",
+      "screenType": "SMS_INBOX",
+      "notification": {
+        "app": "Messages · {{maskedPhone}}",
+        "title": "Electricity cutoff at 9:30 PM",
+        "body": "Download {{fakeApkName}} immediately to avoid disconnection.",
+        "urgent": true
+      },
+      "props": {
+        "title": "SMS Inbox",
+        "subtitle": "Tap red flags inside the message before acting",
+        "sender": "{{maskedPhone}} · Unknown",
+        "time": "{{time}}",
+        "channel": "SMS",
+        "body": "ALERT: Power supply will be DISCONNECTED tonight at 9:30 PM due to unpaid ₹{{amount}} bill. Download {{fakeApkName}} or call {{maskedPhone}} immediately.",
+        "actions": [
+          { "intent": "INSTALL_APK", "label": "Download & install {{fakeApkName}}" },
+          { "intent": "BLOCK_SENDER", "label": "Block SMS sender & verify on official board site" },
+          { "intent": "CLICK_EXTERNAL_LINK", "label": "Open quick-pay link from SMS" }
+        ]
+      },
+      "redFlagPhrases": ["DISCONNECTED tonight at 9:30 PM", "{{fakeApkName}}", "{{maskedPhone}}"],
+      "validIntents": ["BLOCK_SENDER", "IGNORE_MESSAGE"],
+      "trapIntents": {
+        "INSTALL_APK": "Sideloading {{fakeApkName}} gives scammers background permission to intercept SMS OTPs and drain your bank account.",
+        "CLICK_EXTERNAL_LINK": "External links inside cutoff threats lead to credential harvesting or malicious APK downloads."
+      },
+      "nextStepMap": {
+        "BLOCK_SENDER": "reject-helpline-call",
+        "IGNORE_MESSAGE": "reject-helpline-call"
+      }
+    },
+    {
+      "stepId": "reject-helpline-call",
+      "screenType": "INCOMING_CALL",
+      "notification": {
+        "app": "Phone · Incoming",
+        "title": "{{callerAgency}}",
+        "body": "Calling from {{maskedPhone}} about your power meter.",
+        "urgent": true
+      },
+      "props": {
+        "title": "Incoming Call",
+        "callerName": "{{scammerName}}",
+        "maskedPhone": "{{maskedPhone}}",
+        "agency": "{{callerAgency}}",
+        "channel": "Voice Call",
+        "isVideo": false,
+        "transcript": "Sir your meter will be cut in 15 minutes unless you install {{fakeApkName}} and read me the 6-digit OTP to sync your ₹{{amount}} payment.",
+        "extraActions": [
+          { "intent": "SHARE_OTP", "label": "Read back 6-digit OTP to clear bill" }
+        ]
+      },
+      "redFlagPhrases": ["cut in 15 minutes", "install {{fakeApkName}}", "read me the 6-digit OTP"],
+      "validIntents": ["HANG_UP_CALL"],
+      "trapIntents": {
+        "ANSWER_CALL": "Staying on the line allows scammers to intimidate you into installing remote-control APKs.",
+        "SHARE_OTP": "Giving an OTP allows attackers to log into your mobile banking or authorise a payment."
+      },
+      "nextStepMap": {
+        "HANG_UP_CALL": "file-1930-apk"
+      }
+    },
+    {
+      "stepId": "file-1930-apk",
+      "screenType": "COMPLAINT_FORM",
+      "props": {
+        "title": "Report Phishing APK & Number",
+        "intro": "Report the fake electricity disconnection alert and malicious APK filename.",
+        "details": [
+          { "label": "Caller / SMS", "value": "{{maskedPhone}}" },
+          { "label": "Malicious file", "value": "{{fakeApkName}}" },
+          { "label": "Impersonated", "value": "{{callerAgency}}" }
+        ],
+        "reasons": ["Fake electricity bill APK", "Impersonating utility staff", "OTP phishing attempt"],
+        "submitLabel": "Report to 1930 & cybercrime.gov.in",
+        "successText": "Phishing number and APK reported (sandbox)."
+      },
+      "validIntents": ["FILE_1930_REPORT", "BLOCK_SENDER"],
+      "trapIntents": {},
+      "nextStepMap": {
+        "FILE_1930_REPORT": "__FINISH__",
+        "BLOCK_SENDER": "__FINISH__"
+      }
+    }
+  ],
+  "distractors": [],
+  "criticalActions": ["INSTALL_APK", "SHARE_OTP"],
+  "critical": {
+    "title": "You installed an unverified APK or shared an OTP",
+    "explanation": "Fake utility support APKs like {{fakeApkName}} silently forward SMS OTPs and allow remote device control. Never sideload APK files from texts or share OTPs with callers. Enable Aeroplane Mode, uninstall unknown apps, freeze banking via {{bankName}}, and call 1930 immediately.",
+    "reason": "You fell for an APK / OTP trap on a utility cutoff scare last time, so rehearse spotting .apk alerts next.",
+    "concept": "phishing-indicators"
+  },
+  "redFlags": [
+    {
+      "id": "rf-cutoff",
+      "textFragment": "DISCONNECTED tonight at 9:30 PM",
+      "label": "Midnight cutoff panic",
+      "explanation": "Scammers create fake same-night disconnection deadlines so you act without checking your official utility app."
+    },
+    {
+      "id": "rf-apk",
+      "textFragment": "{{fakeApkName}}",
+      "label": "Unknown .apk file",
+      "explanation": "Genuine electricity providers never send .apk installer files over SMS or WhatsApp."
+    },
+    {
+      "id": "rf-phone",
+      "textFragment": "{{maskedPhone}}",
+      "label": "Personal mobile number",
+      "explanation": "Official utility notices use registered consumer helplines, not random 10-digit mobile numbers."
+    }
+  ],
+  "hints": {
+    "inspect-power-sms": "Tap the suspicious phrases in the SMS, then block the sender—never download {{fakeApkName}}.",
+    "reject-helpline-call": "Tap Hang up immediately. Real electricity officers never ask for OTPs or APK installs.",
+    "file-1930-apk": "Choose a reason and submit the report to 1930 so the scam number and APK can be flagged."
+  },
+  "quizId": "phishing-indicators"
+}
